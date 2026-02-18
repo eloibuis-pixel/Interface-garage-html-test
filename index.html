@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Garage Interface - Vapi Manager</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        // --- CONFIG DES ICÔNES ---
+        const { Phone, Calendar, Users, Clock, BarChart3, Search, Bell, ChevronRight, CheckCircle2, XCircle, Menu, MoreVertical, MessageSquare, Smartphone } = lucide;
+
+        // --- TON CODE RE-TRAVAILLÉ POUR LE HTML ---
+        
+        const INITIAL_DATA = [
+            { id: "init-1", nom: "Jean Dupont", telephone: "06 12 34 56 78", probleme: "Remplacement chauffe-eau", heure_rdv: new Date(new Date().getTime() + 86400000).toISOString(), resume: "Client propriétaire, souhaite un devis rapide.", timestamp: Date.now() - 3600000, status: 'appointment' },
+            { id: "init-2", nom: "Alice Fabre", telephone: "07 88 99 00 11", probleme: "Question facturation", heure_rdv: "Aucun RDV", resume: "Appel court pour vérifier si le virement a été reçu.", timestamp: Date.now() - 7200000, status: 'inquiry' }
+        ];
+
+        const StatCard = ({ title, value, iconName, color }) => {
+            const colors = {
+                blue: "bg-blue-50 text-blue-600",
+                emerald: "bg-emerald-50 text-emerald-600",
+                amber: "bg-amber-50 text-amber-600",
+                indigo: "bg-indigo-50 text-indigo-600"
+            };
+            return (
+                <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                    <div className="flex items-center justify-between mb-2">
+                        <div className={`p-2 rounded-lg ${colors[color] || colors.blue}`}>
+                            <i data-lucide={iconName}></i>
+                        </div>
+                    </div>
+                    <p className="text-sm text-slate-500 font-medium">{title}</p>
+                    <h3 className="text-2xl font-bold mt-1">{value}</h3>
+                </div>
+            );
+        };
+
+        const App = () => {
+            const [calls, setCalls] = React.useState(INITIAL_DATA);
+            const [currentView, setCurrentView] = React.useState('dashboard');
+            const [selectedCall, setSelectedCall] = React.useState(null);
+
+            // Relancer les icônes à chaque changement
+            React.useEffect(() => { lucide.createIcons(); });
+
+            const stats = React.useMemo(() => {
+                const total = calls.length;
+                const appointments = calls.filter(c => c.status === 'appointment').length;
+                return { total, appointments, rate: total > 0 ? Math.round((appointments/total)*100) : 0 };
+            }, [calls]);
+
+            const simulateCall = () => {
+                const names = ["Sophie Martin", "Thomas Durand", "Lucas Bernard"];
+                const newCall = {
+                    id: Math.random().toString(36).substr(2, 9),
+                    nom: names[Math.floor(Math.random() * names.length)],
+                    telephone: "06 45 23 11 89",
+                    probleme: "Panne moteur garage",
+                    heure_rdv: "Aucun RDV",
+                    resume: "L'IA a qualifié cet appel comme urgent.",
+                    timestamp: Date.now(),
+                    status: 'inquiry'
+                };
+                setCalls(prev => [newCall, ...prev]);
+            };
+
+            return (
+                <div className="flex min-h-screen">
+                    {/* Sidebar */}
+                    <aside className="w-64 bg-white border-r border-slate-200 p-6 space-y-8">
+                        <div className="flex items-center gap-2 text-indigo-600 font-bold text-xl">
+                            <i data-lucide="smartphone"></i> VapiManager
+                        </div>
+                        <nav className="space-y-2">
+                            <button onClick={() => setCurrentView('dashboard')} className={`w-full flex items-center gap-3 p-3 rounded-lg font-medium ${currentView === 'dashboard' ? 'bg-indigo-50 text-indigo-600' : 'text-slate-600 hover:bg-slate-50'}`}>
+                                <i data-lucide="bar-chart-3" className="w-5 h-5"></i> Dashboard
+                            </button>
+                            <button onClick={() => setCurrentView('calls')} className={`w-full flex items-center gap-3 p-3 rounded-lg font-medium ${currentView === 'calls' ? 'bg-indigo-50 text-indigo-600' : 'text-slate-600 hover:bg-slate-50'}`}>
+                                <i data-lucide="phone" className="w-5 h-5"></i> Appels
+                            </button>
+                        </nav>
+                        <div className="pt-4 border-t border-slate-100">
+                            <button onClick={simulateCall} className="w-full bg-indigo-600 text-white py-3 rounded-xl font-semibold shadow-md hover:bg-indigo-700 transition-all flex items-center justify-center gap-2">
+                                <i data-lucide="bell" className="w-4 h-4"></i> Simuler Appel
+                            </button>
+                        </div>
+                    </aside>
+
+                    {/* Content */}
+                    <main className="flex-1 p-8">
+                        <header className="flex justify-between items-center mb-8">
+                            <h2 className="text-2xl font-bold">{currentView === 'dashboard' ? 'Dashboard' : 'Historique'}</h2>
+                            <div className="flex items-center gap-3 bg-white px-4 py-2 rounded-lg border border-slate-200">
+                                <div className="w-8 h-8 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center font-bold">A</div>
+                                <span className="text-sm font-medium">Admin Garage</span>
+                            </div>
+                        </header>
+
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                            <StatCard title="Total Appels" value={stats.total} iconName="phone" color="blue" />
+                            <StatCard title="RDV Fixés" value={stats.appointments} iconName="calendar" color="emerald" />
+                            <StatCard title="Conversion" value={stats.rate + "%"} iconName="bar-chart-3" color="indigo" />
+                        </div>
+
+                        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                            <table className="w-full text-left border-collapse">
+                                <thead className="bg-slate-50 border-b border-slate-200 text-slate-500 text-sm uppercase">
+                                    <tr>
+                                        <th className="p-4 font-semibold">Client</th>
+                                        <th className="p-4 font-semibold">Problème</th>
+                                        <th className="p-4 font-semibold">Statut</th>
+                                        <th className="p-4 font-semibold">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-slate-100">
+                                    {calls.map(call => (
+                                        <tr key={call.id} className="hover:bg-slate-50 transition-colors">
+                                            <td className="p-4">
+                                                <div className="font-bold">{call.nom}</div>
+                                                <div className="text-xs text-slate-400">{call.telephone}</div>
+                                            </td>
+                                            <td className="p-4 text-sm text-slate-600 italic">"{call.probleme}"</td>
+                                            <td className="p-4">
+                                                <span className={`px-3 py-1 rounded-full text-xs font-bold ${call.status === 'appointment' ? 'bg-emerald-100 text-emerald-700' : 'bg-blue-100 text-blue-700'}`}>
+                                                    {call.status === 'appointment' ? 'RDV FIXÉ' : 'INFO'}
+                                                </span>
+                                            </td>
+                                            <td className="p-4">
+                                                <button onClick={() => setSelectedCall(call)} className="text-indigo-600 hover:underline font-medium text-sm">Détails</button>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    </main>
+
+                    {/* Modal Détails */}
+                    {selectedCall && (
+                        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+                            <div className="bg-white rounded-2xl p-6 max-w-md w-full shadow-2xl">
+                                <h3 className="text-xl font-bold mb-4">Détails du client</h3>
+                                <div className="space-y-3">
+                                    <p><strong>Nom:</strong> {selectedCall.nom}</p>
+                                    <p><strong>Tél:</strong> {selectedCall.telephone}</p>
+                                    <p className="bg-slate-50 p-3 rounded-lg text-sm italic">"{selectedCall.resume}"</p>
+                                </div>
+                                <button onClick={() => setSelectedCall(null)} className="mt-6 w-full bg-slate-900 text-white py-2 rounded-lg">Fermer</button>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
