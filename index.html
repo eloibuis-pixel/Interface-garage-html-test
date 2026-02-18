@@ -4,1377 +4,1012 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>GaragePro – Tableau de bord</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/umd/lucide.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  :root {
-    --sidebar-bg: #0f172a;
-    --sidebar-hover: #1e293b;
-    --sidebar-active: #1e3a5f;
-    --sidebar-text: #94a3b8;
-    --sidebar-text-active: #e2e8f0;
-    --main-bg: #f8fafc;
-    --card-bg: #ffffff;
-    --text-primary: #0f172a;
-    --text-secondary: #64748b;
-    --text-muted: #94a3b8;
-    --border: #e2e8f0;
-    --blue: #2563eb;
-    --blue-light: #eff6ff;
-    --blue-mid: #3b82f6;
-    --green: #22c55e;
-    --green-light: #f0fdf4;
-    --orange: #f97316;
-    --orange-light: #fff7ed;
-    --red: #ef4444;
-    --accent: #6366f1;
-    --accent-light: #eef2ff;
-    --chart-line: #3b82f6;
-    --chart-fill: rgba(59,130,246,0.08);
-    --radius: 20px;
-    --radius-sm: 12px;
-    --shadow: 0 1px 3px rgba(0,0,0,0.07), 0 4px 16px rgba(0,0,0,0.05);
-    --shadow-lg: 0 8px 32px rgba(0,0,0,0.10);
-  }
-
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--main-bg);
-    color: var(--text-primary);
-    display: flex;
-    height: 100vh;
-    overflow: hidden;
-  }
-
-  /* ─── SIDEBAR ─────────────────────────────────────────── */
-  #sidebar {
-    width: 240px;
-    min-width: 240px;
-    background: var(--sidebar-bg);
-    display: flex;
-    flex-direction: column;
-    padding: 24px 16px;
-    gap: 4px;
-    overflow-y: auto;
-    position: relative;
-    z-index: 10;
-  }
-
-  .logo {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 8px 12px 24px;
-  }
-
-  .logo-icon {
-    width: 36px; height: 36px;
-    background: linear-gradient(135deg, #3b82f6, #6366f1);
-    border-radius: 10px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 18px;
-  }
-
-  .logo-text {
-    font-size: 16px;
-    font-weight: 700;
-    color: #f1f5f9;
-    letter-spacing: -0.3px;
-  }
-
-  .logo-text span { color: #3b82f6; }
-
-  .nav-section {
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    color: #475569;
-    padding: 8px 12px 4px;
-    margin-top: 8px;
-  }
-
-  .nav-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 12px;
-    border-radius: 12px;
-    color: var(--sidebar-text);
-    cursor: pointer;
-    transition: all 0.18s;
-    font-size: 14px;
-    font-weight: 500;
-    position: relative;
-  }
-
-  .nav-item:hover { background: var(--sidebar-hover); color: var(--sidebar-text-active); }
-
-  .nav-item.active {
-    background: var(--sidebar-active);
-    color: #60a5fa;
-  }
-
-  .nav-item.active::before {
-    content: '';
-    position: absolute;
-    left: 0; top: 25%; bottom: 25%;
-    width: 3px;
-    background: #3b82f6;
-    border-radius: 0 3px 3px 0;
-  }
-
-  .nav-badge {
-    margin-left: auto;
-    background: #1e3a5f;
-    color: #60a5fa;
-    font-size: 11px;
-    font-weight: 600;
-    padding: 2px 7px;
-    border-radius: 999px;
-  }
-
-  .sidebar-bottom {
-    margin-top: auto;
-    padding-top: 16px;
-    border-top: 1px solid #1e293b;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  #btn-simulate {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 12px 14px;
-    border-radius: 14px;
-    background: linear-gradient(135deg, #1d4ed8, #4f46e5);
-    color: #fff;
-    cursor: pointer;
-    font-family: inherit;
-    font-size: 13px;
-    font-weight: 600;
-    border: none;
-    box-shadow: 0 4px 12px rgba(59,130,246,0.35);
-    transition: all 0.2s;
-    position: relative;
-    overflow: hidden;
-  }
-
-  #btn-simulate::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent);
-    opacity: 0;
-    transition: opacity 0.2s;
-  }
-
-  #btn-simulate:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(59,130,246,0.45); }
-  #btn-simulate:hover::after { opacity: 1; }
-
-  .pulse-dot {
-    width: 8px; height: 8px;
-    background: #4ade80;
-    border-radius: 50%;
-    position: relative;
-    flex-shrink: 0;
-  }
-
-  .pulse-dot::after {
-    content: '';
-    position: absolute;
-    inset: -3px;
-    border-radius: 50%;
-    background: rgba(74,222,128,0.4);
-    animation: pulse 1.6s ease-in-out infinite;
-  }
-
-  @keyframes pulse {
-    0%, 100% { transform: scale(1); opacity: 1; }
-    50% { transform: scale(1.8); opacity: 0; }
-  }
-
-  /* ─── MAIN ─────────────────────────────────────────────── */
-  #main {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-  }
-
-  /* HEADER */
-  #header {
-    background: var(--card-bg);
-    border-bottom: 1px solid var(--border);
-    padding: 16px 28px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-    flex-shrink: 0;
-  }
-
-  .header-left h1 {
-    font-size: 20px;
-    font-weight: 700;
-    letter-spacing: -0.5px;
-    color: var(--text-primary);
-  }
-
-  .header-left p {
-    font-size: 13px;
-    color: var(--text-muted);
-    margin-top: 1px;
-  }
-
-  .header-right { display: flex; align-items: center; gap: 10px; }
-
-  .btn-blue {
-    display: flex;
-    align-items: center;
-    gap: 7px;
-    padding: 9px 16px;
-    background: var(--blue);
-    color: #fff;
-    border-radius: 12px;
-    font-family: inherit;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    border: none;
-    transition: all 0.18s;
-    box-shadow: 0 2px 8px rgba(37,99,235,0.3);
-  }
-
-  .btn-blue:hover { background: #1d4ed8; transform: translateY(-1px); }
-
-  .avatar {
-    width: 36px; height: 36px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #6366f1, #8b5cf6);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 14px;
-    font-weight: 700;
-    color: #fff;
-    cursor: pointer;
-  }
-
-  /* CONTENT GRID */
-  #content {
-    flex: 1;
-    overflow-y: auto;
-    padding: 24px 28px;
-    display: grid;
-    grid-template-columns: 1fr 320px;
-    gap: 20px;
-    align-content: start;
-  }
-
-  /* CARDS */
-  .card {
-    background: var(--card-bg);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    border: 1px solid var(--border);
-    padding: 22px;
-    transition: box-shadow 0.2s;
-  }
-
-  .card:hover { box-shadow: var(--shadow-lg); }
-
-  .card-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 18px;
-  }
-
-  .card-title {
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--text-primary);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .card-title .icon-wrap {
-    width: 28px; height: 28px;
-    border-radius: 8px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 14px;
-  }
-
-  .card-badge {
-    font-size: 11px;
-    font-weight: 600;
-    padding: 3px 9px;
-    border-radius: 999px;
-  }
-
-  /* STATS ROW */
-  .stats-row {
-    grid-column: 1 / -1;
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 14px;
-  }
-
-  .stat-card {
-    background: var(--card-bg);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    border: 1px solid var(--border);
-    padding: 18px 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    transition: all 0.2s;
-    cursor: default;
-  }
-
-  .stat-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
-
-  .stat-top {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .stat-icon {
-    width: 36px; height: 36px;
-    border-radius: 10px;
-    display: flex; align-items: center; justify-content: center;
-  }
-
-  .stat-change {
-    font-size: 11px;
-    font-weight: 600;
-    padding: 3px 7px;
-    border-radius: 999px;
-  }
-
-  .stat-value {
-    font-size: 26px;
-    font-weight: 700;
-    letter-spacing: -1px;
-    color: var(--text-primary);
-  }
-
-  .stat-label {
-    font-size: 12px;
-    color: var(--text-muted);
-    font-weight: 500;
-  }
-
-  /* CHART */
-  .chart-container {
-    position: relative;
-    height: 180px;
-  }
-
-  svg.chart {
-    width: 100%;
-    height: 100%;
-    overflow: visible;
-  }
-
-  /* CALLS TABLE */
-  .calls-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 13px;
-  }
-
-  .calls-table th {
-    text-align: left;
-    font-size: 11px;
-    font-weight: 600;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.7px;
-    padding: 0 10px 12px;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .calls-table td {
-    padding: 12px 10px;
-    border-bottom: 1px solid #f1f5f9;
-    color: var(--text-primary);
-    vertical-align: middle;
-  }
-
-  .calls-table tr:last-child td { border-bottom: none; }
-
-  .calls-table tr:hover td { background: #f8fafc; }
-
-  .call-name {
-    font-weight: 600;
-    font-size: 13px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .avatar-sm {
-    width: 28px; height: 28px;
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 11px;
-    font-weight: 700;
-    color: #fff;
-    flex-shrink: 0;
-  }
-
-  .problem-tag {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    padding: 3px 9px;
-    border-radius: 999px;
-    font-size: 11px;
-    font-weight: 600;
-  }
-
-  .time-tag {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 12px;
-    color: var(--text-muted);
-    font-family: 'DM Mono', monospace;
-  }
-
-  /* CALENDAR */
-  .calendar-grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 4px;
-    margin-top: 12px;
-  }
-
-  .cal-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 10px;
-  }
-
-  .cal-nav {
-    background: none;
-    border: none;
-    width: 28px; height: 28px;
-    border-radius: 8px;
-    cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    color: var(--text-secondary);
-    transition: background 0.15s;
-  }
-
-  .cal-nav:hover { background: var(--border); }
-
-  .cal-month {
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--text-primary);
-  }
-
-  .cal-day-name {
-    text-align: center;
-    font-size: 10px;
-    font-weight: 600;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    padding: 4px 0;
-  }
-
-  .cal-day {
-    aspect-ratio: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
-    font-weight: 500;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.15s;
-    color: var(--text-primary);
-    position: relative;
-  }
-
-  .cal-day:hover { background: var(--blue-light); color: var(--blue); }
-
-  .cal-day.today {
-    background: var(--blue);
-    color: #fff;
-    font-weight: 700;
-    box-shadow: 0 2px 8px rgba(37,99,235,0.3);
-  }
-
-  .cal-day.other-month { color: var(--text-muted); opacity: 0.5; }
-
-  .cal-day.has-rdv::after {
-    content: '';
-    position: absolute;
-    bottom: 3px;
-    width: 4px; height: 4px;
-    border-radius: 50%;
-    background: var(--blue-mid);
-  }
-
-  .cal-day.today.has-rdv::after { background: rgba(255,255,255,0.7); }
-
-  .cal-day.selected { background: var(--blue-light); color: var(--blue); font-weight: 600; }
-
-  /* AI STATUS */
-  .ai-status-card {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 14px 18px;
-    background: var(--green-light);
-    border-radius: 16px;
-    border: 1px solid #bbf7d0;
-  }
-
-  .ai-pulse {
-    width: 12px; height: 12px;
-    background: var(--green);
-    border-radius: 50%;
-    position: relative;
-    flex-shrink: 0;
-  }
-
-  .ai-pulse::after {
-    content: '';
-    position: absolute;
-    inset: -4px;
-    border-radius: 50%;
-    background: rgba(34,197,94,0.3);
-    animation: pulse 1.8s ease-in-out infinite;
-  }
-
-  .ai-info { flex: 1; }
-  .ai-title { font-size: 13px; font-weight: 700; color: #166534; }
-  .ai-sub { font-size: 11px; color: #4ade80; margin-top: 1px; }
-
-  /* MODAL */
-  #modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.45);
-    backdrop-filter: blur(4px);
-    z-index: 100;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.25s;
-  }
-
-  #modal-overlay.show { opacity: 1; pointer-events: all; }
-
-  .modal {
-    background: var(--card-bg);
-    border-radius: 24px;
-    padding: 28px;
-    width: 420px;
-    max-width: 90vw;
-    box-shadow: 0 24px 80px rgba(0,0,0,0.2);
-    transform: translateY(16px) scale(0.97);
-    transition: all 0.25s cubic-bezier(0.34,1.56,0.64,1);
-    position: relative;
-  }
-
-  #modal-overlay.show .modal { transform: translateY(0) scale(1); }
-
-  .modal-close {
-    position: absolute;
-    top: 18px; right: 18px;
-    width: 30px; height: 30px;
-    border-radius: 8px;
-    border: none;
-    background: var(--border);
-    cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    color: var(--text-secondary);
-    transition: background 0.15s;
-  }
-
-  .modal-close:hover { background: #cbd5e1; }
-
-  .call-modal-header {
-    display: flex;
-    align-items: flex-start;
-    gap: 14px;
-    margin-bottom: 20px;
-  }
-
-  .call-icon-lg {
-    width: 52px; height: 52px;
-    border-radius: 16px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 24px;
-    flex-shrink: 0;
-  }
-
-  .call-incoming {
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: var(--green);
-    display: flex; align-items: center; gap: 5px;
-    margin-bottom: 4px;
-  }
-
-  .modal h2 { font-size: 20px; font-weight: 700; letter-spacing: -0.4px; }
-  .modal .phone { font-size: 14px; color: var(--text-muted); margin-top: 2px; font-family: 'DM Mono', monospace; }
-
-  .modal-section {
-    background: var(--main-bg);
-    border-radius: 14px;
-    padding: 14px 16px;
-    margin-bottom: 10px;
-  }
-
-  .modal-section-label {
-    font-size: 10px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: var(--text-muted);
-    margin-bottom: 6px;
-  }
-
-  .modal-section-value {
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--text-primary);
-    line-height: 1.5;
-  }
-
-  .rdv-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 6px 12px;
-    background: var(--blue-light);
-    border-radius: 10px;
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--blue);
-    margin-top: 6px;
-  }
-
-  .modal-actions {
-    display: flex;
-    gap: 8px;
-    margin-top: 16px;
-  }
-
-  .modal-btn {
-    flex: 1;
-    padding: 11px;
-    border-radius: 12px;
-    font-family: inherit;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    border: none;
-    transition: all 0.18s;
-  }
-
-  .modal-btn.primary { background: var(--blue); color: #fff; box-shadow: 0 2px 8px rgba(37,99,235,0.3); }
-  .modal-btn.primary:hover { background: #1d4ed8; }
-  .modal-btn.secondary { background: var(--border); color: var(--text-primary); }
-  .modal-btn.secondary:hover { background: #cbd5e1; }
-
-  /* SCHEDULE MODAL */
-  #schedule-modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.45);
-    backdrop-filter: blur(4px);
-    z-index: 200;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.25s;
-  }
-
-  #schedule-modal-overlay.show { opacity: 1; pointer-events: all; }
-
-  .schedule-modal {
-    background: var(--card-bg);
-    border-radius: 24px;
-    padding: 28px;
-    width: 380px;
-    max-width: 90vw;
-    max-height: 80vh;
-    overflow-y: auto;
-    box-shadow: 0 24px 80px rgba(0,0,0,0.2);
-    transform: translateY(16px) scale(0.97);
-    transition: all 0.25s cubic-bezier(0.34,1.56,0.64,1);
-    position: relative;
-  }
-
-  #schedule-modal-overlay.show .schedule-modal { transform: translateY(0) scale(1); }
-
-  .schedule-hour {
-    display: flex;
-    gap: 12px;
-    padding: 10px 0;
-    border-bottom: 1px solid var(--border);
-    align-items: flex-start;
-  }
-
-  .schedule-hour:last-child { border-bottom: none; }
-
-  .hour-label {
-    font-family: 'DM Mono', monospace;
-    font-size: 12px;
-    color: var(--text-muted);
-    width: 44px;
-    flex-shrink: 0;
-    padding-top: 1px;
-  }
-
-  .hour-rdv {
-    flex: 1;
-    background: var(--blue-light);
-    border-left: 3px solid var(--blue);
-    border-radius: 8px;
-    padding: 6px 10px;
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--blue);
-  }
-
-  .hour-empty {
-    flex: 1;
-    font-size: 12px;
-    color: var(--text-muted);
-    font-style: italic;
-    padding-top: 2px;
-  }
-
-  /* SCROLLBAR */
-  ::-webkit-scrollbar { width: 6px; }
-  ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-  ::-webkit-scrollbar-thumb:hover { background: #cbd5e1; }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --sb:#0f172a;--sb-hover:#1e293b;
+  --bg:#f1f5f9;--card:#ffffff;--border:#e2e8f0;
+  --t1:#0f172a;--t2:#475569;--t3:#94a3b8;
+  --blue:#2563eb;--blue-l:#eff6ff;--blue-m:#3b82f6;
+  --green:#16a34a;--green-l:#f0fdf4;
+  --orange:#ea580c;--orange-l:#fff7ed;
+  --red:#dc2626;--red-l:#fef2f2;
+  --purple:#7c3aed;--purple-l:#f5f3ff;
+  --yellow:#ca8a04;--yellow-l:#fefce8;
+  --r:18px;--sh:0 1px 3px rgba(0,0,0,.06),0 4px 16px rgba(0,0,0,.04);--sh2:0 8px 32px rgba(0,0,0,.10);
+}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t1);display:flex;height:100vh;overflow:hidden;font-size:14px}
+
+/* SIDEBAR */
+#sb{width:246px;min-width:246px;background:var(--sb);display:flex;flex-direction:column;padding:18px 13px;gap:2px;overflow-y:auto}
+.logo{display:flex;align-items:center;gap:10px;padding:6px 10px 20px}
+.logo-ic{width:38px;height:38px;background:linear-gradient(135deg,#3b82f6,#6366f1);border-radius:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.logo-tx{font-size:17px;font-weight:700;color:#f1f5f9;letter-spacing:-.4px}.logo-tx span{color:#60a5fa}
+.sec{font-size:10px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:#334155;padding:10px 10px 4px;margin-top:4px}
+.ni{display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:11px;color:#64748b;cursor:pointer;transition:all .15s;font-size:13px;font-weight:500;position:relative;user-select:none}
+.ni svg{flex-shrink:0}
+.ni:hover{background:var(--sb-hover);color:#cbd5e1}
+.ni.active{background:#1e293b;color:#60a5fa}
+.ni.active::before{content:'';position:absolute;left:0;top:22%;bottom:22%;width:3px;background:#3b82f6;border-radius:0 3px 3px 0}
+.nb{margin-left:auto;font-size:10px;font-weight:700;padding:2px 7px;border-radius:999px;min-width:18px;text-align:center}
+.nb-blue{background:#1e3a5f;color:#60a5fa}
+.nb-red{background:#3f1515;color:#f87171}
+.sb-bot{margin-top:auto;padding-top:12px;border-top:1px solid #1e293b;display:flex;flex-direction:column;gap:7px}
+#btn-sim{display:flex;align-items:center;gap:9px;padding:11px 14px;border-radius:13px;background:linear-gradient(135deg,#1d4ed8,#4f46e5);color:#fff;cursor:pointer;font-family:inherit;font-size:13px;font-weight:600;border:none;box-shadow:0 4px 14px rgba(59,130,246,.35);transition:all .2s;width:100%}
+#btn-sim:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(59,130,246,.45)}
+.sb-user{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:11px;cursor:pointer;transition:background .15s}
+.sb-user:hover{background:var(--sb-hover)}
+.av{border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;flex-shrink:0}
+
+/* PULSE */
+.pls{width:8px;height:8px;background:#4ade80;border-radius:50%;position:relative;flex-shrink:0}
+.pls::after{content:'';position:absolute;inset:-3px;border-radius:50%;background:rgba(74,222,128,.35);animation:pulse 1.7s ease-in-out infinite}
+.pls2{width:12px;height:12px;background:#22c55e;border-radius:50%;position:relative;flex-shrink:0}
+.pls2::after{content:'';position:absolute;inset:-4px;border-radius:50%;background:rgba(34,197,94,.3);animation:pulse 1.9s ease-in-out infinite}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(2);opacity:0}}
+
+/* MAIN */
+#main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+#hdr{background:var(--card);border-bottom:1px solid var(--border);padding:13px 24px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+#hdr h1{font-size:19px;font-weight:700;letter-spacing:-.4px}
+#hdr p{font-size:12px;color:var(--t3);margin-top:1px}
+.hr{display:flex;align-items:center;gap:9px}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:11px;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;border:none;transition:all .18s}
+.btn-blue{background:var(--blue);color:#fff;box-shadow:0 2px 8px rgba(37,99,235,.28)}.btn-blue:hover{background:#1d4ed8;transform:translateY(-1px)}
+.btn-ghost{background:var(--border);color:var(--t2)}.btn-ghost:hover{background:#cbd5e1}
+.btn-red{background:var(--red-l);color:var(--red)}.btn-red:hover{background:#fecaca}
+.btn-green{background:var(--green-l);color:var(--green)}.btn-green:hover{background:#bbf7d0}
+.divider{width:1px;height:26px;background:var(--border)}
+.notif-wrap{position:relative;cursor:pointer;padding:6px;border-radius:9px;transition:background .15s}
+.notif-wrap:hover{background:var(--border)}
+.notif-dot{position:absolute;top:4px;right:4px;width:7px;height:7px;background:var(--red);border-radius:50%;border:2px solid var(--card)}
+
+/* CONTENT */
+#cnt{flex:1;overflow-y:auto;padding:20px 24px;display:grid;grid-template-columns:1fr 308px;gap:18px;align-content:start}
+
+/* CARD */
+.card{background:var(--card);border-radius:var(--r);box-shadow:var(--sh);border:1px solid var(--border);padding:19px;transition:box-shadow .2s}
+.card:hover{box-shadow:var(--sh2)}
+.ch{display:flex;align-items:center;justify-content:space-between;margin-bottom:15px}
+.ct{font-size:13px;font-weight:600;color:var(--t1);display:flex;align-items:center;gap:8px}
+.ic{width:30px;height:30px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.badge{font-size:11px;font-weight:600;padding:3px 9px;border-radius:999px}
+
+/* STATS */
+.stats{grid-column:1/-1;display:grid;grid-template-columns:repeat(4,1fr);gap:13px}
+.sc{background:var(--card);border-radius:var(--r);box-shadow:var(--sh);border:1px solid var(--border);padding:15px 17px;cursor:pointer;transition:all .2s}
+.sc:hover{transform:translateY(-2px);box-shadow:var(--sh2)}
+.sc-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px}
+.sc-ic{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center}
+.sc-chg{font-size:11px;font-weight:600;padding:3px 8px;border-radius:999px}
+.sc-v{font-size:27px;font-weight:700;letter-spacing:-1px}
+.sc-l{font-size:12px;color:var(--t3);margin-top:2px;font-weight:500}
+
+/* TABLE */
+.tbl{width:100%;border-collapse:collapse}
+.tbl th{text-align:left;font-size:10px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:.8px;padding:0 9px 10px;border-bottom:1px solid var(--border)}
+.tbl td{padding:10px 9px;border-bottom:1px solid #f8fafc;vertical-align:middle}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tbody tr{cursor:pointer;transition:background .12s}
+.tbl tbody tr:hover td{background:#f8fafc}
+.cname{font-weight:600;display:flex;align-items:center;gap:8px;white-space:nowrap}
+.ptag{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:999px;font-size:11px;font-weight:600}
+.ttag{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-family:'DM Mono',monospace}
+
+/* CHART */
+.cw{height:170px;position:relative}
+.cw svg{width:100%;height:100%;overflow:visible}
+
+/* CALENDAR */
+.cal-nav{background:none;border:none;width:28px;height:28px;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--t2);transition:background .12s}
+.cal-nav:hover{background:var(--border)}
+.cal-mn{font-size:13px;font-weight:600}
+.cg{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-top:7px}
+.cdn{text-align:center;font-size:10px;font-weight:600;color:var(--t3);text-transform:uppercase;padding:3px 0}
+.cd{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;border-radius:8px;cursor:pointer;transition:all .12s;color:var(--t1);position:relative}
+.cd:hover{background:var(--blue-l);color:var(--blue)}
+.cd.today{background:var(--blue);color:#fff;font-weight:700;box-shadow:0 2px 8px rgba(37,99,235,.3)}
+.cd.om{color:var(--t3);opacity:.4;pointer-events:none}
+.cd.hrdv::after{content:'';position:absolute;bottom:3px;width:4px;height:4px;border-radius:50%;background:var(--blue-m)}
+.cd.today.hrdv::after{background:rgba(255,255,255,.75)}
+
+/* AI */
+.ai-card{display:flex;align-items:center;gap:12px;padding:12px 15px;background:var(--green-l);border-radius:13px;border:1px solid #bbf7d0}
+.ms{background:var(--bg);border-radius:12px;padding:9px 12px;cursor:pointer;transition:background .12s}
+.ms:hover{background:#e2e8f0}
+.ms .l{font-size:10px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:.6px;margin-bottom:2px}
+.ms .v{font-size:16px;font-weight:700}
+
+/* OVERLAY */
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(5px);z-index:200;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .22s}
+.ov.show{opacity:1;pointer-events:all}
+.modal{background:var(--card);border-radius:22px;padding:24px;width:430px;max-width:94vw;box-shadow:0 24px 80px rgba(0,0,0,.18);transform:translateY(14px) scale(.97);transition:all .25s cubic-bezier(.34,1.56,.64,1);position:relative}
+.ov.show .modal{transform:none}
+.mc{position:absolute;top:15px;right:15px;width:30px;height:30px;border-radius:8px;border:none;background:var(--border);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--t2);transition:background .12s}
+.mc:hover{background:#cbd5e1}
+.ms2{background:var(--bg);border-radius:12px;padding:12px 14px;margin-bottom:8px}
+.ms2 .lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--t3);margin-bottom:4px;display:flex;align-items:center;gap:5px}
+.ms2 .val{font-size:13px;font-weight:500;color:var(--t1);line-height:1.55}
+.rdv-chip{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;background:var(--blue-l);border-radius:10px;font-size:13px;font-weight:600;color:var(--blue);margin-top:4px}
+.no-rdv{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;background:var(--border);border-radius:10px;font-size:13px;font-weight:500;color:var(--t3);margin-top:4px}
+.macts{display:flex;gap:7px;margin-top:13px}
+.macts .btn{flex:1;justify-content:center;padding:10px}
+
+/* NEW CALL FORM */
+.nfg{margin-bottom:11px}
+.nfg label{display:block;font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:5px}
+.nfg input,.nfg select,.nfg textarea{width:100%;padding:9px 11px;border:1.5px solid var(--border);border-radius:10px;font-family:inherit;font-size:13px;color:var(--t1);background:var(--bg);outline:none;transition:border .15s}
+.nfg input:focus,.nfg select:focus,.nfg textarea:focus{border-color:var(--blue-m);background:#fff}
+.nfg textarea{resize:none;height:68px}
+.nfr{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+
+/* SCHEDULE */
+.sch-modal{background:var(--card);border-radius:22px;padding:24px;width:360px;max-width:94vw;max-height:80vh;overflow-y:auto;box-shadow:0 24px 80px rgba(0,0,0,.18);transform:translateY(14px) scale(.97);transition:all .25s cubic-bezier(.34,1.56,.64,1);position:relative}
+.ov.show .sch-modal{transform:none}
+.sh-row{display:flex;gap:12px;padding:8px 0;border-bottom:1px solid #f8fafc;align-items:flex-start}
+.sh-row:last-child{border-bottom:none}
+.sh-h{font-family:'DM Mono',monospace;font-size:12px;color:var(--t3);width:44px;flex-shrink:0;padding-top:2px}
+.sh-rdv{flex:1;background:var(--blue-l);border-left:3px solid var(--blue);border-radius:8px;padding:6px 10px;font-size:12px;font-weight:600;color:var(--blue)}
+.sh-emp{flex:1;font-size:12px;color:var(--t3);font-style:italic;padding-top:1px}
+
+/* CALL-IN badge */
+.call-in{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--green);display:flex;align-items:center;gap:5px;margin-bottom:3px}
+
+/* TOAST */
+#toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(20px);background:#0f172a;color:#f1f5f9;padding:10px 18px;border-radius:12px;font-size:13px;font-weight:500;opacity:0;transition:all .25s;z-index:999;pointer-events:none;white-space:nowrap;display:flex;align-items:center;gap:8px}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+
+/* SVG ICON INLINE HELPER */
+.si svg{display:block}
 </style>
 </head>
 <body>
 
-<!-- SIDEBAR -->
-<nav id="sidebar">
+<!-- ─────────── SIDEBAR ─────────── -->
+<nav id="sb">
   <div class="logo">
-    <div class="logo-icon">🔧</div>
-    <div class="logo-text">Garage<span>Pro</span></div>
+    <div class="logo-ic">
+      <!-- wrench icon -->
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+    </div>
+    <div class="logo-tx">Garage<span>Pro</span></div>
   </div>
 
-  <span class="nav-section">Navigation</span>
+  <span class="sec">Principal</span>
 
-  <div class="nav-item active" onclick="setNav(this)">
-    <i data-lucide="layout-dashboard" style="width:16px;height:16px;flex-shrink:0"></i>
+  <div class="ni active" onclick="setNav(this,'dashboard')">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
     Dashboard
   </div>
-  <div class="nav-item" onclick="setNav(this)">
-    <i data-lucide="phone" style="width:16px;height:16px;flex-shrink:0"></i>
+  <div class="ni" onclick="setNav(this,'appels')">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.62 3.45a2 2 0 0 1 2-2.18h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
     Appels
-    <span class="nav-badge">7</span>
+    <span class="nb nb-blue" id="nb-appels">7</span>
   </div>
-  <div class="nav-item" onclick="setNav(this)">
-    <i data-lucide="users" style="width:16px;height:16px;flex-shrink:0"></i>
+  <div class="ni" onclick="setNav(this,'clients')">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
     Clients
   </div>
-  <div class="nav-item" onclick="setNav(this)">
-    <i data-lucide="calendar" style="width:16px;height:16px;flex-shrink:0"></i>
+  <div class="ni" onclick="setNav(this,'rdv')">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
     Rendez-vous
-    <span class="nav-badge">3</span>
+    <span class="nb nb-red" id="nb-rdv">5</span>
   </div>
-  <div class="nav-item" onclick="setNav(this)">
-    <i data-lucide="bar-chart-2" style="width:16px;height:16px;flex-shrink:0"></i>
+  <div class="ni" onclick="setNav(this,'stats')">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
     Statistiques
   </div>
-  <div class="nav-item" onclick="setNav(this)">
-    <i data-lucide="settings" style="width:16px;height:16px;flex-shrink:0"></i>
+
+  <span class="sec">Système</span>
+
+  <div class="ni" onclick="setNav(this,'settings')">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
     Paramètres
   </div>
 
-  <div class="sidebar-bottom">
-    <button id="btn-simulate" onclick="simulateCall()">
-      <div class="pulse-dot"></div>
-      Simuler un Appel
+  <div class="sb-bot">
+    <button id="btn-sim" onclick="simulateCall()">
+      <div class="pls"></div>
+      Simuler un Appel IA
     </button>
-    <div class="nav-item" style="padding:10px 12px;margin:0;cursor:pointer">
-      <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#6366f1,#8b5cf6);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0">MA</div>
+    <div class="sb-user" onclick="toast('Profil de Marc Aubert')">
+      <div class="av" style="width:32px;height:32px;background:linear-gradient(135deg,#6366f1,#8b5cf6);font-size:12px">MA</div>
       <div>
-        <div style="font-size:12px;font-weight:600;color:#e2e8f0">Marc A.</div>
-        <div style="font-size:11px;color:#64748b">Gérant</div>
+        <div style="font-size:12px;font-weight:600;color:#e2e8f0">Marc Aubert</div>
+        <div style="font-size:11px;color:#475569">Gérant · Admin</div>
       </div>
+      <svg style="margin-left:auto;color:#475569" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
     </div>
   </div>
 </nav>
 
-<!-- MAIN -->
+<!-- ─────────── MAIN ─────────── -->
 <div id="main">
-
-  <!-- HEADER -->
-  <header id="header">
-    <div class="header-left">
+  <header id="hdr">
+    <div>
       <h1>Tableau de bord</h1>
-      <p>Mercredi 18 février 2026 · Bienvenue, Marc 👋</p>
+      <p id="hdate">Mercredi 18 février 2026 · Bonjour, Marc 👋</p>
     </div>
-    <div class="header-right">
-      <button class="btn-blue" onclick="openNewCallModal()">
-        <i data-lucide="plus" style="width:15px;height:15px"></i>
+    <div class="hr">
+      <button class="btn btn-blue" onclick="openOv('ov-newcall')">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
         Nouvel Appel
       </button>
-      <div style="width:1px;height:28px;background:var(--border)"></div>
-      <div style="position:relative;cursor:pointer">
-        <i data-lucide="bell" style="width:18px;height:18px;color:var(--text-muted)"></i>
-        <div style="position:absolute;top:-2px;right:-2px;width:8px;height:8px;background:var(--red);border-radius:50%;border:2px solid var(--card-bg)"></div>
+      <button class="btn btn-ghost" onclick="openRdvList()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><polyline points="9 14 11 16 15 12"/></svg>
+        Rendez-vous fixés
+        <span id="rdv-badge" style="background:var(--red);color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:999px">5</span>
+      </button>
+      <div class="divider"></div>
+      <div class="notif-wrap" onclick="openOv('ov-notifs')">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        <div class="notif-dot"></div>
       </div>
-      <div class="avatar">MA</div>
+      <div class="av" style="width:36px;height:36px;background:linear-gradient(135deg,#6366f1,#8b5cf6);font-size:13px;cursor:pointer" onclick="toast('Profil ouvert')">MA</div>
     </div>
   </header>
 
-  <!-- CONTENT -->
-  <div id="content">
+  <div id="cnt">
 
-    <!-- STATS ROW -->
-    <div class="stats-row">
-      <div class="stat-card">
-        <div class="stat-top">
-          <div class="stat-icon" style="background:#eff6ff">
-            <i data-lucide="phone-incoming" style="width:17px;height:17px;color:#3b82f6"></i>
+    <!-- STATS -->
+    <div class="stats">
+      <div class="sc" onclick="toast('47 appels ce mois — +12% vs mois dernier')">
+        <div class="sc-top">
+          <div class="sc-ic" style="background:var(--blue-l)">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.62 3.45a2 2 0 0 1 2-2.18h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
           </div>
-          <span class="stat-change" style="background:#eff6ff;color:#3b82f6">+12%</span>
+          <span class="sc-chg" style="background:var(--blue-l);color:var(--blue-m)">↑ +12%</span>
         </div>
-        <div class="stat-value">47</div>
-        <div class="stat-label">Appels ce mois</div>
+        <div class="sc-v">47</div>
+        <div class="sc-l">Appels ce mois</div>
       </div>
-      <div class="stat-card">
-        <div class="stat-top">
-          <div class="stat-icon" style="background:#f0fdf4">
-            <i data-lucide="calendar-check" style="width:17px;height:17px;color:#22c55e"></i>
+      <div class="sc" onclick="openRdvList()">
+        <div class="sc-top">
+          <div class="sc-ic" style="background:var(--green-l)">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><polyline points="9 14 11 16 15 12"/></svg>
           </div>
-          <span class="stat-change" style="background:#f0fdf4;color:#22c55e">+5%</span>
+          <span class="sc-chg" style="background:var(--green-l);color:var(--green)">↑ +5%</span>
         </div>
-        <div class="stat-value">31</div>
-        <div class="stat-label">RDV fixés</div>
+        <div class="sc-v" id="stat-rdv">5</div>
+        <div class="sc-l">RDV fixés aujourd'hui</div>
       </div>
-      <div class="stat-card">
-        <div class="stat-top">
-          <div class="stat-icon" style="background:#fff7ed">
-            <i data-lucide="clock" style="width:17px;height:17px;color:#f97316"></i>
+      <div class="sc" onclick="toast('Durée moyenne calculée sur 30 jours')">
+        <div class="sc-top">
+          <div class="sc-ic" style="background:var(--orange-l)">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#ea580c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
           </div>
-          <span class="stat-change" style="background:#fff7ed;color:#f97316">-2%</span>
+          <span class="sc-chg" style="background:var(--orange-l);color:var(--orange)">↓ -2%</span>
         </div>
-        <div class="stat-value">2m34</div>
-        <div class="stat-label">Durée moy. appel</div>
+        <div class="sc-v">2m34</div>
+        <div class="sc-l">Durée moy. appel</div>
       </div>
-      <div class="stat-card">
-        <div class="stat-top">
-          <div class="stat-icon" style="background:#eef2ff">
-            <i data-lucide="star" style="width:17px;height:17px;color:#6366f1"></i>
+      <div class="sc" onclick="toast('Note basée sur 89 avis clients')">
+        <div class="sc-top">
+          <div class="sc-ic" style="background:var(--purple-l)">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
           </div>
-          <span class="stat-change" style="background:#eef2ff;color:#6366f1">stable</span>
+          <span class="sc-chg" style="background:var(--purple-l);color:var(--purple)">stable</span>
         </div>
-        <div class="stat-value">4.8</div>
-        <div class="stat-label">Satisfaction clients</div>
+        <div class="sc-v">4.8</div>
+        <div class="sc-l">Satisfaction clients</div>
       </div>
     </div>
 
-    <!-- LEFT COLUMN -->
-    <div style="display:flex;flex-direction:column;gap:20px;min-width:0">
+    <!-- LEFT -->
+    <div style="display:flex;flex-direction:column;gap:17px;min-width:0">
 
-      <!-- CHART CARD -->
+      <!-- CHART -->
       <div class="card">
-        <div class="card-header">
-          <div class="card-title">
-            <div class="icon-wrap" style="background:#eff6ff"><i data-lucide="trending-up" style="width:14px;height:14px;color:#3b82f6"></i></div>
-            Activité des appels – 7 derniers jours
+        <div class="ch">
+          <div class="ct">
+            <div class="ic" style="background:var(--blue-l)">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+            </div>
+            Activité des appels — 7 derniers jours
           </div>
-          <span class="card-badge" style="background:#eff6ff;color:#3b82f6">Cette semaine</span>
+          <div style="display:flex;gap:7px;align-items:center">
+            <span class="badge" style="background:var(--green-l);color:var(--green)">● En direct</span>
+            <button class="btn btn-ghost" style="padding:5px 9px;font-size:11px" onclick="toast('Export CSV téléchargé ✓','⬇')">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Export
+            </button>
+          </div>
         </div>
-        <div class="chart-container">
-          <svg class="chart" viewBox="0 0 600 160" preserveAspectRatio="none" id="line-chart"></svg>
-        </div>
-        <div id="chart-labels" style="display:flex;justify-content:space-between;padding:8px 12px 0;font-size:11px;color:var(--text-muted);font-weight:500"></div>
+        <div class="cw"><svg id="chart-svg"></svg></div>
+        <div id="chart-lbl" style="display:flex;justify-content:space-between;padding:6px 14px 0;font-size:11px;color:var(--t3);font-weight:500"></div>
       </div>
 
-      <!-- CALLS LIST -->
+      <!-- TABLE -->
       <div class="card">
-        <div class="card-header">
-          <div class="card-title">
-            <div class="icon-wrap" style="background:#f5f3ff"><i data-lucide="phone-call" style="width:14px;height:14px;color:#8b5cf6"></i></div>
+        <div class="ch">
+          <div class="ct">
+            <div class="ic" style="background:var(--purple-l)">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.05 5A5 5 0 0 1 19 8.95M15.05 1A9 9 0 0 1 23 8.94m-1 7.98v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.62 3.45a2 2 0 0 1 2-2.18h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            </div>
             Derniers appels
           </div>
-          <span class="card-badge" style="background:#f5f3ff;color:#8b5cf6">7 aujourd'hui</span>
+          <div style="display:flex;gap:7px">
+            <button class="btn btn-ghost" style="padding:5px 9px;font-size:11px" onclick="toast('Filtre actif : tous les appels','🔍')">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+              Filtrer
+            </button>
+            <button class="btn btn-blue" style="padding:5px 9px;font-size:11px" onclick="openOv('ov-newcall')">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Nouveau
+            </button>
+          </div>
         </div>
-        <table class="calls-table">
-          <thead>
-            <tr>
-              <th>Client</th>
-              <th>Résumé</th>
-              <th>Problème</th>
-              <th>RDV</th>
-              <th>Téléphone</th>
-            </tr>
-          </thead>
-          <tbody id="calls-tbody"></tbody>
+        <table class="tbl">
+          <thead><tr>
+            <th>Client</th><th>Résumé</th><th>Problème</th><th>RDV</th><th>Téléphone</th><th></th>
+          </tr></thead>
+          <tbody id="calls-body"></tbody>
         </table>
       </div>
     </div>
 
-    <!-- RIGHT COLUMN -->
-    <div style="display:flex;flex-direction:column;gap:16px;min-width:0">
+    <!-- RIGHT -->
+    <div style="display:flex;flex-direction:column;gap:15px;min-width:0">
 
       <!-- CALENDAR -->
-      <div class="card" style="padding:18px">
-        <div class="card-title" style="margin-bottom:14px">
-          <div class="icon-wrap" style="background:#fff7ed"><i data-lucide="calendar-days" style="width:14px;height:14px;color:#f97316"></i></div>
-          Calendrier
+      <div class="card" style="padding:17px">
+        <div class="ch" style="margin-bottom:8px">
+          <div class="ct">
+            <div class="ic" style="background:var(--orange-l)">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ea580c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            </div>
+            Calendrier
+          </div>
+          <button class="btn btn-ghost" style="padding:4px 9px;font-size:11px" onclick="openRdvList()">Tous les RDV</button>
         </div>
-        <div class="cal-header">
-          <button class="cal-nav" onclick="changeMonth(-1)"><i data-lucide="chevron-left" style="width:14px;height:14px"></i></button>
-          <span class="cal-month" id="cal-month-label"></span>
-          <button class="cal-nav" onclick="changeMonth(1)"><i data-lucide="chevron-right" style="width:14px;height:14px"></i></button>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+          <button class="cal-nav" onclick="changeMonth(-1)">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+          </button>
+          <span class="cal-mn" id="cal-lbl"></span>
+          <button class="cal-nav" onclick="changeMonth(1)">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
         </div>
-        <div class="calendar-grid" id="cal-day-names"></div>
-        <div class="calendar-grid" id="cal-days"></div>
+        <div class="cg" id="cal-names"></div>
+        <div class="cg" id="cal-days"></div>
+        <div style="display:flex;align-items:center;gap:10px;margin-top:9px;padding-top:9px;border-top:1px solid var(--border)">
+          <span style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--t3)"><span style="width:6px;height:6px;border-radius:50%;background:var(--blue-m);display:inline-block"></span>RDV planifié</span>
+          <span style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--t3)"><span style="width:12px;height:12px;border-radius:4px;background:var(--blue);display:inline-block"></span>Aujourd'hui</span>
+        </div>
       </div>
 
       <!-- AI STATUS -->
-      <div class="card" style="padding:16px">
-        <div class="card-title" style="margin-bottom:14px">
-          <div class="icon-wrap" style="background:#f0fdf4"><i data-lucide="cpu" style="width:14px;height:14px;color:#22c55e"></i></div>
-          Statut IA
+      <div class="card" style="padding:15px">
+        <div class="ch" style="margin-bottom:11px">
+          <div class="ct">
+            <div class="ic" style="background:var(--green-l)">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="2"/><path d="M7 2v20M17 2v20M2 12h20M2 7h5M2 17h5M17 17h5M17 7h5"/></svg>
+            </div>
+            Statut IA
+          </div>
+          <button class="btn btn-ghost" style="padding:4px 9px;font-size:11px" onclick="toast('Diagnostics IA: tout est nominal','🤖')">Diagnostics</button>
         </div>
-        <div class="ai-status-card">
-          <div class="ai-pulse"></div>
-          <div class="ai-info">
-            <div class="ai-title">IA en ligne</div>
-            <div class="ai-sub">98.9% uptime · 12 ms latence</div>
+        <div class="ai-card">
+          <div class="pls2"></div>
+          <div style="flex:1">
+            <div style="font-size:13px;font-weight:700;color:#166534">IA en ligne</div>
+            <div style="font-size:11px;color:#4ade80;margin-top:1px">98.9% uptime · 11ms latence</div>
           </div>
-          <i data-lucide="activity" style="width:16px;height:16px;color:#22c55e"></i>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
         </div>
-        <div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:8px">
-          <div style="background:var(--main-bg);border-radius:12px;padding:10px 12px">
-            <div style="font-size:10px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:.6px;margin-bottom:3px">Appels traités</div>
-            <div style="font-size:18px;font-weight:700;color:var(--text-primary)">1 247</div>
-          </div>
-          <div style="background:var(--main-bg);border-radius:12px;padding:10px 12px">
-            <div style="font-size:10px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:.6px;margin-bottom:3px">Précision</div>
-            <div style="font-size:18px;font-weight:700;color:var(--text-primary)">96.4%</div>
-          </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:11px">
+          <div class="ms" onclick="toast('1 247 appels analysés par l\'IA')"><div class="l">Appels traités</div><div class="v">1 247</div></div>
+          <div class="ms" onclick="toast('96.4% de précision de transcription')"><div class="l">Précision</div><div class="v">96.4%</div></div>
+          <div class="ms" onclick="toast('31 RDV créés automatiquement ce mois')"><div class="l">RDV auto</div><div class="v" id="rdv-auto">31</div></div>
+          <div class="ms" onclick="toast('Note moyenne sur 89 retours clients')"><div class="l">Satisfaction</div><div class="v">4.8 ★</div></div>
         </div>
       </div>
 
-      <!-- QUICK NOTE -->
-      <div class="card" style="padding:16px">
-        <div class="card-title" style="margin-bottom:12px">
-          <div class="icon-wrap" style="background:#fefce8"><i data-lucide="sticky-note" style="width:14px;height:14px;color:#eab308"></i></div>
-          Note rapide
-        </div>
-        <textarea placeholder="Écrire une note…" style="width:100%;height:80px;border:1px solid var(--border);border-radius:12px;padding:10px 12px;font-family:inherit;font-size:13px;color:var(--text-primary);resize:none;outline:none;background:var(--main-bg);transition:border 0.15s" onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='var(--border)'"></textarea>
-      </div>
-
-    </div><!-- /right -->
-  </div><!-- /content -->
+    </div>
+  </div><!-- /cnt -->
 </div><!-- /main -->
 
-<!-- CALL SIMULATION MODAL -->
-<div id="modal-overlay">
+<!-- ═══ MODAL: SIMULATE CALL ═══ -->
+<div class="ov" id="ov-sim">
   <div class="modal">
-    <button class="modal-close" onclick="closeModal()"><i data-lucide="x" style="width:14px;height:14px"></i></button>
-    <div class="call-modal-header">
-      <div class="call-icon-lg" id="modal-icon" style="background:#eff6ff">📞</div>
+    <button class="mc" onclick="closeOv('ov-sim')">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <div style="display:flex;align-items:flex-start;gap:13px;margin-bottom:17px">
+      <div id="sim-icon" style="width:50px;height:50px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;background:#eff6ff">📞</div>
       <div>
-        <div class="call-incoming"><div class="pulse-dot" style="width:6px;height:6px"></div> Appel entrant</div>
-        <h2 id="modal-name">Julien Martin</h2>
-        <div class="phone" id="modal-phone">+33 6 12 34 56 78</div>
+        <div class="call-in">
+          <div class="pls" style="width:6px;height:6px"></div>
+          Appel entrant — IA active
+        </div>
+        <div style="font-size:19px;font-weight:700;letter-spacing:-.4px" id="sim-name">—</div>
+        <div style="font-size:13px;color:var(--t3);font-family:'DM Mono',monospace;margin-top:2px" id="sim-phone">—</div>
       </div>
     </div>
-    <div class="modal-section">
-      <div class="modal-section-label">Situation détectée</div>
-      <div class="modal-section-value" id="modal-situation">—</div>
+    <div class="ms2">
+      <div class="lbl">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#ea580c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Situation détectée
+      </div>
+      <div class="val" id="sim-sit">—</div>
     </div>
-    <div class="modal-section">
-      <div class="modal-section-label">Résumé IA</div>
-      <div class="modal-section-value" id="modal-resume">—</div>
+    <div class="ms2">
+      <div class="lbl">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="2"/><path d="M7 2v20M17 2v20M2 12h20M2 7h5M2 17h5M17 17h5M17 7h5"/></svg>
+        Analyse IA
+      </div>
+      <div class="val" id="sim-resume">—</div>
     </div>
-    <div class="modal-section" id="modal-rdv-section">
-      <div class="modal-section-label">Rendez-vous suggéré</div>
-      <div class="rdv-badge" id="modal-rdv">—</div>
+    <div class="ms2">
+      <div class="lbl">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Rendez-vous proposé
+      </div>
+      <div id="sim-rdv">—</div>
     </div>
-    <div class="modal-actions">
-      <button class="modal-btn primary" onclick="acceptCall()">✓ Prendre en charge</button>
-      <button class="modal-btn secondary" onclick="closeModal()">Ignorer</button>
+    <div class="macts">
+      <button class="btn btn-green" onclick="acceptSim()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        Prendre en charge
+      </button>
+      <button class="btn btn-ghost" onclick="bookSimRdv()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Fixer RDV
+      </button>
+      <button class="btn btn-red" onclick="closeOv('ov-sim')">Ignorer</button>
     </div>
   </div>
 </div>
 
-<!-- SCHEDULE MODAL -->
-<div id="schedule-modal-overlay">
-  <div class="schedule-modal">
-    <button class="modal-close" onclick="closeScheduleModal()"><i data-lucide="x" style="width:14px;height:14px"></i></button>
-    <div style="font-size:16px;font-weight:700;margin-bottom:4px" id="schedule-title">Planning du jour</div>
-    <div style="font-size:12px;color:var(--text-muted);margin-bottom:18px" id="schedule-subtitle"></div>
-    <div id="schedule-list"></div>
+<!-- ═══ MODAL: NEW CALL ═══ -->
+<div class="ov" id="ov-newcall">
+  <div class="modal">
+    <button class="mc" onclick="closeOv('ov-newcall')">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:17px">
+      <div class="ic" style="background:var(--blue-l);width:36px;height:36px;border-radius:10px">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      </div>
+      <div>
+        <div style="font-size:17px;font-weight:700">Nouvel Appel</div>
+        <div style="font-size:12px;color:var(--t3)">Enregistrement manuel d'un appel client</div>
+      </div>
+    </div>
+    <div class="nfr">
+      <div class="nfg"><label>Prénom</label><input id="nc-fn" placeholder="Julien" type="text"></div>
+      <div class="nfg"><label>Nom</label><input id="nc-ln" placeholder="Martin" type="text"></div>
+    </div>
+    <div class="nfg"><label>Téléphone</label><input id="nc-tel" placeholder="06 12 34 56 78" type="tel"></div>
+    <div class="nfg">
+      <label>Problème</label>
+      <select id="nc-prob">
+        <option value="">Sélectionner...</option>
+        <option value="moteur">🔧 Problème moteur</option>
+        <option value="freins">🛑 Freins / sécurité</option>
+        <option value="pneus">🛞 Pneus</option>
+        <option value="électrique">⚡ Électrique</option>
+        <option value="révision">📋 Révision</option>
+        <option value="clim">❄️ Climatisation</option>
+        <option value="carrosserie">🚗 Carrosserie</option>
+        <option value="autre">❓ Autre</option>
+      </select>
+    </div>
+    <div class="nfg"><label>Résumé</label><textarea id="nc-resume" placeholder="Description du problème signalé..."></textarea></div>
+    <div class="nfr">
+      <div class="nfg"><label>Date RDV</label><input id="nc-date" type="date" value="2026-02-18"></div>
+      <div class="nfg"><label>Heure RDV</label><input id="nc-time" type="time" value="09:00"></div>
+    </div>
+    <div class="macts">
+      <button class="btn btn-blue" onclick="saveCall()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        Enregistrer
+      </button>
+      <button class="btn btn-ghost" onclick="closeOv('ov-newcall')">Annuler</button>
+    </div>
   </div>
 </div>
+
+<!-- ═══ MODAL: CALL DETAIL ═══ -->
+<div class="ov" id="ov-detail">
+  <div class="modal">
+    <button class="mc" onclick="closeOv('ov-detail')">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <div style="display:flex;align-items:flex-start;gap:13px;margin-bottom:17px">
+      <div id="det-av" class="av" style="width:50px;height:50px;border-radius:14px;background:#6366f1;font-size:16px">SB</div>
+      <div>
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--t3);margin-bottom:3px">Fiche appel</div>
+        <div style="font-size:19px;font-weight:700" id="det-name">—</div>
+        <div style="font-size:13px;color:var(--t3);font-family:'DM Mono',monospace" id="det-phone">—</div>
+      </div>
+    </div>
+    <div class="ms2"><div class="lbl">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="2"/><path d="M7 2v20M17 2v20M2 12h20M2 7h5M2 17h5M17 17h5M17 7h5"/></svg>
+      Résumé</div><div class="val" id="det-resume">—</div></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+      <div class="ms2" style="margin:0"><div class="lbl">Problème</div><div id="det-prob">—</div></div>
+      <div class="ms2" style="margin:0"><div class="lbl">Rendez-vous</div><div id="det-rdv">—</div></div>
+    </div>
+    <div class="macts">
+      <button class="btn btn-blue" onclick="callDet()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.62 3.45a2 2 0 0 1 2-2.18h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        Rappeler
+      </button>
+      <button class="btn btn-ghost" onclick="editDetRdv()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+        Modifier RDV
+      </button>
+      <button class="btn btn-red" onclick="delDet()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M9 6V4h6v2"/></svg>
+        Supprimer
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ MODAL: RDV LIST ═══ -->
+<div class="ov" id="ov-rdvlist">
+  <div class="modal" style="width:490px;max-height:82vh;overflow-y:auto">
+    <button class="mc" onclick="closeOv('ov-rdvlist')">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+      <div class="ic" style="background:var(--blue-l);width:36px;height:36px;border-radius:10px">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><polyline points="9 14 11 16 15 12"/></svg>
+      </div>
+      <div>
+        <div style="font-size:17px;font-weight:700">Rendez-vous fixés</div>
+        <div style="font-size:12px;color:var(--t3)" id="rdv-list-sub">—</div>
+      </div>
+    </div>
+    <div id="rdv-list-content"></div>
+    <button class="btn btn-blue" style="width:100%;justify-content:center;margin-top:13px" onclick="closeOv('ov-rdvlist');openOv('ov-newcall')">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Ajouter un RDV
+    </button>
+  </div>
+</div>
+
+<!-- ═══ MODAL: SCHEDULE ═══ -->
+<div class="ov" id="ov-sched">
+  <div class="sch-modal">
+    <button class="mc" onclick="closeOv('ov-sched')">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <div style="font-size:16px;font-weight:700;margin-bottom:1px" id="sched-title">—</div>
+    <div style="font-size:12px;color:var(--t3);margin-bottom:14px" id="sched-sub">—</div>
+    <div id="sched-list"></div>
+    <button class="btn btn-blue" style="width:100%;justify-content:center;margin-top:13px" onclick="closeOv('ov-sched');openOv('ov-newcall')">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Ajouter un RDV ce jour
+    </button>
+  </div>
+</div>
+
+<!-- ═══ MODAL: NOTIFICATIONS ═══ -->
+<div class="ov" id="ov-notifs">
+  <div class="modal" style="width:370px">
+    <button class="mc" onclick="closeOv('ov-notifs')">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:15px">
+      <div style="font-size:16px;font-weight:700">Notifications</div>
+      <button class="btn btn-ghost" style="padding:4px 9px;font-size:11px" onclick="clearNotifs()">Tout lire</button>
+    </div>
+    <div id="notif-list"></div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast"></div>
 
 <script>
-// ─── DATA ───────────────────────────────────────────────────
-const today = new Date(2026, 1, 18); // Feb 18, 2026
-
-const callsData = [
-  { name: "Sophie Bernard", avatar: "#6366f1", initials: "SB", resume: "Bruit anormal sous capot", problem: "moteur", heure_rdv: "10h30", telephone: "06 11 22 33 44", tags: ["Mécanique"] },
-  { name: "Thomas Lefebvre", avatar: "#f97316", initials: "TL", resume: "Voyant de frein allumé", problem: "freins", heure_rdv: "14h00", telephone: "06 98 76 54 32", tags: ["Sécurité"] },
-  { name: "Amina Khalid", avatar: "#22c55e", initials: "AK", resume: "Révision annuelle véhicule", problem: "révision", heure_rdv: "—", telephone: "07 12 34 56 78", tags: ["Entretien"] },
-  { name: "Lucas Moreau", avatar: "#ef4444", initials: "LM", resume: "Pneu crevé, remplacement urgent", problem: "pneus", heure_rdv: "09h00", telephone: "06 55 44 33 22", tags: ["Urgence"] },
-  { name: "Claire Petit", avatar: "#8b5cf6", initials: "CP", resume: "Climatisation plus froide", problem: "clim", heure_rdv: "16h30", telephone: "07 99 88 77 66", tags: ["Confort"] },
-  { name: "Mehdi Roux", avatar: "#0ea5e9", initials: "MR", resume: "Démarreur défaillant", problem: "électrique", heure_rdv: "—", telephone: "06 22 11 00 99", tags: ["Électrique"] },
-  { name: "Isabelle Simon", avatar: "#ec4899", initials: "IS", resume: "Vitre conducteur bloquée", problem: "carrosserie", heure_rdv: "11h00", telephone: "07 33 44 55 66", tags: ["Carrosserie"] },
-];
-
-const problemColors = {
-  moteur: ["#fff7ed","#f97316"],
-  freins: ["#fef2f2","#ef4444"],
-  révision: ["#f0fdf4","#22c55e"],
-  pneus: ["#fef2f2","#ef4444"],
-  clim: ["#eff6ff","#3b82f6"],
-  électrique: ["#fffbeb","#eab308"],
-  carrosserie: ["#fdf4ff","#a855f7"],
+// ══════════════════════════════════════════════
+// DATA
+// ══════════════════════════════════════════════
+const MONTHS=["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"];
+const DAYS=["Lun","Mar","Mer","Jeu","Ven","Sam","Dim"];
+const TODAY={y:2026,m:1,d:18};
+const PCOL={
+  moteur:["#fff7ed","#ea580c"],freins:["#fef2f2","#dc2626"],
+  révision:["#f0fdf4","#16a34a"],pneus:["#fef2f2","#dc2626"],
+  clim:["#eff6ff","#2563eb"],électrique:["#fefce8","#ca8a04"],
+  carrosserie:["#fdf4ff","#7c3aed"],autre:["#f8fafc","#475569"]
 };
 
-const chartData = {
-  days: ["Mer","Jeu","Ven","Sam","Dim","Lun","Mar"],
-  values: [8, 14, 11, 6, 4, 13, 10]
+let calls=[
+  {id:1,name:"Sophie Bernard",av:"#6366f1",ini:"SB",resume:"Bruit anormal sous capot, cliquetis régulier en accélération",prob:"moteur",rdv:"10:30",tel:"06 11 22 33 44"},
+  {id:2,name:"Thomas Lefebvre",av:"#dc2626",ini:"TL",resume:"Voyant de frein allumé depuis 2 jours",prob:"freins",rdv:"14:00",tel:"06 98 76 54 32"},
+  {id:3,name:"Amina Khalid",av:"#16a34a",ini:"AK",resume:"Révision annuelle 60 000 km",prob:"révision",rdv:"",tel:"07 12 34 56 78"},
+  {id:4,name:"Lucas Moreau",av:"#dc2626",ini:"LM",resume:"Pneu avant droit crevé, remplacement urgent",prob:"pneus",rdv:"09:00",tel:"06 55 44 33 22"},
+  {id:5,name:"Claire Petit",av:"#7c3aed",ini:"CP",resume:"Climatisation souffle chaud en mode froid",prob:"clim",rdv:"16:30",tel:"07 99 88 77 66"},
+  {id:6,name:"Mehdi Roux",av:"#ca8a04",ini:"MR",resume:"Démarreur défaillant, démarrage difficile le matin",prob:"électrique",rdv:"",tel:"06 22 11 00 99"},
+  {id:7,name:"Isabelle Simon",av:"#ec4899",ini:"IS",resume:"Lève-vitre conducteur bloqué en position basse",prob:"carrosserie",rdv:"11:00",tel:"07 33 44 55 66"},
+];
+
+let rdv={
+  "2026-1-18":[
+    {h:"09:00",label:"Lucas Moreau – Pneus"},
+    {h:"10:30",label:"Sophie Bernard – Moteur"},
+    {h:"11:00",label:"Isabelle Simon – Carrosserie"},
+    {h:"14:00",label:"Thomas Lefebvre – Freins"},
+    {h:"16:30",label:"Claire Petit – Climatisation"},
+  ],
+  "2026-1-20":[{h:"09:00",label:"Paul Durand – Vidange"},{h:"14:00",label:"Emma Martin – Révision"}],
+  "2026-1-22":[{h:"10:00",label:"Ali Benali – Diagnostic"}],
+  "2026-1-25":[{h:"15:30",label:"Nadia Leclerc – Freins"}],
 };
 
-// ─── RDV per day ────────────────────────────────────────────
-const rdvByDay = {};
-// populate some rdv
-const rdvList = [
-  { day: 18, hour: "09:00", label: "Lucas Moreau – Pneus" },
-  { day: 18, hour: "10:30", label: "Sophie Bernard – Moteur" },
-  { day: 18, hour: "11:00", label: "Isabelle Simon – Carrosserie" },
-  { day: 18, hour: "14:00", label: "Thomas Lefebvre – Freins" },
-  { day: 18, hour: "16:30", label: "Claire Petit – Clim" },
-  { day: 20, hour: "09:00", label: "Paul Durand – Vidange" },
-  { day: 20, hour: "14:00", label: "Emma Martin – Révision" },
-  { day: 22, hour: "10:00", label: "Ali Benali – Diagnostic" },
-  { day: 25, hour: "15:30", label: "Nadia Leclerc – Freins" },
+let notifs=[
+  {ic:"📞",txt:"Appel entrant: Lucas Moreau",t:"Il y a 5 min",bg:"#eff6ff"},
+  {ic:"✅",txt:"RDV confirmé: Sophie Bernard 10:30",t:"Il y a 12 min",bg:"#f0fdf4"},
+  {ic:"⚠️",txt:"Rappel: Thomas Lefebvre RDV 14:00",t:"Il y a 30 min",bg:"#fff7ed"},
+  {ic:"🤖",txt:"IA: 3 résumés générés automatiquement",t:"Il y a 1h",bg:"#fdf4ff"},
 ];
-rdvList.forEach(r => {
-  const key = `2026-2-${r.day}`;
-  if (!rdvByDay[key]) rdvByDay[key] = [];
-  rdvByDay[key].push({ hour: r.hour, label: r.label });
+
+let calY=2026,calM=1,detIdx=null,simN="",simP="";
+const chartV=[8,14,11,6,4,13,10];
+const chartD=["Mer 11","Jeu 12","Ven 13","Sam 14","Dim 15","Lun 16","Mar 17"];
+
+// ══════════════════════════════════════════════
+// UTILS
+// ══════════════════════════════════════════════
+function toast(msg,ic="✓"){
+  const el=document.getElementById("toast");
+  el.innerHTML=`<span>${ic}</span> ${msg}`;
+  el.classList.add("show");
+  clearTimeout(el._t);
+  el._t=setTimeout(()=>el.classList.remove("show"),2800);
+}
+function openOv(id){document.getElementById(id).classList.add("show")}
+function closeOv(id){document.getElementById(id).classList.remove("show")}
+
+document.querySelectorAll(".ov").forEach(ov=>{
+  ov.addEventListener("click",e=>{if(e.target===ov)ov.classList.remove("show")});
 });
 
-// ─── SIMULATE CALL ───────────────────────────────────────────
-const simScenarios = [
-  {
-    icon: "🔊", iconBg: "#fff7ed",
-    situation: "Bruit de roulement sourd à grande vitesse, s'aggrave en virage",
-    resume: "Le client signale un bruit métallique constant depuis 3 jours. Probable défaillance du roulement de roue avant gauche.",
-    hasRdv: true,
-    rdv: "Vendredi 20 fév à 09h30"
-  },
-  {
-    icon: "💨", iconBg: "#eff6ff",
-    situation: "Fumée blanche au démarrage, odeur sucrée dans habitacle",
-    resume: "Potentielle fuite de liquide de refroidissement. Le moteur présente des signes de surchauffe. Intervention urgente recommandée.",
-    hasRdv: true,
-    rdv: "Demain 19 fév à 08h00 (urgent)"
-  },
-  {
-    icon: "⚡", iconBg: "#fffbeb",
-    situation: "Voyant batterie + voyant moteur allumés simultanément",
-    resume: "L'alternateur semble défaillant. La batterie ne se recharge plus en roulant. Risque de panne imminente.",
-    hasRdv: false,
-    rdv: null
-  },
-  {
-    icon: "🛞", iconBg: "#fef2f2",
-    situation: "Véhicule tire fortement à gauche, volant vibrant au-dessus de 80 km/h",
-    resume: "Problème d'équilibrage ou de géométrie. Pneu avant droit potentiellement usé de façon asymétrique. Contrôle direction recommandé.",
-    hasRdv: true,
-    rdv: "Lundi 23 fév à 14h00"
-  },
-  {
-    icon: "🌡️", iconBg: "#f0fdf4",
-    situation: "Témoin de température dans le rouge, chauffage ne fonctionne plus",
-    resume: "Problème de circuit de refroidissement. Niveau de liquide très bas constaté par le client. Thermostat ou pompe à eau suspects.",
-    hasRdv: false,
-    rdv: null
-  },
-  {
-    icon: "🔧", iconBg: "#fdf4ff",
-    situation: "Boîte de vitesses grince en 3e, passage difficile à froid",
-    resume: "Synchroniseur de 3e vitesse usé. Huile de boîte probablement dégradée. Vidange + diagnostic complet conseillés.",
-    hasRdv: true,
-    rdv: "Mercredi 25 fév à 10h00"
+function setNav(el,pg){
+  document.querySelectorAll(".ni").forEach(n=>n.classList.remove("active"));
+  el.classList.add("active");
+  if(pg==="rdv")openRdvList();
+  else if(pg!=="dashboard")toast(`Section ${pg.charAt(0).toUpperCase()+pg.slice(1)}`);
+}
+
+function updateCounts(){
+  const todayRdvCount=(rdv["2026-1-18"]||[]).length;
+  const totalRdv=Object.values(rdv).reduce((s,a)=>s+a.length,0);
+  document.getElementById("nb-rdv").textContent=totalRdv;
+  document.getElementById("rdv-badge").textContent=totalRdv;
+  document.getElementById("stat-rdv").textContent=todayRdvCount;
+  document.getElementById("rdv-auto").textContent=totalRdv+26;
+  document.getElementById("nb-appels").textContent=calls.length;
+}
+
+// ══════════════════════════════════════════════
+// CHART
+// ══════════════════════════════════════════════
+function drawChart(){
+  const svg=document.getElementById("chart-svg");
+  const W=600,H=160,pl=32,pr=14,pt=18,pb=14;
+  const mx=Math.max(...chartV)+3;
+  const xs=chartV.map((_,i)=>pl+i*((W-pl-pr)/(chartV.length-1)));
+  const ys=chartV.map(v=>pt+(1-v/mx)*(H-pt-pb));
+  let fp=`M${xs[0]},${ys[0]}`,lp=`M${xs[0]},${ys[0]}`;
+  for(let i=1;i<xs.length;i++){
+    const cx=(xs[i-1]+xs[i])/2;
+    fp+=` C${cx},${ys[i-1]} ${cx},${ys[i]} ${xs[i]},${ys[i]}`;
+    lp+=` C${cx},${ys[i-1]} ${cx},${ys[i]} ${xs[i]},${ys[i]}`;
   }
-];
-
-const firstNames = ["Julien","Camille","Romain","Nathalie","Kevin","Fatima","Pierre","Yasmine","Antoine","Léa"];
-const lastNames = ["Martin","Dupont","Bernard","Thomas","Robert","Petit","Richard","Simon","Michel","Leroy"];
-function randName() {
-  return firstNames[Math.floor(Math.random()*firstNames.length)] + " " + lastNames[Math.floor(Math.random()*lastNames.length)];
-}
-function randPhone() {
-  const p = ["06","07"][Math.floor(Math.random()*2)];
-  const nums = Array.from({length:4}, ()=>String(Math.floor(Math.random()*90+10)));
-  return `${p} ${nums.join(" ")}`;
-}
-
-function simulateCall() {
-  const sc = simScenarios[Math.floor(Math.random() * simScenarios.length)];
-  const name = randName();
-  const phone = randPhone();
-
-  document.getElementById("modal-icon").textContent = sc.icon;
-  document.getElementById("modal-icon").style.background = sc.iconBg;
-  document.getElementById("modal-name").textContent = name;
-  document.getElementById("modal-phone").textContent = phone;
-  document.getElementById("modal-situation").textContent = sc.situation;
-  document.getElementById("modal-resume").textContent = sc.resume;
-
-  const rdvSection = document.getElementById("modal-rdv-section");
-  const rdvEl = document.getElementById("modal-rdv");
-  if (sc.hasRdv) {
-    rdvSection.style.display = "block";
-    rdvEl.innerHTML = `<i data-lucide="calendar" style="width:13px;height:13px"></i> ${sc.rdv}`;
-  } else {
-    rdvSection.style.display = "none";
+  fp+=` L${xs[xs.length-1]},${H-pb} L${xs[0]},${H-pb} Z`;
+  let g="",dots="";
+  for(let i=0;i<=4;i++){
+    const y=pt+(i/4)*(H-pt-pb),v=Math.round(mx-(i/4)*mx);
+    g+=`<line x1="${pl}" y1="${y}" x2="${W-pr}" y2="${y}" stroke="#f1f5f9" stroke-width="1"/>`;
+    g+=`<text x="${pl-4}" y="${y+4}" text-anchor="end" font-size="9" fill="#94a3b8" font-family="DM Sans,sans-serif">${v}</text>`;
   }
-
-  document.getElementById("modal-overlay").classList.add("show");
-  lucide.createIcons();
-}
-
-function closeModal() {
-  document.getElementById("modal-overlay").classList.remove("show");
-}
-
-function acceptCall() {
-  closeModal();
-  // Could add to call list in a real app
-}
-
-function openNewCallModal() {
-  simulateCall();
-}
-
-// ─── CHART ───────────────────────────────────────────────────
-function drawChart() {
-  const svg = document.getElementById("line-chart");
-  const W = 600, H = 160;
-  const pad = { top: 20, right: 20, bottom: 20, left: 30 };
-  const vals = chartData.values;
-  const maxV = Math.max(...vals) + 2;
-  const minV = 0;
-
-  const xs = vals.map((_, i) => pad.left + i * ((W - pad.left - pad.right) / (vals.length - 1)));
-  const ys = vals.map(v => pad.top + (1 - (v - minV) / (maxV - minV)) * (H - pad.top - pad.bottom));
-
-  // Grid lines
-  let grid = "";
-  for (let i = 0; i <= 4; i++) {
-    const y = pad.top + (i / 4) * (H - pad.top - pad.bottom);
-    grid += `<line x1="${pad.left}" y1="${y}" x2="${W - pad.right}" y2="${y}" stroke="#f1f5f9" stroke-width="1"/>`;
-  }
-
-  // Fill path
-  let fillPath = `M ${xs[0]},${ys[0]}`;
-  for (let i = 1; i < xs.length; i++) {
-    const cpx = (xs[i-1] + xs[i]) / 2;
-    fillPath += ` C ${cpx},${ys[i-1]} ${cpx},${ys[i]} ${xs[i]},${ys[i]}`;
-  }
-  fillPath += ` L ${xs[xs.length-1]},${H - pad.bottom} L ${xs[0]},${H - pad.bottom} Z`;
-
-  // Line path
-  let linePath = `M ${xs[0]},${ys[0]}`;
-  for (let i = 1; i < xs.length; i++) {
-    const cpx = (xs[i-1] + xs[i]) / 2;
-    linePath += ` C ${cpx},${ys[i-1]} ${cpx},${ys[i]} ${xs[i]},${ys[i]}`;
-  }
-
-  // Dots + values
-  let dots = "";
-  vals.forEach((v, i) => {
-    dots += `<circle cx="${xs[i]}" cy="${ys[i]}" r="4" fill="#3b82f6" stroke="#fff" stroke-width="2"/>`;
-    dots += `<text x="${xs[i]}" y="${ys[i] - 10}" text-anchor="middle" font-size="10" font-weight="600" fill="#3b82f6" font-family="DM Sans,sans-serif">${v}</text>`;
+  chartV.forEach((v,i)=>{
+    dots+=`<circle cx="${xs[i]}" cy="${ys[i]}" r="4.5" fill="#3b82f6" stroke="#fff" stroke-width="2" style="cursor:pointer" onclick="toast('${chartD[i]}: ${v} appels','📊')"/>`;
+    dots+=`<text x="${xs[i]}" y="${ys[i]-10}" text-anchor="middle" font-size="10" font-weight="600" fill="#3b82f6" font-family="DM Sans,sans-serif">${v}</text>`;
   });
-
-  svg.innerHTML = `
-    <defs>
-      <linearGradient id="fill-grad" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.18"/>
-        <stop offset="100%" stop-color="#3b82f6" stop-opacity="0"/>
-      </linearGradient>
-    </defs>
-    ${grid}
-    <path d="${fillPath}" fill="url(#fill-grad)"/>
-    <path d="${linePath}" fill="none" stroke="#3b82f6" stroke-width="2.5" stroke-linecap="round"/>
-    ${dots}
-  `;
-
-  // Labels
-  const labelsEl = document.getElementById("chart-labels");
-  labelsEl.innerHTML = chartData.days.map(d => `<span>${d}</span>`).join('');
+  svg.innerHTML=`<defs><linearGradient id="g1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#3b82f6" stop-opacity=".18"/><stop offset="100%" stop-color="#3b82f6" stop-opacity="0"/></linearGradient></defs>${g}<path d="${fp}" fill="url(#g1)"/><path d="${lp}" fill="none" stroke="#3b82f6" stroke-width="2.5" stroke-linecap="round"/>${dots}`;
+  document.getElementById("chart-lbl").innerHTML=chartD.map(d=>`<span>${d}</span>`).join("");
 }
 
-// ─── CALLS TABLE ─────────────────────────────────────────────
-function renderCalls() {
-  const tbody = document.getElementById("calls-tbody");
-  tbody.innerHTML = callsData.map(c => {
-    const [bg, col] = problemColors[c.problem] || ["#f8fafc","#64748b"];
-    const hasRdv = c.heure_rdv !== "—";
-    return `
-      <tr>
-        <td><div class="call-name">
-          <div class="avatar-sm" style="background:${c.avatar}">${c.initials}</div>
-          ${c.name}
-        </div></td>
-        <td style="max-width:160px;color:var(--text-secondary);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${c.resume}</td>
-        <td><span class="problem-tag" style="background:${bg};color:${col}">${c.problem}</span></td>
-        <td>
-          ${hasRdv
-            ? `<span class="time-tag"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>${c.heure_rdv}</span>`
-            : `<span style="color:var(--text-muted);font-size:12px">—</span>`
-          }
-        </td>
-        <td style="font-family:'DM Mono',monospace;font-size:12px;color:var(--text-secondary)">${c.telephone}</td>
-      </tr>
-    `;
-  }).join('');
+// ══════════════════════════════════════════════
+// CALLS TABLE
+// ══════════════════════════════════════════════
+function renderCalls(){
+  document.getElementById("calls-body").innerHTML=calls.map((c,i)=>{
+    const[bg,col]=PCOL[c.prob]||["#f8fafc","#475569"];
+    return`<tr onclick="openDetail(${i})">
+      <td><div class="cname"><div class="av" style="width:30px;height:30px;background:${c.av};font-size:11px">${c.ini}</div>${c.name}</div></td>
+      <td style="max-width:140px;color:var(--t2);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${c.resume}</td>
+      <td><span class="ptag" style="background:${bg};color:${col}">${c.prob}</span></td>
+      <td>${c.rdv
+        ?`<span class="ttag" style="color:var(--blue)"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>${c.rdv}</span>`
+        :`<button onclick="event.stopPropagation();quickRdv(${i})" style="border:none;background:var(--blue-l);color:var(--blue);padding:3px 8px;border-radius:7px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit">+ Fixer RDV</button>`
+      }</td>
+      <td style="font-family:'DM Mono',monospace;font-size:12px;color:var(--t2)">${c.tel}</td>
+      <td><div style="display:flex;gap:4px">
+        <button onclick="event.stopPropagation();toast('Appel vers ${c.name} (${c.tel})','📞')" style="border:none;background:var(--green-l);color:var(--green);width:26px;height:26px;border-radius:7px;cursor:pointer;display:flex;align-items:center;justify-content:center" title="Appeler">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.62 3.45a2 2 0 0 1 2-2.18h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        </button>
+        <button onclick="event.stopPropagation();delCallIdx(${i})" style="border:none;background:var(--red-l);color:var(--red);width:26px;height:26px;border-radius:7px;cursor:pointer;display:flex;align-items:center;justify-content:center" title="Supprimer">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M9 6V4h6v2"/></svg>
+        </button>
+      </div></td>
+    </tr>`;
+  }).join("");
 }
 
-// ─── CALENDAR ────────────────────────────────────────────────
-let calYear = 2026, calMonth = 1; // Feb 2026
-
-const monthNames = ["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"];
-const dayNames = ["Lun","Mar","Mer","Jeu","Ven","Sam","Dim"];
-
-function getDayKey(y, m, d) { return `${y}-${m}-${d}`; }
-
-function renderCalendar() {
-  document.getElementById("cal-month-label").textContent = `${monthNames[calMonth]} ${calYear}`;
-
-  const namesEl = document.getElementById("cal-day-names");
-  namesEl.innerHTML = dayNames.map(d => `<div class="cal-day-name">${d}</div>`).join('');
-
-  const firstDay = new Date(calYear, calMonth, 1).getDay(); // 0=Sun
-  const startOffset = firstDay === 0 ? 6 : firstDay - 1; // Mon-based
-  const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
-  const prevDays = new Date(calYear, calMonth, 0).getDate();
-
-  const daysEl = document.getElementById("cal-days");
-  let html = "";
-
-  // prev month days
-  for (let i = startOffset - 1; i >= 0; i--) {
-    html += `<div class="cal-day other-month">${prevDays - i}</div>`;
+function openDetail(i){
+  detIdx=i;const c=calls[i];
+  const[bg,col]=PCOL[c.prob]||["#f8fafc","#475569"];
+  document.getElementById("det-av").style.background=c.av;
+  document.getElementById("det-av").textContent=c.ini;
+  document.getElementById("det-name").textContent=c.name;
+  document.getElementById("det-phone").textContent=c.tel;
+  document.getElementById("det-resume").textContent=c.resume;
+  document.getElementById("det-prob").innerHTML=`<span class="ptag" style="background:${bg};color:${col}">${c.prob}</span>`;
+  document.getElementById("det-rdv").innerHTML=c.rdv
+    ?`<div class="rdv-chip"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>${c.rdv}</div>`
+    :`<div class="no-rdv">Aucun RDV fixé</div>`;
+  openOv("ov-detail");
+}
+function callDet(){toast(`Appel vers ${calls[detIdx].name} — ${calls[detIdx].tel}`,"📞");closeOv("ov-detail")}
+function editDetRdv(){
+  const h=prompt(`Modifier l'heure du RDV pour ${calls[detIdx].name} (ex: 15:00):`,calls[detIdx].rdv||"09:00");
+  if(h){
+    calls[detIdx].rdv=h;
+    const key="2026-1-18";
+    if(!rdv[key])rdv[key]=[];
+    rdv[key]=rdv[key].filter(r=>r.label.indexOf(calls[detIdx].name)===-1);
+    rdv[key].push({h,label:`${calls[detIdx].name} – ${calls[detIdx].prob}`});
+    renderCalls();renderCalendar();updateCounts();
+    openDetail(detIdx);
+    toast(`RDV modifié : ${calls[detIdx].name} à ${h}`,"✅");
   }
-
-  // current month
-  for (let d = 1; d <= daysInMonth; d++) {
-    const isToday = (d === today.getDate() && calMonth === today.getMonth() && calYear === today.getFullYear());
-    const key = getDayKey(calYear, calMonth, d);
-    const hasRdv = !!rdvByDay[key];
-    html += `<div class="cal-day${isToday ? " today" : ""}${hasRdv ? " has-rdv" : ""}" onclick="openSchedule(${calYear},${calMonth},${d})">${d}</div>`;
-  }
-
-  // next month
-  const total = startOffset + daysInMonth;
-  const remaining = (7 - (total % 7)) % 7;
-  for (let d = 1; d <= remaining; d++) {
-    html += `<div class="cal-day other-month">${d}</div>`;
-  }
-
-  daysEl.innerHTML = html;
+}
+function delDet(){
+  if(detIdx===null)return;
+  const n=calls[detIdx].name;
+  calls.splice(detIdx,1);
+  renderCalls();updateCounts();
+  closeOv("ov-detail");
+  toast(`${n} supprimé`,"🗑");
+}
+function delCallIdx(i){
+  const n=calls[i].name;
+  calls.splice(i,1);
+  renderCalls();updateCounts();
+  toast(`${n} supprimé`,"🗑");
+}
+function quickRdv(i){
+  const h=prompt(`Heure du RDV pour ${calls[i].name} (ex: 10:00):`,calls[i].rdv||"10:00");
+  if(!h)return;
+  calls[i].rdv=h;
+  const key="2026-1-18";
+  if(!rdv[key])rdv[key]=[];
+  rdv[key].push({h,label:`${calls[i].name} – ${calls[i].prob}`});
+  renderCalls();renderCalendar();updateCounts();
+  toast(`RDV fixé : ${calls[i].name} à ${h}`,"✅");
 }
 
-function changeMonth(dir) {
-  calMonth += dir;
-  if (calMonth > 11) { calMonth = 0; calYear++; }
-  if (calMonth < 0) { calMonth = 11; calYear--; }
-  renderCalendar();
+// ══════════════════════════════════════════════
+// NEW CALL
+// ══════════════════════════════════════════════
+function saveCall(){
+  const fn=document.getElementById("nc-fn").value.trim();
+  const ln=document.getElementById("nc-ln").value.trim();
+  if(!fn||!ln){toast("Prénom et nom requis","⚠️");return;}
+  const tel=document.getElementById("nc-tel").value.trim();
+  const prob=document.getElementById("nc-prob").value||"autre";
+  const resume=document.getElementById("nc-resume").value.trim()||"Aucune description";
+  const date=document.getElementById("nc-date").value;
+  const time=document.getElementById("nc-time").value;
+  const name=`${fn} ${ln}`,ini=(fn[0]+ln[0]).toUpperCase();
+  const avs=["#6366f1","#3b82f6","#16a34a","#dc2626","#ca8a04","#7c3aed","#ec4899"];
+  const av=avs[Math.floor(Math.random()*avs.length)];
+  calls.unshift({id:Date.now(),name,av,ini,resume,prob,rdv:time||"",tel:tel||"—"});
+  if(time&&date){
+    const[y,m,d]=date.split("-").map(Number);
+    const key=`${y}-${m-1}-${d}`;
+    if(!rdv[key])rdv[key]=[];
+    rdv[key].push({h:time,label:`${name} – ${prob}`});
+    renderCalendar();
+  }
+  renderCalls();updateCounts();
+  closeOv("ov-newcall");
+  toast(`${name} enregistré`,"✅");
+  ["nc-fn","nc-ln","nc-tel","nc-resume"].forEach(id=>{document.getElementById(id).value="";});
 }
 
-// ─── SCHEDULE MODAL ──────────────────────────────────────────
-function openSchedule(y, m, d) {
-  const key = getDayKey(y, m, d);
-  const dayRdv = rdvByDay[key] || [];
+// ══════════════════════════════════════════════
+// SIMULATE CALL
+// ══════════════════════════════════════════════
+const SCENS=[
+  {ic:"🔊",bg:"#fff7ed",sit:"Bruit de roulement sourd à grande vitesse, s'aggrave en virage à droite",res:"Probable défaillance du roulement de roue avant gauche. Intervention recommandée sous 48h pour éviter panne complète.",hasRdv:true,rdv:"Vendredi 20 fév à 09:30"},
+  {ic:"💨",bg:"#eff6ff",sit:"Fumée blanche dense au démarrage, forte odeur sucrée dans l'habitacle",res:"Potentielle fuite de liquide de refroidissement. Risque élevé de surchauffe moteur. Intervention urgente requise.",hasRdv:true,rdv:"Demain 19 fév à 08:00 (URGENT)"},
+  {ic:"⚡",bg:"#fffbeb",sit:"Voyant batterie + voyant moteur allumés simultanément depuis ce matin",res:"Alternateur probablement hors service. La batterie ne se recharge plus en roulant. Panne imminente si non traité.",hasRdv:false,rdv:null},
+  {ic:"🛞",bg:"#fef2f2",sit:"Le véhicule tire fortement à gauche, vibrations intenses au volant au-dessus de 80 km/h",res:"Géométrie ou équilibrage défectueux. Pneu avant droit probablement usé de façon asymétrique.",hasRdv:true,rdv:"Lundi 23 fév à 14:00"},
+  {ic:"🌡️",bg:"#f0fdf4",sit:"Témoin température moteur dans le rouge, chauffage habitacle ne fonctionne plus",res:"Circuit de refroidissement compromis. Thermostat ou pompe à eau suspects. Arrêt immédiat recommandé.",hasRdv:false,rdv:null},
+  {ic:"🔧",bg:"#fdf4ff",sit:"Boîte de vitesses grince fortement en 3e et 4e vitesse, passage difficile à froid",res:"Synchroniseur de 3e et 4e vitesse usé. Vidange boîte + diagnostic complet conseillés avant aggravation.",hasRdv:true,rdv:"Mercredi 25 fév à 10:00"},
+];
+const FN=["Julien","Camille","Romain","Nathalie","Kevin","Fatima","Pierre","Yasmine","Antoine","Léa","Hugo","Manon","Samir","Élise"];
+const LN=["Martin","Dupont","Bernard","Thomas","Robert","Petit","Richard","Simon","Michel","Leroy","Fontaine","Marchand","Benali","Girard"];
+function rN(){return FN[0|Math.random()*FN.length]+" "+LN[0|Math.random()*LN.length]}
+function rP(){return["06","07"][+Math.random()>.5]+" "+Array.from({length:4},()=>String(10+0|Math.random()*90)).join(" ")}
 
-  const dateLabel = `${d} ${monthNames[m]} ${y}`;
-  document.getElementById("schedule-title").textContent = `Planning du ${dateLabel}`;
-  document.getElementById("schedule-subtitle").textContent = `${dayRdv.length} rendez-vous prévu(s)`;
+function simulateCall(){
+  const sc=SCENS[0|Math.random()*SCENS.length];
+  simN=rN();simP=rP();
+  document.getElementById("sim-icon").textContent=sc.ic;
+  document.getElementById("sim-icon").style.background=sc.bg;
+  document.getElementById("sim-name").textContent=simN;
+  document.getElementById("sim-phone").textContent=simP;
+  document.getElementById("sim-sit").textContent=sc.sit;
+  document.getElementById("sim-resume").textContent=sc.res;
+  document.getElementById("sim-rdv").innerHTML=sc.hasRdv
+    ?`<div class="rdv-chip"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>${sc.rdv}</div>`
+    :`<div class="no-rdv"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Pas encore de RDV fixé</div>`;
+  openOv("ov-sim");
+}
+function acceptSim(){
+  const ini=(simN.split(" ").map(p=>p[0]).join("")).toUpperCase();
+  const avs=["#6366f1","#3b82f6","#16a34a","#dc2626","#ca8a04","#7c3aed"];
+  calls.unshift({id:Date.now(),name:simN,av:avs[0|Math.random()*avs.length],ini,resume:"Appel simulé IA — en attente de résumé",prob:"autre",rdv:"",tel:simP});
+  renderCalls();updateCounts();
+  closeOv("ov-sim");
+  toast(`${simN} ajouté aux appels`,"✅");
+}
+function bookSimRdv(){
+  const h=prompt(`Heure du RDV pour ${simN} (ex: 15:00):`,`${String(8+0|Math.random()*10).padStart(2,"0")}:00`);
+  if(!h)return;
+  const ini=(simN.split(" ").map(p=>p[0]).join("")).toUpperCase();
+  const avs=["#6366f1","#3b82f6","#16a34a","#dc2626","#ca8a04","#7c3aed"];
+  calls.unshift({id:Date.now(),name:simN,av:avs[0|Math.random()*avs.length],ini,resume:"Appel simulé IA",prob:"autre",rdv:h,tel:simP});
+  const key="2026-1-18";
+  if(!rdv[key])rdv[key]=[];
+  rdv[key].push({h,label:`${simN} – Appel simulé`});
+  renderCalls();renderCalendar();updateCounts();
+  closeOv("ov-sim");
+  toast(`RDV fixé : ${simN} à ${h}`,"✅");
+}
 
-  // Build hours 8-19
-  const hours = [];
-  for (let h = 8; h <= 19; h++) {
-    const hStr = h.toString().padStart(2,'0');
-    const rdv = dayRdv.find(r => r.hour.startsWith(hStr));
-    hours.push({ hStr, rdv });
-  }
-
-  const listEl = document.getElementById("schedule-list");
-  listEl.innerHTML = hours.map(({ hStr, rdv }) => `
-    <div class="schedule-hour">
-      <div class="hour-label">${hStr}:00</div>
-      ${rdv
-        ? `<div class="hour-rdv">${rdv.label}</div>`
-        : `<div class="hour-empty">Disponible</div>`
+// ══════════════════════════════════════════════
+// RDV LIST
+// ══════════════════════════════════════════════
+function openRdvList(){
+  const all=[];
+  Object.entries(rdv).forEach(([key,list])=>{
+    const[y,m,d]=key.split("-").map(Number);
+    list.forEach(r=>all.push({...r,y,m,d,dateStr:`${d} ${MONTHS[m]} ${y}`}));
+  });
+  all.sort((a,b)=>{
+    const da=new Date(a.y,a.m,a.d,...a.h.split(":").map(Number));
+    const db=new Date(b.y,b.m,b.d,...b.h.split(":").map(Number));
+    return da-db;
+  });
+  document.getElementById("rdv-list-sub").textContent=`${all.length} rendez-vous au total`;
+  let html="",lastDate="";
+  if(!all.length){html=`<div style="text-align:center;padding:20px;color:var(--t3);font-size:13px">Aucun rendez-vous planifié</div>`;}
+  else{
+    all.forEach(r=>{
+      const isToday=r.d===TODAY.d&&r.m===TODAY.m&&r.y===TODAY.y;
+      if(r.dateStr!==lastDate){
+        html+=`<div style="font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.8px;padding:${lastDate?"11px":"0"} 0 6px">${r.dateStr}${isToday?` <span style="color:var(--blue);font-size:10px">• Aujourd'hui</span>`:""}</div>`;
+        lastDate=r.dateStr;
       }
-    </div>
-  `).join('');
-
-  document.getElementById("schedule-modal-overlay").classList.add("show");
-  lucide.createIcons();
+      const key=`${r.y}-${r.m}-${r.d}`;
+      html+=`<div style="display:flex;align-items:center;gap:11px;padding:9px 12px;background:var(--bg);border-radius:11px;margin-bottom:5px">
+        <span style="font-family:'DM Mono',monospace;font-size:12px;color:var(--t3);min-width:42px">${r.h}</span>
+        <div style="flex:1">
+          <div style="font-size:13px;font-weight:500">${r.label}</div>
+          <div style="font-size:11px;color:var(--t3);margin-top:1px">${r.dateStr}</div>
+        </div>
+        <button onclick="removeRdv('${key}','${r.h}')" style="border:none;background:var(--red-l);color:var(--red);width:26px;height:26px;border-radius:7px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;line-height:1">×</button>
+      </div>`;
+    });
+  }
+  document.getElementById("rdv-list-content").innerHTML=html;
+  openOv("ov-rdvlist");
+}
+function removeRdv(key,h){
+  if(rdv[key])rdv[key]=rdv[key].filter(r=>r.h!==h);
+  if(rdv[key]&&!rdv[key].length)delete rdv[key];
+  renderCalendar();updateCounts();openRdvList();
+  toast("RDV supprimé","🗑");
 }
 
-function closeScheduleModal() {
-  document.getElementById("schedule-modal-overlay").classList.remove("show");
+// ══════════════════════════════════════════════
+// CALENDAR
+// ══════════════════════════════════════════════
+function renderCalendar(){
+  document.getElementById("cal-lbl").textContent=`${MONTHS[calM]} ${calY}`;
+  document.getElementById("cal-names").innerHTML=DAYS.map(d=>`<div class="cdn">${d}</div>`).join("");
+  const fd=new Date(calY,calM,1).getDay(),off=fd===0?6:fd-1;
+  const dim=new Date(calY,calM+1,0).getDate(),prev=new Date(calY,calM,0).getDate();
+  let html="";
+  for(let i=off-1;i>=0;i--)html+=`<div class="cd om">${prev-i}</div>`;
+  for(let d=1;d<=dim;d++){
+    const isT=d===TODAY.d&&calM===TODAY.m&&calY===TODAY.y;
+    const key=`${calY}-${calM}-${d}`;
+    const hasR=!!(rdv[key]&&rdv[key].length>0);
+    html+=`<div class="cd${isT?" today":""}${hasR?" hrdv":""}" onclick="openSchedule(${calY},${calM},${d})">${d}</div>`;
+  }
+  const rem=(7-((off+dim)%7))%7;
+  for(let d=1;d<=rem;d++)html+=`<div class="cd om">${d}</div>`;
+  document.getElementById("cal-days").innerHTML=html;
 }
-
-// ─── NAV ─────────────────────────────────────────────────────
-function setNav(el) {
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  el.classList.add('active');
-}
-
-// ─── CLOSE MODALS ON OVERLAY CLICK ───────────────────────────
-document.getElementById("modal-overlay").addEventListener("click", function(e) {
-  if (e.target === this) closeModal();
-});
-document.getElementById("schedule-modal-overlay").addEventListener("click", function(e) {
-  if (e.target === this) closeScheduleModal();
-});
-
-// ─── INIT ─────────────────────────────────────────────────────
-document.addEventListener("DOMContentLoaded", () => {
-  lucide.createIcons();
-  drawChart();
-  renderCalls();
+function changeMonth(dir){
+  calM+=dir;
+  if(calM>11){calM=0;calY++;}
+  if(calM<0){calM=11;calY--;}
   renderCalendar();
-});
+}
+function openSchedule(y,m,d){
+  const key=`${y}-${m}-${d}`;
+  const dayR=(rdv[key]||[]).sort((a,b)=>a.h.localeCompare(b.h));
+  document.getElementById("sched-title").textContent=`Planning du ${d} ${MONTHS[m]} ${y}`;
+  document.getElementById("sched-sub").textContent=`${dayR.length} rendez-vous planifié${dayR.length!==1?"s":""}`;
+  let html="";
+  for(let h=8;h<=19;h++){
+    const hs=String(h).padStart(2,"0")+":00";
+    const r=dayR.find(x=>x.h.startsWith(String(h).padStart(2,"0")));
+    html+=`<div class="sh-row">
+      <div class="sh-h">${hs}</div>
+      ${r
+        ?`<div class="sh-rdv"><div style="font-weight:700;font-size:13px">${r.label}</div><div style="font-size:11px;opacity:.7;margin-top:1px">${r.h}</div></div>`
+        :`<div class="sh-emp">Disponible</div>`
+      }
+    </div>`;
+  }
+  document.getElementById("sched-list").innerHTML=html;
+  openOv("ov-sched");
+}
+
+// ══════════════════════════════════════════════
+// NOTIFICATIONS
+// ══════════════════════════════════════════════
+function renderNotifs(){
+  document.getElementById("notif-list").innerHTML=notifs.length
+    ?notifs.map(n=>`<div style="display:flex;align-items:flex-start;gap:11px;padding:10px 0;border-bottom:1px solid var(--border)">
+        <div style="width:34px;height:34px;border-radius:10px;background:${n.bg};display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0">${n.ic}</div>
+        <div><div style="font-size:13px;font-weight:500">${n.txt}</div><div style="font-size:11px;color:var(--t3);margin-top:2px">${n.t}</div></div>
+      </div>`).join("")
+    :`<div style="text-align:center;padding:18px;color:var(--t3);font-size:13px">Aucune notification</div>`;
+}
+document.getElementById("ov-notifs").addEventListener("click",e=>{if(e.target===document.getElementById("ov-notifs")){}});
+document.getElementById("ov-notifs").querySelector(".ov").length; // no-op trick
+function openNotifsCb(){renderNotifs();}
+document.querySelector('[onclick="openOv(\'ov-notifs\')"]').addEventListener("click",renderNotifs);
+function clearNotifs(){
+  notifs=[];
+  renderNotifs();
+  document.querySelector(".notif-dot").style.display="none";
+  toast("Toutes les notifications lues","✓");
+}
+
+// ══════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════
+drawChart();
+renderCalls();
+renderCalendar();
+updateCounts();
+
+// Live time
+(function tick(){
+  const n=new Date();
+  const hh=String(n.getHours()).padStart(2,"0"),mm=String(n.getMinutes()).padStart(2,"0");
+  document.getElementById("hdate").textContent=`Mercredi 18 février 2026 · Bonjour, Marc 👋  —  ${hh}:${mm}`;
+  setTimeout(tick,30000);
+})();
 </script>
 </body>
 </html>
