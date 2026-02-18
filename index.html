@@ -1,165 +1,1380 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Garage Pro Dashboard</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
-        body { font-family: 'Inter', sans-serif; margin: 0; padding: 0; }
-        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GaragePro – Tableau de bord</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/umd/lucide.min.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --sidebar-bg: #0f172a;
+    --sidebar-hover: #1e293b;
+    --sidebar-active: #1e3a5f;
+    --sidebar-text: #94a3b8;
+    --sidebar-text-active: #e2e8f0;
+    --main-bg: #f8fafc;
+    --card-bg: #ffffff;
+    --text-primary: #0f172a;
+    --text-secondary: #64748b;
+    --text-muted: #94a3b8;
+    --border: #e2e8f0;
+    --blue: #2563eb;
+    --blue-light: #eff6ff;
+    --blue-mid: #3b82f6;
+    --green: #22c55e;
+    --green-light: #f0fdf4;
+    --orange: #f97316;
+    --orange-light: #fff7ed;
+    --red: #ef4444;
+    --accent: #6366f1;
+    --accent-light: #eef2ff;
+    --chart-line: #3b82f6;
+    --chart-fill: rgba(59,130,246,0.08);
+    --radius: 20px;
+    --radius-sm: 12px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.07), 0 4px 16px rgba(0,0,0,0.05);
+    --shadow-lg: 0 8px 32px rgba(0,0,0,0.10);
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--main-bg);
+    color: var(--text-primary);
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  /* ─── SIDEBAR ─────────────────────────────────────────── */
+  #sidebar {
+    width: 240px;
+    min-width: 240px;
+    background: var(--sidebar-bg);
+    display: flex;
+    flex-direction: column;
+    padding: 24px 16px;
+    gap: 4px;
+    overflow-y: auto;
+    position: relative;
+    z-index: 10;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px 24px;
+  }
+
+  .logo-icon {
+    width: 36px; height: 36px;
+    background: linear-gradient(135deg, #3b82f6, #6366f1);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+  }
+
+  .logo-text {
+    font-size: 16px;
+    font-weight: 700;
+    color: #f1f5f9;
+    letter-spacing: -0.3px;
+  }
+
+  .logo-text span { color: #3b82f6; }
+
+  .nav-section {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #475569;
+    padding: 8px 12px 4px;
+    margin-top: 8px;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: 12px;
+    color: var(--sidebar-text);
+    cursor: pointer;
+    transition: all 0.18s;
+    font-size: 14px;
+    font-weight: 500;
+    position: relative;
+  }
+
+  .nav-item:hover { background: var(--sidebar-hover); color: var(--sidebar-text-active); }
+
+  .nav-item.active {
+    background: var(--sidebar-active);
+    color: #60a5fa;
+  }
+
+  .nav-item.active::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 25%; bottom: 25%;
+    width: 3px;
+    background: #3b82f6;
+    border-radius: 0 3px 3px 0;
+  }
+
+  .nav-badge {
+    margin-left: auto;
+    background: #1e3a5f;
+    color: #60a5fa;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 7px;
+    border-radius: 999px;
+  }
+
+  .sidebar-bottom {
+    margin-top: auto;
+    padding-top: 16px;
+    border-top: 1px solid #1e293b;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  #btn-simulate {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #1d4ed8, #4f46e5);
+    color: #fff;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    border: none;
+    box-shadow: 0 4px 12px rgba(59,130,246,0.35);
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  #btn-simulate::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent);
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  #btn-simulate:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(59,130,246,0.45); }
+  #btn-simulate:hover::after { opacity: 1; }
+
+  .pulse-dot {
+    width: 8px; height: 8px;
+    background: #4ade80;
+    border-radius: 50%;
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .pulse-dot::after {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: 50%;
+    background: rgba(74,222,128,0.4);
+    animation: pulse 1.6s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.8); opacity: 0; }
+  }
+
+  /* ─── MAIN ─────────────────────────────────────────────── */
+  #main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* HEADER */
+  #header {
+    background: var(--card-bg);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-shrink: 0;
+  }
+
+  .header-left h1 {
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    color: var(--text-primary);
+  }
+
+  .header-left p {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: 1px;
+  }
+
+  .header-right { display: flex; align-items: center; gap: 10px; }
+
+  .btn-blue {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 9px 16px;
+    background: var(--blue);
+    color: #fff;
+    border-radius: 12px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.18s;
+    box-shadow: 0 2px 8px rgba(37,99,235,0.3);
+  }
+
+  .btn-blue:hover { background: #1d4ed8; transform: translateY(-1px); }
+
+  .avatar {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+    cursor: pointer;
+  }
+
+  /* CONTENT GRID */
+  #content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px 28px;
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 20px;
+    align-content: start;
+  }
+
+  /* CARDS */
+  .card {
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+    padding: 22px;
+    transition: box-shadow 0.2s;
+  }
+
+  .card:hover { box-shadow: var(--shadow-lg); }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+  }
+
+  .card-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .card-title .icon-wrap {
+    width: 28px; height: 28px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+  }
+
+  .card-badge {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 9px;
+    border-radius: 999px;
+  }
+
+  /* STATS ROW */
+  .stats-row {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+  }
+
+  .stat-card {
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+    padding: 18px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    transition: all 0.2s;
+    cursor: default;
+  }
+
+  .stat-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+
+  .stat-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .stat-icon {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .stat-change {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 7px;
+    border-radius: 999px;
+  }
+
+  .stat-value {
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: -1px;
+    color: var(--text-primary);
+  }
+
+  .stat-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+
+  /* CHART */
+  .chart-container {
+    position: relative;
+    height: 180px;
+  }
+
+  svg.chart {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  /* CALLS TABLE */
+  .calls-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+
+  .calls-table th {
+    text-align: left;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+    padding: 0 10px 12px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .calls-table td {
+    padding: 12px 10px;
+    border-bottom: 1px solid #f1f5f9;
+    color: var(--text-primary);
+    vertical-align: middle;
+  }
+
+  .calls-table tr:last-child td { border-bottom: none; }
+
+  .calls-table tr:hover td { background: #f8fafc; }
+
+  .call-name {
+    font-weight: 600;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .avatar-sm {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    color: #fff;
+    flex-shrink: 0;
+  }
+
+  .problem-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 9px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+
+  .time-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    color: var(--text-muted);
+    font-family: 'DM Mono', monospace;
+  }
+
+  /* CALENDAR */
+  .calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+    margin-top: 12px;
+  }
+
+  .cal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+
+  .cal-nav {
+    background: none;
+    border: none;
+    width: 28px; height: 28px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-secondary);
+    transition: background 0.15s;
+  }
+
+  .cal-nav:hover { background: var(--border); }
+
+  .cal-month {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  .cal-day-name {
+    text-align: center;
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 4px 0;
+  }
+
+  .cal-day {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 500;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.15s;
+    color: var(--text-primary);
+    position: relative;
+  }
+
+  .cal-day:hover { background: var(--blue-light); color: var(--blue); }
+
+  .cal-day.today {
+    background: var(--blue);
+    color: #fff;
+    font-weight: 700;
+    box-shadow: 0 2px 8px rgba(37,99,235,0.3);
+  }
+
+  .cal-day.other-month { color: var(--text-muted); opacity: 0.5; }
+
+  .cal-day.has-rdv::after {
+    content: '';
+    position: absolute;
+    bottom: 3px;
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    background: var(--blue-mid);
+  }
+
+  .cal-day.today.has-rdv::after { background: rgba(255,255,255,0.7); }
+
+  .cal-day.selected { background: var(--blue-light); color: var(--blue); font-weight: 600; }
+
+  /* AI STATUS */
+  .ai-status-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 18px;
+    background: var(--green-light);
+    border-radius: 16px;
+    border: 1px solid #bbf7d0;
+  }
+
+  .ai-pulse {
+    width: 12px; height: 12px;
+    background: var(--green);
+    border-radius: 50%;
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .ai-pulse::after {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    background: rgba(34,197,94,0.3);
+    animation: pulse 1.8s ease-in-out infinite;
+  }
+
+  .ai-info { flex: 1; }
+  .ai-title { font-size: 13px; font-weight: 700; color: #166534; }
+  .ai-sub { font-size: 11px; color: #4ade80; margin-top: 1px; }
+
+  /* MODAL */
+  #modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    backdrop-filter: blur(4px);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s;
+  }
+
+  #modal-overlay.show { opacity: 1; pointer-events: all; }
+
+  .modal {
+    background: var(--card-bg);
+    border-radius: 24px;
+    padding: 28px;
+    width: 420px;
+    max-width: 90vw;
+    box-shadow: 0 24px 80px rgba(0,0,0,0.2);
+    transform: translateY(16px) scale(0.97);
+    transition: all 0.25s cubic-bezier(0.34,1.56,0.64,1);
+    position: relative;
+  }
+
+  #modal-overlay.show .modal { transform: translateY(0) scale(1); }
+
+  .modal-close {
+    position: absolute;
+    top: 18px; right: 18px;
+    width: 30px; height: 30px;
+    border-radius: 8px;
+    border: none;
+    background: var(--border);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-secondary);
+    transition: background 0.15s;
+  }
+
+  .modal-close:hover { background: #cbd5e1; }
+
+  .call-modal-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+
+  .call-icon-lg {
+    width: 52px; height: 52px;
+    border-radius: 16px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px;
+    flex-shrink: 0;
+  }
+
+  .call-incoming {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--green);
+    display: flex; align-items: center; gap: 5px;
+    margin-bottom: 4px;
+  }
+
+  .modal h2 { font-size: 20px; font-weight: 700; letter-spacing: -0.4px; }
+  .modal .phone { font-size: 14px; color: var(--text-muted); margin-top: 2px; font-family: 'DM Mono', monospace; }
+
+  .modal-section {
+    background: var(--main-bg);
+    border-radius: 14px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+  }
+
+  .modal-section-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+  }
+
+  .modal-section-value {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-primary);
+    line-height: 1.5;
+  }
+
+  .rdv-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: var(--blue-light);
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--blue);
+    margin-top: 6px;
+  }
+
+  .modal-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 16px;
+  }
+
+  .modal-btn {
+    flex: 1;
+    padding: 11px;
+    border-radius: 12px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.18s;
+  }
+
+  .modal-btn.primary { background: var(--blue); color: #fff; box-shadow: 0 2px 8px rgba(37,99,235,0.3); }
+  .modal-btn.primary:hover { background: #1d4ed8; }
+  .modal-btn.secondary { background: var(--border); color: var(--text-primary); }
+  .modal-btn.secondary:hover { background: #cbd5e1; }
+
+  /* SCHEDULE MODAL */
+  #schedule-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    backdrop-filter: blur(4px);
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s;
+  }
+
+  #schedule-modal-overlay.show { opacity: 1; pointer-events: all; }
+
+  .schedule-modal {
+    background: var(--card-bg);
+    border-radius: 24px;
+    padding: 28px;
+    width: 380px;
+    max-width: 90vw;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 24px 80px rgba(0,0,0,0.2);
+    transform: translateY(16px) scale(0.97);
+    transition: all 0.25s cubic-bezier(0.34,1.56,0.64,1);
+    position: relative;
+  }
+
+  #schedule-modal-overlay.show .schedule-modal { transform: translateY(0) scale(1); }
+
+  .schedule-hour {
+    display: flex;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    align-items: flex-start;
+  }
+
+  .schedule-hour:last-child { border-bottom: none; }
+
+  .hour-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--text-muted);
+    width: 44px;
+    flex-shrink: 0;
+    padding-top: 1px;
+  }
+
+  .hour-rdv {
+    flex: 1;
+    background: var(--blue-light);
+    border-left: 3px solid var(--blue);
+    border-radius: 8px;
+    padding: 6px 10px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--blue);
+  }
+
+  .hour-empty {
+    flex: 1;
+    font-size: 12px;
+    color: var(--text-muted);
+    font-style: italic;
+    padding-top: 2px;
+  }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: #cbd5e1; }
+</style>
 </head>
-<body class="bg-slate-50">
-    <div id="root"></div>
+<body>
 
-    <script type="text/babel">
-        const { useState, useEffect, useMemo } = React;
+<!-- SIDEBAR -->
+<nav id="sidebar">
+  <div class="logo">
+    <div class="logo-icon">🔧</div>
+    <div class="logo-text">Garage<span>Pro</span></div>
+  </div>
 
-        // --- COMPOSANT GRAPHIQUE ---
-        const ActivityChart = () => {
-            useEffect(() => {
-                const ctx = document.getElementById('activityChart');
-                if (ctx) {
-                    new Chart(ctx, {
-                        type: 'line',
-                        data: {
-                            labels: ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'],
-                            datasets: [{
-                                data: [5, 12, 8, 20, 15, 7],
-                                borderColor: '#4f46e5',
-                                tension: 0.4,
-                                fill: true,
-                                backgroundColor: 'rgba(79, 70, 229, 0.1)'
-                            }]
-                        },
-                        options: { 
-                            responsive: true, 
-                            maintainAspectRatio: false,
-                            plugins: { legend: { display: false } },
-                            scales: { y: { display: false }, x: { grid: { display: false } } }
-                        }
-                    });
-                }
-            }, []);
-            return <div style={{height: '150px'}}><canvas id="activityChart"></canvas></div>;
-        };
+  <span class="nav-section">Navigation</span>
 
-        // --- COMPOSANT CALENDRIER ---
-        const CalendarWidget = () => {
-            const days = ['L', 'M', 'M', 'J', 'V', 'S', 'D'];
-            const currentDay = new Date().getDate();
-            return (
-                <div className="bg-white p-5 rounded-3xl border border-slate-200">
-                    <div className="flex justify-between items-center mb-4">
-                        <h3 className="font-bold">Février 2026</h3>
-                        <div className="flex gap-2">
-                            <i className="fa-solid fa-chevron-left text-xs text-slate-400"></i>
-                            <i className="fa-solid fa-chevron-right text-xs text-slate-400"></i>
-                        </div>
-                    </div>
-                    <div className="calendar-grid mb-2 text-[10px] text-slate-400 font-bold text-center">
-                        {days.map(d => <div key={d}>{d}</div>)}
-                    </div>
-                    <div className="calendar-grid text-center text-sm">
-                        {[...Array(28)].map((_, i) => (
-                            <div key={i} className={`p-2 rounded-xl ${i + 1 === currentDay ? 'bg-indigo-600 text-white font-bold' : 'hover:bg-slate-50'}`}>
-                                {i + 1}
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            );
-        };
+  <div class="nav-item active" onclick="setNav(this)">
+    <i data-lucide="layout-dashboard" style="width:16px;height:16px;flex-shrink:0"></i>
+    Dashboard
+  </div>
+  <div class="nav-item" onclick="setNav(this)">
+    <i data-lucide="phone" style="width:16px;height:16px;flex-shrink:0"></i>
+    Appels
+    <span class="nav-badge">7</span>
+  </div>
+  <div class="nav-item" onclick="setNav(this)">
+    <i data-lucide="users" style="width:16px;height:16px;flex-shrink:0"></i>
+    Clients
+  </div>
+  <div class="nav-item" onclick="setNav(this)">
+    <i data-lucide="calendar" style="width:16px;height:16px;flex-shrink:0"></i>
+    Rendez-vous
+    <span class="nav-badge">3</span>
+  </div>
+  <div class="nav-item" onclick="setNav(this)">
+    <i data-lucide="bar-chart-2" style="width:16px;height:16px;flex-shrink:0"></i>
+    Statistiques
+  </div>
+  <div class="nav-item" onclick="setNav(this)">
+    <i data-lucide="settings" style="width:16px;height:16px;flex-shrink:0"></i>
+    Paramètres
+  </div>
 
-        // --- APPLICATION PRINCIPALE ---
-        const App = () => {
-            return (
-                <div className="flex min-h-screen">
-                    {/* Sidebar */}
-                    <div className="w-20 lg:w-64 bg-slate-900 text-white p-6 flex flex-col">
-                        <div className="flex items-center gap-3 mb-10">
-                            <div className="bg-indigo-600 p-2 rounded-lg"><i className="fa-solid fa-car"></i></div>
-                            <span className="hidden lg:block font-bold text-xl tracking-tight">GaragePro</span>
-                        </div>
-                        <nav className="flex-1 space-y-4">
-                            <div className="flex items-center gap-4 p-3 bg-indigo-600 rounded-xl cursor-pointer">
-                                <i className="fa-solid fa-chart-pie"></i>
-                                <span className="hidden lg:block font-medium">Dashboard</span>
-                            </div>
-                            <div className="flex items-center gap-4 p-3 text-slate-400 hover:text-white cursor-pointer">
-                                <i className="fa-solid fa-phone"></i>
-                                <span className="hidden lg:block font-medium">Appels</span>
-                            </div>
-                        </nav>
-                    </div>
+  <div class="sidebar-bottom">
+    <button id="btn-simulate" onclick="simulateCall()">
+      <div class="pulse-dot"></div>
+      Simuler un Appel
+    </button>
+    <div class="nav-item" style="padding:10px 12px;margin:0;cursor:pointer">
+      <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#6366f1,#8b5cf6);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0">MA</div>
+      <div>
+        <div style="font-size:12px;font-weight:600;color:#e2e8f0">Marc A.</div>
+        <div style="font-size:11px;color:#64748b">Gérant</div>
+      </div>
+    </div>
+  </div>
+</nav>
 
-                    {/* Main */}
-                    <div className="flex-1 p-8">
-                        <header className="flex justify-between items-center mb-8">
-                            <div>
-                                <h1 className="text-3xl font-bold text-slate-900">Tableau de bord</h1>
-                                <p className="text-slate-500">Bienvenue, Admin</p>
-                            </div>
-                            <button className="bg-indigo-600 text-white px-6 py-3 rounded-2xl font-bold shadow-lg shadow-indigo-200">
-                                + Nouvel Appel
-                            </button>
-                        </header>
+<!-- MAIN -->
+<div id="main">
 
-                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                            <div className="lg:col-span-2 space-y-8">
-                                {/* Graphe */}
-                                <div className="bg-white p-8 rounded-[2rem] border border-slate-200 shadow-sm">
-                                    <h3 className="font-bold mb-6 flex items-center gap-2">
-                                        <i className="fa-solid fa-arrow-trend-up text-indigo-600"></i> Activité hebdomadaire
-                                    </h3>
-                                    <ActivityChart />
-                                </div>
-                                
-                                {/* Table */}
-                                <div className="bg-white rounded-[2rem] border border-slate-200 shadow-sm overflow-hidden text-sm">
-                                    <div className="p-6 font-bold border-b border-slate-100">Derniers Appels</div>
-                                    <div className="p-4 space-y-4">
-                                        <div className="flex justify-between items-center p-2 hover:bg-slate-50 rounded-xl cursor-pointer">
-                                            <div className="flex gap-3 items-center">
-                                                <div className="w-10 h-10 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-bold">ML</div>
-                                                <div>
-                                                    <div className="font-bold">Marc Lefebvre</div>
-                                                    <div className="text-xs text-slate-500">Peugeot 3008</div>
-                                                </div>
-                                            </div>
-                                            <span className="bg-rose-100 text-rose-600 px-3 py-1 rounded-full font-bold text-[10px]">URGENT</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+  <!-- HEADER -->
+  <header id="header">
+    <div class="header-left">
+      <h1>Tableau de bord</h1>
+      <p>Mercredi 18 février 2026 · Bienvenue, Marc 👋</p>
+    </div>
+    <div class="header-right">
+      <button class="btn-blue" onclick="openNewCallModal()">
+        <i data-lucide="plus" style="width:15px;height:15px"></i>
+        Nouvel Appel
+      </button>
+      <div style="width:1px;height:28px;background:var(--border)"></div>
+      <div style="position:relative;cursor:pointer">
+        <i data-lucide="bell" style="width:18px;height:18px;color:var(--text-muted)"></i>
+        <div style="position:absolute;top:-2px;right:-2px;width:8px;height:8px;background:var(--red);border-radius:50%;border:2px solid var(--card-bg)"></div>
+      </div>
+      <div class="avatar">MA</div>
+    </div>
+  </header>
 
-                            {/* Sidebar Droite */}
-                            <div className="space-y-8">
-                                <CalendarWidget />
-                                <div className="bg-slate-900 p-8 rounded-[2rem] text-white">
-                                    <h3 className="font-bold text-xl mb-2">Statut IA</h3>
-                                    <p className="text-slate-400 text-sm mb-6">L'assistant répond actuellement aux appels entrants.</p>
-                                    <div className="flex items-center gap-3">
-                                        <span className="w-3 h-3 bg-emerald-500 rounded-full animate-pulse"></span>
-                                        <span className="font-bold text-sm">En ligne</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            );
-        };
+  <!-- CONTENT -->
+  <div id="content">
 
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<App />);
-    </script>
+    <!-- STATS ROW -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-top">
+          <div class="stat-icon" style="background:#eff6ff">
+            <i data-lucide="phone-incoming" style="width:17px;height:17px;color:#3b82f6"></i>
+          </div>
+          <span class="stat-change" style="background:#eff6ff;color:#3b82f6">+12%</span>
+        </div>
+        <div class="stat-value">47</div>
+        <div class="stat-label">Appels ce mois</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-top">
+          <div class="stat-icon" style="background:#f0fdf4">
+            <i data-lucide="calendar-check" style="width:17px;height:17px;color:#22c55e"></i>
+          </div>
+          <span class="stat-change" style="background:#f0fdf4;color:#22c55e">+5%</span>
+        </div>
+        <div class="stat-value">31</div>
+        <div class="stat-label">RDV fixés</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-top">
+          <div class="stat-icon" style="background:#fff7ed">
+            <i data-lucide="clock" style="width:17px;height:17px;color:#f97316"></i>
+          </div>
+          <span class="stat-change" style="background:#fff7ed;color:#f97316">-2%</span>
+        </div>
+        <div class="stat-value">2m34</div>
+        <div class="stat-label">Durée moy. appel</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-top">
+          <div class="stat-icon" style="background:#eef2ff">
+            <i data-lucide="star" style="width:17px;height:17px;color:#6366f1"></i>
+          </div>
+          <span class="stat-change" style="background:#eef2ff;color:#6366f1">stable</span>
+        </div>
+        <div class="stat-value">4.8</div>
+        <div class="stat-label">Satisfaction clients</div>
+      </div>
+    </div>
+
+    <!-- LEFT COLUMN -->
+    <div style="display:flex;flex-direction:column;gap:20px;min-width:0">
+
+      <!-- CHART CARD -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <div class="icon-wrap" style="background:#eff6ff"><i data-lucide="trending-up" style="width:14px;height:14px;color:#3b82f6"></i></div>
+            Activité des appels – 7 derniers jours
+          </div>
+          <span class="card-badge" style="background:#eff6ff;color:#3b82f6">Cette semaine</span>
+        </div>
+        <div class="chart-container">
+          <svg class="chart" viewBox="0 0 600 160" preserveAspectRatio="none" id="line-chart"></svg>
+        </div>
+        <div id="chart-labels" style="display:flex;justify-content:space-between;padding:8px 12px 0;font-size:11px;color:var(--text-muted);font-weight:500"></div>
+      </div>
+
+      <!-- CALLS LIST -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <div class="icon-wrap" style="background:#f5f3ff"><i data-lucide="phone-call" style="width:14px;height:14px;color:#8b5cf6"></i></div>
+            Derniers appels
+          </div>
+          <span class="card-badge" style="background:#f5f3ff;color:#8b5cf6">7 aujourd'hui</span>
+        </div>
+        <table class="calls-table">
+          <thead>
+            <tr>
+              <th>Client</th>
+              <th>Résumé</th>
+              <th>Problème</th>
+              <th>RDV</th>
+              <th>Téléphone</th>
+            </tr>
+          </thead>
+          <tbody id="calls-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- RIGHT COLUMN -->
+    <div style="display:flex;flex-direction:column;gap:16px;min-width:0">
+
+      <!-- CALENDAR -->
+      <div class="card" style="padding:18px">
+        <div class="card-title" style="margin-bottom:14px">
+          <div class="icon-wrap" style="background:#fff7ed"><i data-lucide="calendar-days" style="width:14px;height:14px;color:#f97316"></i></div>
+          Calendrier
+        </div>
+        <div class="cal-header">
+          <button class="cal-nav" onclick="changeMonth(-1)"><i data-lucide="chevron-left" style="width:14px;height:14px"></i></button>
+          <span class="cal-month" id="cal-month-label"></span>
+          <button class="cal-nav" onclick="changeMonth(1)"><i data-lucide="chevron-right" style="width:14px;height:14px"></i></button>
+        </div>
+        <div class="calendar-grid" id="cal-day-names"></div>
+        <div class="calendar-grid" id="cal-days"></div>
+      </div>
+
+      <!-- AI STATUS -->
+      <div class="card" style="padding:16px">
+        <div class="card-title" style="margin-bottom:14px">
+          <div class="icon-wrap" style="background:#f0fdf4"><i data-lucide="cpu" style="width:14px;height:14px;color:#22c55e"></i></div>
+          Statut IA
+        </div>
+        <div class="ai-status-card">
+          <div class="ai-pulse"></div>
+          <div class="ai-info">
+            <div class="ai-title">IA en ligne</div>
+            <div class="ai-sub">98.9% uptime · 12 ms latence</div>
+          </div>
+          <i data-lucide="activity" style="width:16px;height:16px;color:#22c55e"></i>
+        </div>
+        <div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <div style="background:var(--main-bg);border-radius:12px;padding:10px 12px">
+            <div style="font-size:10px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:.6px;margin-bottom:3px">Appels traités</div>
+            <div style="font-size:18px;font-weight:700;color:var(--text-primary)">1 247</div>
+          </div>
+          <div style="background:var(--main-bg);border-radius:12px;padding:10px 12px">
+            <div style="font-size:10px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:.6px;margin-bottom:3px">Précision</div>
+            <div style="font-size:18px;font-weight:700;color:var(--text-primary)">96.4%</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- QUICK NOTE -->
+      <div class="card" style="padding:16px">
+        <div class="card-title" style="margin-bottom:12px">
+          <div class="icon-wrap" style="background:#fefce8"><i data-lucide="sticky-note" style="width:14px;height:14px;color:#eab308"></i></div>
+          Note rapide
+        </div>
+        <textarea placeholder="Écrire une note…" style="width:100%;height:80px;border:1px solid var(--border);border-radius:12px;padding:10px 12px;font-family:inherit;font-size:13px;color:var(--text-primary);resize:none;outline:none;background:var(--main-bg);transition:border 0.15s" onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='var(--border)'"></textarea>
+      </div>
+
+    </div><!-- /right -->
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<!-- CALL SIMULATION MODAL -->
+<div id="modal-overlay">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()"><i data-lucide="x" style="width:14px;height:14px"></i></button>
+    <div class="call-modal-header">
+      <div class="call-icon-lg" id="modal-icon" style="background:#eff6ff">📞</div>
+      <div>
+        <div class="call-incoming"><div class="pulse-dot" style="width:6px;height:6px"></div> Appel entrant</div>
+        <h2 id="modal-name">Julien Martin</h2>
+        <div class="phone" id="modal-phone">+33 6 12 34 56 78</div>
+      </div>
+    </div>
+    <div class="modal-section">
+      <div class="modal-section-label">Situation détectée</div>
+      <div class="modal-section-value" id="modal-situation">—</div>
+    </div>
+    <div class="modal-section">
+      <div class="modal-section-label">Résumé IA</div>
+      <div class="modal-section-value" id="modal-resume">—</div>
+    </div>
+    <div class="modal-section" id="modal-rdv-section">
+      <div class="modal-section-label">Rendez-vous suggéré</div>
+      <div class="rdv-badge" id="modal-rdv">—</div>
+    </div>
+    <div class="modal-actions">
+      <button class="modal-btn primary" onclick="acceptCall()">✓ Prendre en charge</button>
+      <button class="modal-btn secondary" onclick="closeModal()">Ignorer</button>
+    </div>
+  </div>
+</div>
+
+<!-- SCHEDULE MODAL -->
+<div id="schedule-modal-overlay">
+  <div class="schedule-modal">
+    <button class="modal-close" onclick="closeScheduleModal()"><i data-lucide="x" style="width:14px;height:14px"></i></button>
+    <div style="font-size:16px;font-weight:700;margin-bottom:4px" id="schedule-title">Planning du jour</div>
+    <div style="font-size:12px;color:var(--text-muted);margin-bottom:18px" id="schedule-subtitle"></div>
+    <div id="schedule-list"></div>
+  </div>
+</div>
+
+<script>
+// ─── DATA ───────────────────────────────────────────────────
+const today = new Date(2026, 1, 18); // Feb 18, 2026
+
+const callsData = [
+  { name: "Sophie Bernard", avatar: "#6366f1", initials: "SB", resume: "Bruit anormal sous capot", problem: "moteur", heure_rdv: "10h30", telephone: "06 11 22 33 44", tags: ["Mécanique"] },
+  { name: "Thomas Lefebvre", avatar: "#f97316", initials: "TL", resume: "Voyant de frein allumé", problem: "freins", heure_rdv: "14h00", telephone: "06 98 76 54 32", tags: ["Sécurité"] },
+  { name: "Amina Khalid", avatar: "#22c55e", initials: "AK", resume: "Révision annuelle véhicule", problem: "révision", heure_rdv: "—", telephone: "07 12 34 56 78", tags: ["Entretien"] },
+  { name: "Lucas Moreau", avatar: "#ef4444", initials: "LM", resume: "Pneu crevé, remplacement urgent", problem: "pneus", heure_rdv: "09h00", telephone: "06 55 44 33 22", tags: ["Urgence"] },
+  { name: "Claire Petit", avatar: "#8b5cf6", initials: "CP", resume: "Climatisation plus froide", problem: "clim", heure_rdv: "16h30", telephone: "07 99 88 77 66", tags: ["Confort"] },
+  { name: "Mehdi Roux", avatar: "#0ea5e9", initials: "MR", resume: "Démarreur défaillant", problem: "électrique", heure_rdv: "—", telephone: "06 22 11 00 99", tags: ["Électrique"] },
+  { name: "Isabelle Simon", avatar: "#ec4899", initials: "IS", resume: "Vitre conducteur bloquée", problem: "carrosserie", heure_rdv: "11h00", telephone: "07 33 44 55 66", tags: ["Carrosserie"] },
+];
+
+const problemColors = {
+  moteur: ["#fff7ed","#f97316"],
+  freins: ["#fef2f2","#ef4444"],
+  révision: ["#f0fdf4","#22c55e"],
+  pneus: ["#fef2f2","#ef4444"],
+  clim: ["#eff6ff","#3b82f6"],
+  électrique: ["#fffbeb","#eab308"],
+  carrosserie: ["#fdf4ff","#a855f7"],
+};
+
+const chartData = {
+  days: ["Mer","Jeu","Ven","Sam","Dim","Lun","Mar"],
+  values: [8, 14, 11, 6, 4, 13, 10]
+};
+
+// ─── RDV per day ────────────────────────────────────────────
+const rdvByDay = {};
+// populate some rdv
+const rdvList = [
+  { day: 18, hour: "09:00", label: "Lucas Moreau – Pneus" },
+  { day: 18, hour: "10:30", label: "Sophie Bernard – Moteur" },
+  { day: 18, hour: "11:00", label: "Isabelle Simon – Carrosserie" },
+  { day: 18, hour: "14:00", label: "Thomas Lefebvre – Freins" },
+  { day: 18, hour: "16:30", label: "Claire Petit – Clim" },
+  { day: 20, hour: "09:00", label: "Paul Durand – Vidange" },
+  { day: 20, hour: "14:00", label: "Emma Martin – Révision" },
+  { day: 22, hour: "10:00", label: "Ali Benali – Diagnostic" },
+  { day: 25, hour: "15:30", label: "Nadia Leclerc – Freins" },
+];
+rdvList.forEach(r => {
+  const key = `2026-2-${r.day}`;
+  if (!rdvByDay[key]) rdvByDay[key] = [];
+  rdvByDay[key].push({ hour: r.hour, label: r.label });
+});
+
+// ─── SIMULATE CALL ───────────────────────────────────────────
+const simScenarios = [
+  {
+    icon: "🔊", iconBg: "#fff7ed",
+    situation: "Bruit de roulement sourd à grande vitesse, s'aggrave en virage",
+    resume: "Le client signale un bruit métallique constant depuis 3 jours. Probable défaillance du roulement de roue avant gauche.",
+    hasRdv: true,
+    rdv: "Vendredi 20 fév à 09h30"
+  },
+  {
+    icon: "💨", iconBg: "#eff6ff",
+    situation: "Fumée blanche au démarrage, odeur sucrée dans habitacle",
+    resume: "Potentielle fuite de liquide de refroidissement. Le moteur présente des signes de surchauffe. Intervention urgente recommandée.",
+    hasRdv: true,
+    rdv: "Demain 19 fév à 08h00 (urgent)"
+  },
+  {
+    icon: "⚡", iconBg: "#fffbeb",
+    situation: "Voyant batterie + voyant moteur allumés simultanément",
+    resume: "L'alternateur semble défaillant. La batterie ne se recharge plus en roulant. Risque de panne imminente.",
+    hasRdv: false,
+    rdv: null
+  },
+  {
+    icon: "🛞", iconBg: "#fef2f2",
+    situation: "Véhicule tire fortement à gauche, volant vibrant au-dessus de 80 km/h",
+    resume: "Problème d'équilibrage ou de géométrie. Pneu avant droit potentiellement usé de façon asymétrique. Contrôle direction recommandé.",
+    hasRdv: true,
+    rdv: "Lundi 23 fév à 14h00"
+  },
+  {
+    icon: "🌡️", iconBg: "#f0fdf4",
+    situation: "Témoin de température dans le rouge, chauffage ne fonctionne plus",
+    resume: "Problème de circuit de refroidissement. Niveau de liquide très bas constaté par le client. Thermostat ou pompe à eau suspects.",
+    hasRdv: false,
+    rdv: null
+  },
+  {
+    icon: "🔧", iconBg: "#fdf4ff",
+    situation: "Boîte de vitesses grince en 3e, passage difficile à froid",
+    resume: "Synchroniseur de 3e vitesse usé. Huile de boîte probablement dégradée. Vidange + diagnostic complet conseillés.",
+    hasRdv: true,
+    rdv: "Mercredi 25 fév à 10h00"
+  }
+];
+
+const firstNames = ["Julien","Camille","Romain","Nathalie","Kevin","Fatima","Pierre","Yasmine","Antoine","Léa"];
+const lastNames = ["Martin","Dupont","Bernard","Thomas","Robert","Petit","Richard","Simon","Michel","Leroy"];
+function randName() {
+  return firstNames[Math.floor(Math.random()*firstNames.length)] + " " + lastNames[Math.floor(Math.random()*lastNames.length)];
+}
+function randPhone() {
+  const p = ["06","07"][Math.floor(Math.random()*2)];
+  const nums = Array.from({length:4}, ()=>String(Math.floor(Math.random()*90+10)));
+  return `${p} ${nums.join(" ")}`;
+}
+
+function simulateCall() {
+  const sc = simScenarios[Math.floor(Math.random() * simScenarios.length)];
+  const name = randName();
+  const phone = randPhone();
+
+  document.getElementById("modal-icon").textContent = sc.icon;
+  document.getElementById("modal-icon").style.background = sc.iconBg;
+  document.getElementById("modal-name").textContent = name;
+  document.getElementById("modal-phone").textContent = phone;
+  document.getElementById("modal-situation").textContent = sc.situation;
+  document.getElementById("modal-resume").textContent = sc.resume;
+
+  const rdvSection = document.getElementById("modal-rdv-section");
+  const rdvEl = document.getElementById("modal-rdv");
+  if (sc.hasRdv) {
+    rdvSection.style.display = "block";
+    rdvEl.innerHTML = `<i data-lucide="calendar" style="width:13px;height:13px"></i> ${sc.rdv}`;
+  } else {
+    rdvSection.style.display = "none";
+  }
+
+  document.getElementById("modal-overlay").classList.add("show");
+  lucide.createIcons();
+}
+
+function closeModal() {
+  document.getElementById("modal-overlay").classList.remove("show");
+}
+
+function acceptCall() {
+  closeModal();
+  // Could add to call list in a real app
+}
+
+function openNewCallModal() {
+  simulateCall();
+}
+
+// ─── CHART ───────────────────────────────────────────────────
+function drawChart() {
+  const svg = document.getElementById("line-chart");
+  const W = 600, H = 160;
+  const pad = { top: 20, right: 20, bottom: 20, left: 30 };
+  const vals = chartData.values;
+  const maxV = Math.max(...vals) + 2;
+  const minV = 0;
+
+  const xs = vals.map((_, i) => pad.left + i * ((W - pad.left - pad.right) / (vals.length - 1)));
+  const ys = vals.map(v => pad.top + (1 - (v - minV) / (maxV - minV)) * (H - pad.top - pad.bottom));
+
+  // Grid lines
+  let grid = "";
+  for (let i = 0; i <= 4; i++) {
+    const y = pad.top + (i / 4) * (H - pad.top - pad.bottom);
+    grid += `<line x1="${pad.left}" y1="${y}" x2="${W - pad.right}" y2="${y}" stroke="#f1f5f9" stroke-width="1"/>`;
+  }
+
+  // Fill path
+  let fillPath = `M ${xs[0]},${ys[0]}`;
+  for (let i = 1; i < xs.length; i++) {
+    const cpx = (xs[i-1] + xs[i]) / 2;
+    fillPath += ` C ${cpx},${ys[i-1]} ${cpx},${ys[i]} ${xs[i]},${ys[i]}`;
+  }
+  fillPath += ` L ${xs[xs.length-1]},${H - pad.bottom} L ${xs[0]},${H - pad.bottom} Z`;
+
+  // Line path
+  let linePath = `M ${xs[0]},${ys[0]}`;
+  for (let i = 1; i < xs.length; i++) {
+    const cpx = (xs[i-1] + xs[i]) / 2;
+    linePath += ` C ${cpx},${ys[i-1]} ${cpx},${ys[i]} ${xs[i]},${ys[i]}`;
+  }
+
+  // Dots + values
+  let dots = "";
+  vals.forEach((v, i) => {
+    dots += `<circle cx="${xs[i]}" cy="${ys[i]}" r="4" fill="#3b82f6" stroke="#fff" stroke-width="2"/>`;
+    dots += `<text x="${xs[i]}" y="${ys[i] - 10}" text-anchor="middle" font-size="10" font-weight="600" fill="#3b82f6" font-family="DM Sans,sans-serif">${v}</text>`;
+  });
+
+  svg.innerHTML = `
+    <defs>
+      <linearGradient id="fill-grad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.18"/>
+        <stop offset="100%" stop-color="#3b82f6" stop-opacity="0"/>
+      </linearGradient>
+    </defs>
+    ${grid}
+    <path d="${fillPath}" fill="url(#fill-grad)"/>
+    <path d="${linePath}" fill="none" stroke="#3b82f6" stroke-width="2.5" stroke-linecap="round"/>
+    ${dots}
+  `;
+
+  // Labels
+  const labelsEl = document.getElementById("chart-labels");
+  labelsEl.innerHTML = chartData.days.map(d => `<span>${d}</span>`).join('');
+}
+
+// ─── CALLS TABLE ─────────────────────────────────────────────
+function renderCalls() {
+  const tbody = document.getElementById("calls-tbody");
+  tbody.innerHTML = callsData.map(c => {
+    const [bg, col] = problemColors[c.problem] || ["#f8fafc","#64748b"];
+    const hasRdv = c.heure_rdv !== "—";
+    return `
+      <tr>
+        <td><div class="call-name">
+          <div class="avatar-sm" style="background:${c.avatar}">${c.initials}</div>
+          ${c.name}
+        </div></td>
+        <td style="max-width:160px;color:var(--text-secondary);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${c.resume}</td>
+        <td><span class="problem-tag" style="background:${bg};color:${col}">${c.problem}</span></td>
+        <td>
+          ${hasRdv
+            ? `<span class="time-tag"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>${c.heure_rdv}</span>`
+            : `<span style="color:var(--text-muted);font-size:12px">—</span>`
+          }
+        </td>
+        <td style="font-family:'DM Mono',monospace;font-size:12px;color:var(--text-secondary)">${c.telephone}</td>
+      </tr>
+    `;
+  }).join('');
+}
+
+// ─── CALENDAR ────────────────────────────────────────────────
+let calYear = 2026, calMonth = 1; // Feb 2026
+
+const monthNames = ["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"];
+const dayNames = ["Lun","Mar","Mer","Jeu","Ven","Sam","Dim"];
+
+function getDayKey(y, m, d) { return `${y}-${m}-${d}`; }
+
+function renderCalendar() {
+  document.getElementById("cal-month-label").textContent = `${monthNames[calMonth]} ${calYear}`;
+
+  const namesEl = document.getElementById("cal-day-names");
+  namesEl.innerHTML = dayNames.map(d => `<div class="cal-day-name">${d}</div>`).join('');
+
+  const firstDay = new Date(calYear, calMonth, 1).getDay(); // 0=Sun
+  const startOffset = firstDay === 0 ? 6 : firstDay - 1; // Mon-based
+  const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+  const prevDays = new Date(calYear, calMonth, 0).getDate();
+
+  const daysEl = document.getElementById("cal-days");
+  let html = "";
+
+  // prev month days
+  for (let i = startOffset - 1; i >= 0; i--) {
+    html += `<div class="cal-day other-month">${prevDays - i}</div>`;
+  }
+
+  // current month
+  for (let d = 1; d <= daysInMonth; d++) {
+    const isToday = (d === today.getDate() && calMonth === today.getMonth() && calYear === today.getFullYear());
+    const key = getDayKey(calYear, calMonth, d);
+    const hasRdv = !!rdvByDay[key];
+    html += `<div class="cal-day${isToday ? " today" : ""}${hasRdv ? " has-rdv" : ""}" onclick="openSchedule(${calYear},${calMonth},${d})">${d}</div>`;
+  }
+
+  // next month
+  const total = startOffset + daysInMonth;
+  const remaining = (7 - (total % 7)) % 7;
+  for (let d = 1; d <= remaining; d++) {
+    html += `<div class="cal-day other-month">${d}</div>`;
+  }
+
+  daysEl.innerHTML = html;
+}
+
+function changeMonth(dir) {
+  calMonth += dir;
+  if (calMonth > 11) { calMonth = 0; calYear++; }
+  if (calMonth < 0) { calMonth = 11; calYear--; }
+  renderCalendar();
+}
+
+// ─── SCHEDULE MODAL ──────────────────────────────────────────
+function openSchedule(y, m, d) {
+  const key = getDayKey(y, m, d);
+  const dayRdv = rdvByDay[key] || [];
+
+  const dateLabel = `${d} ${monthNames[m]} ${y}`;
+  document.getElementById("schedule-title").textContent = `Planning du ${dateLabel}`;
+  document.getElementById("schedule-subtitle").textContent = `${dayRdv.length} rendez-vous prévu(s)`;
+
+  // Build hours 8-19
+  const hours = [];
+  for (let h = 8; h <= 19; h++) {
+    const hStr = h.toString().padStart(2,'0');
+    const rdv = dayRdv.find(r => r.hour.startsWith(hStr));
+    hours.push({ hStr, rdv });
+  }
+
+  const listEl = document.getElementById("schedule-list");
+  listEl.innerHTML = hours.map(({ hStr, rdv }) => `
+    <div class="schedule-hour">
+      <div class="hour-label">${hStr}:00</div>
+      ${rdv
+        ? `<div class="hour-rdv">${rdv.label}</div>`
+        : `<div class="hour-empty">Disponible</div>`
+      }
+    </div>
+  `).join('');
+
+  document.getElementById("schedule-modal-overlay").classList.add("show");
+  lucide.createIcons();
+}
+
+function closeScheduleModal() {
+  document.getElementById("schedule-modal-overlay").classList.remove("show");
+}
+
+// ─── NAV ─────────────────────────────────────────────────────
+function setNav(el) {
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// ─── CLOSE MODALS ON OVERLAY CLICK ───────────────────────────
+document.getElementById("modal-overlay").addEventListener("click", function(e) {
+  if (e.target === this) closeModal();
+});
+document.getElementById("schedule-modal-overlay").addEventListener("click", function(e) {
+  if (e.target === this) closeScheduleModal();
+});
+
+// ─── INIT ─────────────────────────────────────────────────────
+document.addEventListener("DOMContentLoaded", () => {
+  lucide.createIcons();
+  drawChart();
+  renderCalls();
+  renderCalendar();
+});
+</script>
 </body>
 </html>
