@@ -11,47 +11,54 @@ html,body{height:100%;overflow:hidden}
 body{font-family:'DM Sans',sans-serif;background:#f1f5f9;color:#1e293b}
 ::-webkit-scrollbar{width:5px}::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:99px}
 @keyframes pg{0%,100%{box-shadow:0 0 0 0 rgba(34,197,94,.5)}50%{box-shadow:0 0 0 6px rgba(34,197,94,0)}}
-@keyframes rg{0%{transform:rotate(0deg)}10%{transform:rotate(-15deg)}20%{transform:rotate(15deg)}30%{transform:rotate(-10deg)}40%{transform:rotate(10deg)}50%,100%{transform:rotate(0deg)}}
-@keyframes fu{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fu{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 .pdot{width:8px;height:8px;background:#22c55e;border-radius:50%;animation:pg 2s infinite;flex-shrink:0}
 .pdot-lg{width:10px;height:10px;background:#22c55e;border-radius:50%;animation:pg 2s infinite;flex-shrink:0}
-.ringing{display:inline-block;animation:rg 1s infinite}
 .fup{animation:fu .3s ease both}
 .layout{display:flex;height:100vh}
+
+/* SIDEBAR */
 .sidebar{width:220px;background:#0f172a;display:flex;flex-direction:column;padding:24px 16px;flex-shrink:0}
-.logo-wrap{margin-bottom:32px}
 .logo-title{font-family:'Syne',sans-serif;font-weight:800;font-size:20px;color:white}
 .logo-dot{color:#3b82f6}.logo-ai{color:#60a5fa}
 .logo-sub{color:#475569;font-size:11px;margin-top:2px}
 .nav-btn{display:flex;align-items:center;gap:10px;width:100%;padding:10px 12px;border-radius:12px;border:none;background:transparent;color:#94a3b8;font-weight:400;font-size:14px;margin-bottom:4px;text-align:left;transition:all .2s;cursor:pointer;font-family:'DM Sans',sans-serif}
 .nav-btn.active{background:#1e40af;color:white;font-weight:600}
-.sim-btn{background:linear-gradient(135deg,#2563eb,#7c3aed);color:white;border:none;border-radius:14px;padding:14px 12px;font-weight:700;font-size:13px;width:100%;box-shadow:0 4px 20px rgba(59,130,246,.4);display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:transform .15s,box-shadow .15s}
-.sim-btn:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(59,130,246,.55)}
 .ai-status{margin-top:14px;display:flex;align-items:center;gap:8px;padding:10px 12px;background:#1e293b;border-radius:12px}
+
+/* MAIN */
 .main{flex:1;overflow:auto;padding:24px;display:flex;flex-direction:column}
 .header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}
 .page-title{font-family:'Syne',sans-serif;font-weight:800;font-size:26px;color:#0f172a;letter-spacing:-.5px}
 .page-sub{color:#64748b;font-size:14px;margin-top:2px}
 .new-btn{background:#3b82f6;color:white;border:none;border-radius:12px;padding:10px 18px;font-weight:600;font-size:14px;box-shadow:0 4px 14px rgba(59,130,246,.35);cursor:pointer;font-family:'DM Sans',sans-serif}
+
+/* CARDS */
 .card{background:white;border-radius:24px;padding:24px;box-shadow:0 2px 16px rgba(0,0,0,.06)}
 .card-sm{background:white;border-radius:20px;padding:20px;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+
+/* GRIDS */
 .dash-grid{display:grid;grid-template-columns:1fr 300px;gap:20px}
 .left-col{display:flex;flex-direction:column;gap:20px}
 .right-col{display:flex;flex-direction:column;gap:16px}
 .stats-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:20px}
 .clients-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+
+/* TABLE */
 table{border-collapse:collapse;width:100%}
 th{text-align:left;padding:8px 10px;font-size:12px;font-weight:600;color:#94a3b8;white-space:nowrap;border-bottom:2px solid #f1f5f9}
-td{padding:12px 10px;border-bottom:1px solid #f8fafc;font-size:13px;vertical-align:middle;transition:background .15s}
+td{padding:11px 10px;border-bottom:1px solid #f8fafc;font-size:13px;vertical-align:middle;transition:background .15s}
 tr:hover td{background:#f8fafc}
 .prob-input{border:1px solid #e2e8f0;border-radius:8px;padding:5px 8px;font-size:12px;color:#334155;width:100%;background:#fafafa;font-family:'DM Sans',sans-serif;transition:border .15s,background .15s}
 .prob-input:focus{outline:none;border-color:#3b82f6;background:white}
 .badge{display:inline-block;background:#f1f5f9;border-radius:6px;padding:3px 8px;font-size:12px;color:#475569}
+
+/* CALENDAR */
 .cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
 .cal-nav{background:#f1f5f9;border:none;border-radius:8px;width:28px;height:28px;color:#475569;font-size:18px;cursor:pointer;line-height:1}
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
 .cal-day-name{text-align:center;font-size:11px;font-weight:600;color:#94a3b8;padding:3px 0}
-.cal-day{text-align:center;padding:6px 2px;border-radius:8px;cursor:pointer;font-size:13px;border:1.5px solid transparent;transition:all .15s;position:relative}
+.cal-day{text-align:center;padding:6px 2px;border-radius:8px;cursor:pointer;font-size:13px;border:1.5px solid transparent;transition:all .15s}
 .cal-day:hover{background:#f1f5f9}
 .cal-day.today{background:#3b82f6;color:white;font-weight:700}
 .cal-day.selected{background:#eff6ff;border-color:#3b82f6}
@@ -59,42 +66,37 @@ tr:hover td{background:#f8fafc}
 .cal-dot{width:4px;height:4px;border-radius:50%;background:#3b82f6;margin:1px auto 0}
 .cal-day.today .cal-dot{background:white}
 .cal-hint{margin-top:10px;padding:8px 10px;background:#f8fafc;border-radius:10px;font-size:12px;color:#64748b;text-align:center}
+
+/* CHART */
 .chart-wrap{position:relative;width:100%}
 svg.chart{width:100%;height:auto;overflow:visible}
-.chart-tip{position:fixed;background:#0f172a;color:white;padding:5px 10px;border-radius:8px;font-size:12px;pointer-events:none;white-space:nowrap;z-index:9999;display:none}
+.ctip{position:fixed;background:#0f172a;color:white;padding:5px 10px;border-radius:8px;font-size:12px;pointer-events:none;white-space:nowrap;z-index:9999;display:none}
+
+/* OVERLAYS */
 .overlay{position:fixed;inset:0;background:rgba(15,23,42,.65);z-index:200;display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
 .overlay.open{display:flex}
-.modal{background:white;border-radius:20px;width:480px;max-height:82vh;overflow:hidden;box-shadow:0 25px 60px rgba(0,0,0,.35);animation:fu .3s ease}
-.modal-hdr{background:#1e293b;padding:16px 20px;display:flex;align-items:center;justify-content:space-between}
+.modal{background:white;border-radius:20px;width:520px;max-height:88vh;overflow:hidden;box-shadow:0 25px 60px rgba(0,0,0,.35);animation:fu .3s ease;display:flex;flex-direction:column}
+.modal-hdr{background:#1e293b;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
 .modal-close{background:#334155;border:none;color:white;border-radius:8px;width:30px;height:30px;font-size:20px;cursor:pointer;line-height:1;display:flex;align-items:center;justify-content:center}
-.modal-body{overflow-y:auto;max-height:66vh;padding:8px 16px 20px}
+.modal-body{overflow-y:auto;padding:20px}
+
+/* CALL DETAIL MODAL */
+.detail-section{border-radius:12px;padding:12px 14px;margin-bottom:12px}
+.detail-yellow{background:#fef3c7;border-left:4px solid #f59e0b}
+.detail-blue{background:#eff6ff;border-left:4px solid #3b82f6}
+.detail-gray{background:#f8fafc}
+.detail-green{background:#f0fdf4;border-left:4px solid #22c55e}
+.detail-label{font-weight:600;font-size:11px;color:#64748b;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.detail-val{font-size:14px;color:#1e293b;font-weight:500}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+
+/* AGENDA */
 .agenda-row{display:flex;min-height:50px;border-bottom:1px solid #f1f5f9}
 .agenda-time{width:46px;padding-top:10px;color:#94a3b8;font-size:11px;flex-shrink:0}
 .agenda-slot{flex:1;padding:4px 0 4px 8px}
 .agenda-event{background:#eff6ff;border-left:4px solid #3b82f6;border-radius:10px;padding:8px 12px}
-.call-modal-wrap{background:white;border-radius:24px;width:400px;box-shadow:0 30px 80px rgba(0,0,0,.4);overflow:hidden;animation:fu .3s ease}
-.call-hdr{padding:28px 24px;text-align:center;transition:background .6s}
-.hdr-ring{background:linear-gradient(135deg,#1e40af,#3b82f6)}
-.hdr-active{background:linear-gradient(135deg,#166534,#16a34a)}
-.call-body{padding:20px 24px}
-.info-box{border-radius:12px;padding:12px 14px;margin-bottom:12px}
-.info-yellow{background:#fef3c7;border-left:4px solid #f59e0b}
-.info-gray{background:#f8fafc}
-.info-blue{background:#eff6ff;border-left:4px solid #3b82f6;margin-bottom:16px}
-.info-green{background:#f0fdf4;margin-bottom:16px}
-.call-footer{padding:20px 24px;text-align:center}
-.btn-row{display:flex;gap:12px}
-.btn-ignore{flex:1;background:#fef2f2;color:#ef4444;border:none;border-radius:12px;padding:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif}
-.btn-answer{flex:1;background:#22c55e;color:white;border:none;border-radius:12px;padding:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif}
-.btn-end{width:100%;background:#1e293b;color:white;border:none;border-radius:12px;padding:12px;font-weight:600;font-size:14px;cursor:pointer;font-family:'DM Sans',sans-serif}
-.stat-card{background:white;border-radius:16px;padding:16px;box-shadow:0 2px 12px rgba(0,0,0,.06)}
-.stat-val{font-weight:700;font-size:22px;margin-top:6px}
-.stat-lbl{font-size:12px;color:#94a3b8;margin-top:2px}
-.prob-bar-bg{background:#f1f5f9;border-radius:99px;height:6px;margin-top:4px;margin-bottom:10px}
-.prob-bar{background:#3b82f6;border-radius:99px;height:6px}
-.prob-row{display:flex;justify-content:space-between;font-size:13px}
-.client-card{background:white;border-radius:20px;padding:20px;box-shadow:0 2px 12px rgba(0,0,0,.06)}
-.client-icon{width:44px;height:44px;background:#eff6ff;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:12px}
+
+/* MISC */
 .tab-content{display:none}.tab-content.active{display:block}
 .sec-title{font-family:'Syne',sans-serif;font-weight:700;font-size:15px;color:#1e293b;margin-bottom:14px}
 .sec-title-lg{font-family:'Syne',sans-serif;font-weight:700;font-size:16px;color:#1e293b;margin-bottom:16px}
@@ -102,17 +104,27 @@ svg.chart{width:100%;height:auto;overflow:visible}
 .stats-cta{background:linear-gradient(135deg,#0f172a,#1e293b);color:white;border:none;border-radius:20px;padding:16px;cursor:pointer;text-align:left;box-shadow:0 4px 16px rgba(0,0,0,.15);width:100%;font-family:'DM Sans',sans-serif}
 .chart-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
 .pill{background:#eff6ff;color:#3b82f6;font-size:12px;padding:4px 10px;border-radius:99px;font-weight:600}
+.stat-card{background:white;border-radius:16px;padding:16px;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+.prob-bar-bg{background:#f1f5f9;border-radius:99px;height:6px;margin-top:4px;margin-bottom:10px}
+.prob-bar{background:#3b82f6;border-radius:99px;height:6px}
+.client-card{background:white;border-radius:20px;padding:20px;box-shadow:0 2px 12px rgba(0,0,0,.06);cursor:pointer;transition:box-shadow .15s}
+.client-card:hover{box-shadow:0 6px 24px rgba(0,0,0,.1)}
+.row-link{cursor:pointer}
+
+/* STATUS BADGES */
+.status-rdv{display:inline-block;background:#eff6ff;color:#1d4ed8;font-size:11px;padding:3px 8px;border-radius:99px;font-weight:600}
+.status-info{display:inline-block;background:#f0fdf4;color:#166534;font-size:11px;padding:3px 8px;border-radius:99px;font-weight:600}
+.status-urgent{display:inline-block;background:#fef2f2;color:#dc2626;font-size:11px;padding:3px 8px;border-radius:99px;font-weight:600}
 </style>
 </head>
 <body>
 <div class="layout">
   <aside class="sidebar">
-    <div class="logo-wrap">
+    <div style="margin-bottom:32px">
       <div class="logo-title">Garage<span class="logo-dot">.</span><span class="logo-ai">AI</span></div>
       <div class="logo-sub">Gestionnaire Automobile</div>
     </div>
     <nav style="flex:1" id="nav"></nav>
-    <button class="sim-btn" id="sim-btn">📲 Simuler Appel</button>
     <div class="ai-status">
       <div class="pdot"></div>
       <div>
@@ -128,9 +140,10 @@ svg.chart{width:100%;height:auto;overflow:visible}
         <h1 class="page-title" id="page-title">Tableau de bord</h1>
         <p class="page-sub" id="page-sub"></p>
       </div>
-      <button class="new-btn">+ Nouvel Appel</button>
+      <button class="new-btn" id="new-btn">+ Nouvel Appel</button>
     </div>
 
+    <!-- DASHBOARD -->
     <div id="tab-dashboard" class="tab-content active">
       <div class="dash-grid">
         <div class="left-col">
@@ -138,7 +151,7 @@ svg.chart{width:100%;height:auto;overflow:visible}
             <div class="chart-hdr">
               <div>
                 <div class="sec-title-lg" style="margin-bottom:2px">Activité des appels</div>
-                <div style="color:#94a3b8;font-size:13px">7 derniers jours · 84 appels ce mois</div>
+                <div style="color:#94a3b8;font-size:13px" id="chart-sub">7 derniers jours</div>
               </div>
               <span class="pill">📈 Semaine en cours</span>
             </div>
@@ -156,7 +169,7 @@ svg.chart{width:100%;height:auto;overflow:visible}
             <div class="ai-row"><span style="color:#94a3b8">Modèle</span><span style="font-weight:500">GPT-4o via n8n</span></div>
             <div class="ai-row"><span style="color:#94a3b8">Webhook</span><span style="font-weight:500">Connecté ✓</span></div>
             <div class="ai-row"><span style="color:#94a3b8">Réponse moy.</span><span style="font-weight:500">1.4s</span></div>
-            <div class="ai-row"><span style="color:#94a3b8">Appels traités</span><span style="font-weight:500">84 ce mois</span></div>
+            <div class="ai-row"><span style="color:#94a3b8">Appels traités</span><span style="font-weight:500" id="ai-count">0 ce mois</span></div>
           </div>
           <button class="stats-cta" id="stats-cta">
             <div style="font-size:24px;margin-bottom:6px">📊</div>
@@ -167,12 +180,17 @@ svg.chart{width:100%;height:auto;overflow:visible}
       </div>
     </div>
 
+    <!-- CALLS -->
     <div id="tab-calls" class="tab-content">
       <div class="card fup" id="calls-tab"></div>
     </div>
+
+    <!-- CLIENTS -->
     <div id="tab-clients" class="tab-content">
       <div class="clients-grid fup" id="clients-grid"></div>
     </div>
+
+    <!-- STATS -->
     <div id="tab-stats" class="tab-content fup">
       <div class="stats-grid" id="stats-cards"></div>
       <div class="card-sm" style="margin-bottom:16px" id="probs-card"></div>
@@ -181,8 +199,23 @@ svg.chart{width:100%;height:auto;overflow:visible}
   </main>
 </div>
 
+<!-- CALL DETAIL MODAL -->
+<div class="overlay" id="detail-overlay">
+  <div class="modal" id="detail-modal">
+    <div class="modal-hdr">
+      <div>
+        <div style="color:#94a3b8;font-size:11px;text-transform:uppercase;letter-spacing:.5px">Détail de l'appel</div>
+        <div id="detail-title" style="color:white;font-weight:700;font-size:16px;font-family:'Syne',sans-serif;margin-top:2px"></div>
+      </div>
+      <button class="modal-close" id="detail-close">×</button>
+    </div>
+    <div class="modal-body" id="detail-body"></div>
+  </div>
+</div>
+
+<!-- AGENDA MODAL -->
 <div class="overlay" id="agenda-overlay">
-  <div class="modal" id="agenda-modal">
+  <div class="modal" id="agenda-modal" style="width:480px">
     <div class="modal-hdr">
       <div>
         <div style="color:#94a3b8;font-size:12px">Agenda du</div>
@@ -190,54 +223,231 @@ svg.chart{width:100%;height:auto;overflow:visible}
       </div>
       <button class="modal-close" id="agenda-close">×</button>
     </div>
-    <div class="modal-body" id="agenda-body"></div>
+    <div class="modal-body" id="agenda-body" style="padding:8px 16px 20px"></div>
   </div>
 </div>
 
-<div class="overlay" id="call-overlay">
-  <div class="call-modal-wrap" id="call-inner"></div>
+<!-- NEW CALL MODAL -->
+<div class="overlay" id="new-overlay">
+  <div class="modal" style="width:480px">
+    <div class="modal-hdr">
+      <div>
+        <div style="color:#94a3b8;font-size:11px;text-transform:uppercase;letter-spacing:.5px">Ajouter manuellement</div>
+        <div style="color:white;font-weight:700;font-size:16px;font-family:'Syne',sans-serif;margin-top:2px">Nouvel appel</div>
+      </div>
+      <button class="modal-close" id="new-close">×</button>
+    </div>
+    <div class="modal-body">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+        <div>
+          <label style="font-size:12px;font-weight:600;color:#64748b;display:block;margin-bottom:4px">Prénom *</label>
+          <input id="f-prenom" class="prob-input" style="width:100%;padding:8px 10px" placeholder="Jean">
+        </div>
+        <div>
+          <label style="font-size:12px;font-weight:600;color:#64748b;display:block;margin-bottom:4px">Numéro *</label>
+          <input id="f-numero" class="prob-input" style="width:100%;padding:8px 10px" placeholder="06 12 34 56 78">
+        </div>
+      </div>
+      <div style="margin-bottom:12px">
+        <label style="font-size:12px;font-weight:600;color:#64748b;display:block;margin-bottom:4px">Résumé *</label>
+        <input id="f-resume" class="prob-input" style="width:100%;padding:8px 10px" placeholder="Bruit moteur anormal">
+      </div>
+      <div style="margin-bottom:12px">
+        <label style="font-size:12px;font-weight:600;color:#64748b;display:block;margin-bottom:4px">Problème détaillé</label>
+        <textarea id="f-probleme" class="prob-input" style="width:100%;padding:8px 10px;height:72px;resize:vertical" placeholder="Description complète du problème signalé..."></textarea>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+        <div>
+          <label style="font-size:12px;font-weight:600;color:#64748b;display:block;margin-bottom:4px">Heure RDV</label>
+          <input id="f-rdv" class="prob-input" style="width:100%;padding:8px 10px" type="datetime-local">
+        </div>
+        <div>
+          <label style="font-size:12px;font-weight:600;color:#64748b;display:block;margin-bottom:4px">Chat ID (n8n)</label>
+          <input id="f-chatid" class="prob-input" style="width:100%;padding:8px 10px" placeholder="auto-généré">
+        </div>
+      </div>
+      <div id="new-err" style="color:#dc2626;font-size:12px;margin-bottom:8px;display:none"></div>
+      <button id="new-save" style="width:100%;background:#3b82f6;color:white;border:none;border-radius:12px;padding:12px;font-weight:600;font-size:14px;cursor:pointer;font-family:'DM Sans',sans-serif">Enregistrer l'appel</button>
+    </div>
+  </div>
 </div>
 
-<div class="chart-tip" id="ctip"></div>
+<div class="ctip" id="ctip"></div>
 
 <script>
-var CHART=[{day:'Lun 12',n:8},{day:'Mar 13',n:14},{day:'Mer 14',n:11},{day:'Jeu 15',n:17},{day:'Ven 16',n:22},{day:'Sam 17',n:9},{day:'Dim 18',n:3}];
-var CALLS=[
-  {id:1,co:'Transports Dupont',res:'Bruit moteur anormal',prob:'Claquement démarrage à froid, possible distribution',rdv:'2025-02-18T09:30',tel:'06 12 34 56 78'},
-  {id:2,co:'BTP Marchand SARL',res:'Voyant moteur allumé',prob:'Témoin orange 3 jours, perte de puissance ressentie',rdv:'2025-02-18T11:00',tel:'07 89 01 23 45'},
-  {id:3,co:'Livraisons Express 31',res:'Pneu crevé sur A64',prob:'Crevaison arrière droit, pneu de secours posé',rdv:null,tel:'06 55 44 33 22'},
-  {id:4,co:'Cabinet Notarial Léon',res:'Vidange + révision',prob:'Véhicule à 45 000 km, révision complète demandée',rdv:'2025-02-19T14:00',tel:'05 61 78 90 12'},
-  {id:5,co:'Agence Immobilière Sud',res:'Freins qui crissent',prob:'Bruit métallique au freinage, plaquettes à vérifier',rdv:'2025-02-20T10:00',tel:'06 33 22 11 00'},
-  {id:6,co:'Menuiserie Fabre',res:'Climatisation en panne',prob:'Clim ne refroidit plus depuis la semaine dernière',rdv:null,tel:'06 77 66 55 44'}
+// ─── DATA — modifiable par n8n via addCall() ──────────────────────────────────
+// Structure d'un appel :
+// { id, prenom, numero, resume, probleme, heure_rdv (ISO string|null), timestamp (ISO), chat_id }
+
+var CALLS = [
+  {
+    id: 1,
+    prenom: 'Transports Dupont',
+    numero: '06 12 34 56 78',
+    resume: 'Bruit moteur anormal',
+    probleme: 'Claquement au démarrage à froid, possible problème de distribution. Véhicule : Renault Master 2019, 87 400 km.',
+    heure_rdv: '2025-02-18T09:30',
+    timestamp: '2025-02-18T08:02:14',
+    chat_id: 'n8n_conv_001'
+  },
+  {
+    id: 2,
+    prenom: 'BTP Marchand SARL',
+    numero: '07 89 01 23 45',
+    resume: 'Voyant moteur allumé',
+    probleme: 'Témoin orange allumé depuis 3 jours, perte de puissance ressentie lors des montées. Peugeot Partner 2020.',
+    heure_rdv: '2025-02-18T11:00',
+    timestamp: '2025-02-18T09:15:33',
+    chat_id: 'n8n_conv_002'
+  },
+  {
+    id: 3,
+    prenom: 'Livraisons Express 31',
+    numero: '06 55 44 33 22',
+    resume: 'Pneu crevé sur A64',
+    probleme: 'Crevaison arrière droit, pneu de secours posé. Souhaite rendez-vous pour remplacement complet des 4 pneus.',
+    heure_rdv: null,
+    timestamp: '2025-02-17T14:44:09',
+    chat_id: 'n8n_conv_003'
+  },
+  {
+    id: 4,
+    prenom: 'Cabinet Notarial Léon',
+    numero: '05 61 78 90 12',
+    resume: 'Vidange + révision',
+    probleme: 'Véhicule à 45 000 km, révision complète demandée avec remplacement des filtres et vérification des plaquettes.',
+    heure_rdv: '2025-02-19T14:00',
+    timestamp: '2025-02-17T11:22:55',
+    chat_id: 'n8n_conv_004'
+  },
+  {
+    id: 5,
+    prenom: 'Agence Immobilière Sud',
+    numero: '06 33 22 11 00',
+    resume: 'Freins qui crissent',
+    probleme: 'Bruit métallique au freinage depuis une semaine, plus prononcé à faible vitesse. Plaquettes à vérifier.',
+    heure_rdv: '2025-02-20T10:00',
+    timestamp: '2025-02-17T16:08:41',
+    chat_id: 'n8n_conv_005'
+  },
+  {
+    id: 6,
+    prenom: 'Menuiserie Fabre',
+    numero: '06 77 66 55 44',
+    resume: 'Climatisation en panne',
+    probleme: 'Clim ne refroidit plus depuis la semaine dernière. Véhicule : Citroën Berlingo 2021. Recharge gaz probable.',
+    heure_rdv: null,
+    timestamp: '2025-02-16T10:30:18',
+    chat_id: 'n8n_conv_006'
+  }
 ];
-var RDV={
-  '2025-02-18':[{t:'09:30',dur:60,cl:'Transports Dupont',det:'Bruit moteur – Diagnostic'},{t:'11:00',dur:90,cl:'BTP Marchand SARL',det:'Voyant moteur – Contrôle OBD'},{t:'14:30',dur:45,cl:'Auto École Martin',det:'Contrôle technique préventif'},{t:'16:00',dur:30,cl:'SARL Constructions Nord',det:'Devis carrosserie'}],
-  '2025-02-19':[{t:'08:30',dur:120,cl:'Cabinet Notarial Léon',det:'Vidange + révision 45k km'},{t:'11:00',dur:60,cl:'Flotte Renault SAS',det:'Remplacement courroie'},{t:'15:00',dur:45,cl:'Pharmacie Centrale',det:'Diagnostic électronique'}],
-  '2025-02-20':[{t:'10:00',dur:60,cl:'Agence Immobilière Sud',det:'Freins – Remplacement plaquettes'},{t:'13:30',dur:90,cl:'Société Génie Civil 31',det:'Boîte de vitesses – Inspection'}],
-  '2025-02-21':[{t:'09:00',dur:45,cl:'Restaurant Le Quercy',det:'Batterie déchargée – Remplacement'},{t:'14:00',dur:120,cl:'Taxi Occitanie',det:'Révision complète + contrôle'},{t:'16:30',dur:30,cl:'Boulangerie Moreau',det:'Pneus – Permutation saisonnière'}],
-  '2025-02-24':[{t:'10:30',dur:60,cl:'Studio Photo Lumière',det:'Climatisation – Recharge gaz'},{t:'15:00',dur:45,cl:'Mairie de Blagnac',det:'Contrôle périodique flotte'}]
+
+var RDV = {
+  '2025-02-18':[
+    {t:'09:30',dur:60,cl:'Transports Dupont',det:'Bruit moteur – Diagnostic'},
+    {t:'11:00',dur:90,cl:'BTP Marchand SARL',det:'Voyant moteur – Contrôle OBD'},
+    {t:'14:30',dur:45,cl:'Auto École Martin',det:'Contrôle technique préventif'},
+    {t:'16:00',dur:30,cl:'SARL Constructions Nord',det:'Devis carrosserie'}
+  ],
+  '2025-02-19':[
+    {t:'08:30',dur:120,cl:'Cabinet Notarial Léon',det:'Vidange + révision 45k km'},
+    {t:'11:00',dur:60,cl:'Flotte Renault SAS',det:'Remplacement courroie'},
+    {t:'15:00',dur:45,cl:'Pharmacie Centrale',det:'Diagnostic électronique'}
+  ],
+  '2025-02-20':[
+    {t:'10:00',dur:60,cl:'Agence Immobilière Sud',det:'Freins – Remplacement plaquettes'},
+    {t:'13:30',dur:90,cl:'Société Génie Civil 31',det:'Boîte de vitesses – Inspection'}
+  ],
+  '2025-02-21':[
+    {t:'09:00',dur:45,cl:'Restaurant Le Quercy',det:'Batterie déchargée – Remplacement'},
+    {t:'14:00',dur:120,cl:'Taxi Occitanie',det:'Révision complète + contrôle'},
+    {t:'16:30',dur:30,cl:'Boulangerie Moreau',det:'Pneus – Permutation saisonnière'}
+  ],
+  '2025-02-24':[
+    {t:'10:30',dur:60,cl:'Studio Photo Lumière',det:'Climatisation – Recharge gaz'},
+    {t:'15:00',dur:45,cl:'Mairie de Blagnac',det:'Contrôle périodique flotte'}
+  ]
 };
-var SIMS=[
-  {co:'Transports Leclerc & Fils',tel:'06 42 18 73 05',sit:'Claquement métallique sous capot au démarrage',det:'Répété à froid, disparaît après 2 min. KM: 87 400. Renault Master 2019.',rdv:'2025-02-19T08:30'},
-  {co:'SARL Électricité Faure',tel:'07 63 29 41 87',sit:"Fumée blanche à l'échappement",det:"Continue depuis matin, conso eau anormale. Suspicion joint de culasse. Peugeot Partner 2020.",rdv:null},
-  {co:'Flotte VTC Toulouse',tel:'06 81 54 32 09',sit:'Vibrations au freinage haute vitesse',det:'Volant vibre lors freinages >100km/h. Disques avant probablement voilés. Toyota Camry 2022.',rdv:'2025-02-20T14:30'},
-  {co:'Cabinet Médical Pyrénées',tel:'05 61 22 87 44',sit:'Voyant huile + témoin moteur allumés',det:'Deux témoins après long trajet. Niveau huile OK mais pression faible. BMW 320d 2021.',rdv:null},
-  {co:'Agence Compta Gestion Sud',tel:'06 17 93 62 58',sit:"Boîte auto qui patine 2ème-3ème",det:"Passage hésitant, odeur brûlé lors accélérations. VW Passat 2018 – 110 000 km.",rdv:'2025-02-21T09:00'}
-];
-var PROBS=[{lb:'Moteur / Diagnostic',n:24},{lb:'Freins',n:18},{lb:'Vidange / Révision',n:15},{lb:'Pneumatiques',n:12},{lb:'Climatisation',n:8},{lb:'Électronique',n:7}];
+
 var MFR=['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
 var DFR=['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'];
 var NAV=[{id:'dashboard',lb:'Tableau de bord',ic:'⊞'},{id:'calls',lb:'Appels',ic:'📞'},{id:'clients',lb:'Clients',ic:'👥'},{id:'stats',lb:'Statistiques',ic:'📊'}];
+var calY=2025,calM=1,calSel=null;
+var nextId=100;
 
-var calY=2025,calM=1,calSel=null,callTimer=null,callStep='ringing',callData=null;
-var probs={};
-CALLS.forEach(function(c){probs[c.id]=c.prob;});
+// ─── PUBLIC API — appelée par n8n ─────────────────────────────────────────────
+// Usage depuis n8n (HTTP Request ou webhook) :
+// window.addCall({ prenom, numero, resume, probleme, heure_rdv, timestamp, chat_id })
+function addCall(data) {
+  var call = {
+    id: nextId++,
+    prenom: data.prenom || '',
+    numero: data.numero || '',
+    resume: data.resume || '',
+    probleme: data.probleme || '',
+    heure_rdv: data.heure_rdv || null,
+    timestamp: data.timestamp || new Date().toISOString(),
+    chat_id: data.chat_id || ''
+  };
+  CALLS.unshift(call);
+  if (call.heure_rdv) {
+    var dk = call.heure_rdv.split('T')[0];
+    var hr = parseInt(call.heure_rdv.split('T')[1]);
+    var tm = call.heure_rdv.split('T')[1].slice(0,5);
+    if (!RDV[dk]) RDV[dk] = [];
+    RDV[dk].push({t:tm, dur:60, cl:call.prenom, det:call.resume});
+  }
+  refresh();
+}
 
-function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-function fmtL(dt){if(!dt)return null;var d=new Date(dt);return d.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'})+' à '+d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});}
-function fmtS(dt){if(!dt)return '—';var d=new Date(dt);return d.toLocaleDateString('fr-FR',{day:'2-digit',month:'2-digit'})+' '+d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});}
+function removeCall(id) {
+  CALLS = CALLS.filter(function(c){return c.id !== id;});
+  refresh();
+}
+
+function refresh() {
+  buildChart('chart-main', chartData());
+  buildCallsTable('calls-main');
+  buildCallsTable('calls-tab');
+  buildCalendar();
+  buildStats();
+  buildClients();
+  updateAiCount();
+}
+
+// ─── UTILS ────────────────────────────────────────────────────────────────────
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function fmtDT(dt){
+  if(!dt)return '—';
+  var d=new Date(dt);
+  return d.toLocaleDateString('fr-FR',{day:'2-digit',month:'2-digit',year:'2-digit'})+' '+d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+}
+function fmtTS(ts){
+  if(!ts)return '';
+  var d=new Date(ts);
+  return d.toLocaleDateString('fr-FR',{day:'2-digit',month:'2-digit'})+' à '+d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+}
+function fmtFull(dt){
+  if(!dt)return null;
+  var d=new Date(dt);
+  return d.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'})+' à '+d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+}
 function dkey(y,m,d){return y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');}
 
+// ─── CHART DATA from CALLS ────────────────────────────────────────────────────
+function chartData() {
+  var days = [];
+  for (var i=6; i>=0; i--) {
+    var d = new Date(2025,1,18); d.setDate(d.getDate()-i);
+    var dk = d.toISOString().split('T')[0];
+    var label = ['Dim','Lun','Mar','Mer','Jeu','Ven','Sam'][d.getDay()]+' '+d.getDate();
+    var count = CALLS.filter(function(c){return c.timestamp && c.timestamp.split('T')[0]===dk;}).length;
+    days.push({day:label, n:count});
+  }
+  return days;
+}
+
+// ─── TAB ──────────────────────────────────────────────────────────────────────
 function setTab(id){
   document.querySelectorAll('.tab-content').forEach(function(el){el.classList.remove('active');});
   document.getElementById('tab-'+id).classList.add('active');
@@ -246,6 +456,7 @@ function setTab(id){
   document.getElementById('page-title').textContent=labs[id];
 }
 
+// ─── NAV ──────────────────────────────────────────────────────────────────────
 function buildNav(){
   var nav=document.getElementById('nav');
   NAV.forEach(function(item){
@@ -258,17 +469,22 @@ function buildNav(){
   });
 }
 
+// ─── CHART ────────────────────────────────────────────────────────────────────
 function buildChart(id,data){
   var el=document.getElementById(id);
   if(!el)return;
+  var total=0;for(var i=0;i<data.length;i++)total+=data[i].n;
+  var csub=document.getElementById('chart-sub');
+  if(csub)csub.textContent='7 derniers jours · '+total+' appels';
   var W=500,H=150,PX=36,PY=18,maxV=0;
-  for(var i=0;i<data.length;i++){if(data[i].n>maxV)maxV=data[i].n;}
+  for(var j=0;j<data.length;j++){if(data[j].n>maxV)maxV=data[j].n;}
+  if(maxV===0)maxV=1;
   function px(i){return PX+(i/(data.length-1))*(W-PX*2);}
-  function py(v){return PY+(1-v/(maxV||1))*(H-PY*2);}
+  function py(v){return PY+(1-v/maxV)*(H-PY*2);}
   var ld=data.map(function(d,i){return (i===0?'M':'L')+px(i).toFixed(1)+','+py(d.n).toFixed(1);}).join(' ');
   var ad=ld+' L'+px(data.length-1).toFixed(1)+','+(H-PY)+' L'+px(0).toFixed(1)+','+(H-PY)+' Z';
   var uid='g'+Math.random().toString(36).slice(2,7);
-  var gl=[0,0.33,0.66,1].map(function(t,i){
+  var gl=[0,0.33,0.66,1].map(function(t){
     var y=PY+t*(H-PY*2);
     return '<line x1="'+PX+'" y1="'+y.toFixed(1)+'" x2="'+(W-PX)+'" y2="'+y.toFixed(1)+'" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="4,3"/><text x="'+(PX-5)+'" y="'+(y+4).toFixed(1)+'" text-anchor="end" font-size="10" fill="#94a3b8">'+Math.round(maxV*(1-t))+'</text>';
   }).join('');
@@ -279,26 +495,82 @@ function buildChart(id,data){
   el.innerHTML='<svg class="chart" viewBox="0 0 '+W+' '+H+'"><defs><linearGradient id="'+uid+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#3b82f6" stop-opacity="0.2"/><stop offset="100%" stop-color="#3b82f6" stop-opacity="0"/></linearGradient></defs>'+gl+'<path d="'+ad+'" fill="url(#'+uid+')"/><path d="'+ld+'" fill="none" stroke="#3b82f6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>'+pts+'</svg>';
   var tip=document.getElementById('ctip');
   el.querySelectorAll('.cpt').forEach(function(pt){
-    pt.addEventListener('mouseenter',function(e){tip.textContent=pt.dataset.d+' : '+pt.dataset.n+' appels';tip.style.display='block';tip.style.left=(e.clientX-40)+'px';tip.style.top=(e.clientY-38)+'px';});
+    pt.addEventListener('mouseenter',function(e){tip.textContent=pt.dataset.d+' : '+pt.dataset.n+' appel'+(pt.dataset.n!=='1'?'s':'');tip.style.display='block';tip.style.left=(e.clientX-40)+'px';tip.style.top=(e.clientY-38)+'px';});
     pt.addEventListener('mousemove',function(e){tip.style.left=(e.clientX-40)+'px';tip.style.top=(e.clientY-38)+'px';});
     pt.addEventListener('mouseleave',function(){tip.style.display='none';});
   });
 }
 
-function callsTableHTML(){
-  var h='<div class="sec-title-lg">Derniers appels</div><div style="overflow-x:auto"><table><thead><tr><th>Entreprise</th><th>Résumé</th><th>Problème (éditable)</th><th>Heure RDV</th><th>Téléphone</th></tr></thead><tbody>';
+// ─── CALLS TABLE ──────────────────────────────────────────────────────────────
+function buildCallsTable(id){
+  var el=document.getElementById(id);
+  if(!el)return;
+  var h='<div class="sec-title-lg">Derniers appels <span style="font-size:13px;font-weight:400;color:#94a3b8">('+CALLS.length+')</span></div>';
+  h+='<div style="overflow-x:auto"><table><thead><tr>';
+  h+='<th>Contact</th><th>Numéro</th><th>Résumé</th><th>Problème</th><th>RDV</th><th>Reçu le</th><th>Chat ID</th><th></th>';
+  h+='</tr></thead><tbody>';
   CALLS.forEach(function(c){
-    var rc=c.rdv?'color:#1d4ed8;font-weight:600':'color:#94a3b8';
-    h+='<tr><td style="font-weight:600;color:#1e293b;white-space:nowrap">'+esc(c.co)+'</td><td><span class="badge">'+esc(c.res)+'</span></td><td style="min-width:200px"><input class="prob-input" data-id="'+c.id+'" value="'+esc(probs[c.id])+'"></td><td style="white-space:nowrap;'+rc+'">'+fmtS(c.rdv)+'</td><td style="white-space:nowrap;color:#475569">'+esc(c.tel)+'</td></tr>';
+    var hasRdv=!!c.heure_rdv;
+    var statusBadge=hasRdv?'<span class="status-rdv">RDV fixé</span>':'<span class="status-info">Info</span>';
+    h+='<tr class="row-link" data-id="'+c.id+'">';
+    h+='<td style="font-weight:600;color:#1e293b;white-space:nowrap">'+esc(c.prenom)+'</td>';
+    h+='<td style="white-space:nowrap;color:#475569">'+esc(c.numero)+'</td>';
+    h+='<td><span class="badge">'+esc(c.resume)+'</span></td>';
+    h+='<td style="min-width:180px"><input class="prob-input" data-id="'+c.id+'" value="'+esc(c.probleme)+'" title="'+esc(c.probleme)+'"></td>';
+    h+='<td style="white-space:nowrap;'+(hasRdv?'color:#1d4ed8;font-weight:600':'color:#94a3b8')+'">'+fmtDT(c.heure_rdv)+'</td>';
+    h+='<td style="white-space:nowrap;color:#64748b;font-size:12px">'+fmtTS(c.timestamp)+'</td>';
+    h+='<td style="white-space:nowrap"><code style="font-size:11px;background:#f1f5f9;padding:2px 6px;border-radius:4px;color:#64748b">'+esc(c.chat_id)+'</code></td>';
+    h+='<td><button class="del-btn" data-id="'+c.id+'" style="background:none;border:none;color:#94a3b8;cursor:pointer;font-size:16px;padding:2px 4px" title="Supprimer">🗑</button></td>';
+    h+='</tr>';
   });
-  return h+'</tbody></table></div>';
-}
-function bindInputs(el){
+  if(CALLS.length===0){h+='<tr><td colspan="8" style="text-align:center;padding:40px;color:#94a3b8">Aucun appel enregistré</td></tr>';}
+  h+='</tbody></table></div>';
+  el.innerHTML=h;
   el.querySelectorAll('.prob-input').forEach(function(inp){
-    inp.addEventListener('change',function(){probs[inp.dataset.id]=inp.value;});
+    inp.addEventListener('change',function(){
+      var id=parseInt(inp.dataset.id);
+      var c=CALLS.find(function(x){return x.id===id;});
+      if(c)c.probleme=inp.value;
+    });
+    inp.addEventListener('click',function(e){e.stopPropagation();});
+  });
+  el.querySelectorAll('.del-btn').forEach(function(btn){
+    btn.addEventListener('click',function(e){
+      e.stopPropagation();
+      if(confirm('Supprimer cet appel ?'))removeCall(parseInt(btn.dataset.id));
+    });
+  });
+  el.querySelectorAll('.row-link').forEach(function(row){
+    row.addEventListener('click',function(){openDetail(parseInt(row.dataset.id));});
   });
 }
 
+// ─── CALL DETAIL ──────────────────────────────────────────────────────────────
+function openDetail(id){
+  var c=CALLS.find(function(x){return x.id===id;});
+  if(!c)return;
+  document.getElementById('detail-title').textContent=c.prenom;
+  var h='';
+  h+='<div class="detail-grid">';
+  h+='<div class="detail-section detail-gray"><div class="detail-label">Prénom / Entreprise</div><div class="detail-val">'+esc(c.prenom)+'</div></div>';
+  h+='<div class="detail-section detail-gray"><div class="detail-label">Numéro</div><div class="detail-val"><a href="tel:'+esc(c.numero)+'" style="color:#3b82f6;text-decoration:none">'+esc(c.numero)+'</a></div></div>';
+  h+='</div>';
+  h+='<div class="detail-section detail-yellow"><div class="detail-label">Résumé</div><div class="detail-val" style="font-size:15px;font-weight:600">'+esc(c.resume)+'</div></div>';
+  h+='<div class="detail-section detail-gray"><div class="detail-label">Problème détaillé</div><div class="detail-val" style="line-height:1.6">'+esc(c.probleme)+'</div></div>';
+  if(c.heure_rdv){
+    h+='<div class="detail-section detail-blue"><div class="detail-label">📅 Rendez-vous fixé</div><div class="detail-val" style="color:#1d4ed8;font-size:15px">'+fmtFull(c.heure_rdv)+'</div></div>';
+  }else{
+    h+='<div class="detail-section detail-gray"><div class="detail-label">Rendez-vous</div><div class="detail-val" style="color:#94a3b8">Pas encore fixé</div></div>';
+  }
+  h+='<div class="detail-grid" style="margin-top:12px">';
+  h+='<div class="detail-section detail-green" style="margin-bottom:0"><div class="detail-label">⏰ Reçu le</div><div class="detail-val" style="font-size:13px">'+esc(fmtFull(c.timestamp)||'')+'</div></div>';
+  h+='<div class="detail-section detail-gray" style="margin-bottom:0"><div class="detail-label">🔗 Chat ID (n8n)</div><div class="detail-val"><code style="font-size:13px;background:#e2e8f0;padding:3px 8px;border-radius:6px">'+esc(c.chat_id)+'</code></div></div>';
+  h+='</div>';
+  document.getElementById('detail-body').innerHTML=h;
+  document.getElementById('detail-overlay').classList.add('open');
+}
+
+// ─── CALENDAR ─────────────────────────────────────────────────────────────────
 function buildCalendar(){
   var el=document.getElementById('cal-widget');
   if(!el)return;
@@ -330,6 +602,7 @@ function buildCalendar(){
   });
 }
 
+// ─── AGENDA ───────────────────────────────────────────────────────────────────
 function openAgenda(date){
   var key=date.toISOString().split('T')[0];
   var rdvs=RDV[key]||[];
@@ -351,70 +624,132 @@ function openAgenda(date){
   document.getElementById('agenda-overlay').classList.add('open');
 }
 
+// ─── STATS ────────────────────────────────────────────────────────────────────
 function buildStats(){
+  var withRdv=CALLS.filter(function(c){return !!c.heure_rdv;}).length;
+  var taux=CALLS.length?Math.round(withRdv/CALLS.length*100):0;
   var sc=document.getElementById('stats-cards');
-  if(sc)sc.innerHTML=[{lb:'Appels ce mois',val:'84',col:'#3b82f6',ic:'📞'},{lb:'RDV confirmés',val:'31',col:'#22c55e',ic:'✅'},{lb:'Taux conversion',val:'36.9%',col:'#f59e0b',ic:'📈'}].map(function(s){return '<div class="stat-card"><div style="font-size:24px">'+s.ic+'</div><div class="stat-val" style="color:'+s.col+'">'+s.val+'</div><div class="stat-lbl">'+s.lb+'</div></div>';}).join('');
-  var maxC=0;PROBS.forEach(function(p){if(p.n>maxC)maxC=p.n;});
+  if(sc)sc.innerHTML=[
+    {lb:'Appels enregistrés',val:String(CALLS.length),col:'#3b82f6',ic:'📞'},
+    {lb:'RDV confirmés',val:String(withRdv),col:'#22c55e',ic:'✅'},
+    {lb:'Taux conversion',val:taux+'%',col:'#f59e0b',ic:'📈'}
+  ].map(function(s){return '<div class="stat-card"><div style="font-size:24px">'+s.ic+'</div><div style="font-weight:700;font-size:22px;color:'+s.col+';margin-top:6px">'+s.val+'</div><div style="font-size:12px;color:#94a3b8;margin-top:2px">'+s.lb+'</div></div>';}).join('');
+
+  var probMap={};
+  CALLS.forEach(function(c){
+    var kw=['moteur','frein','vidange','pneu','clim','électro','boîte','batterie','carrosserie'];
+    var found=false;
+    kw.forEach(function(k){
+      if(!found&&c.probleme&&c.probleme.toLowerCase().indexOf(k)>=0){
+        probMap[k]=(probMap[k]||0)+1;found=true;
+      }
+    });
+    if(!found)probMap['autre']=(probMap['autre']||0)+1;
+  });
+  var probs=Object.keys(probMap).map(function(k){return {lb:k.charAt(0).toUpperCase()+k.slice(1),n:probMap[k]};});
+  probs.sort(function(a,b){return b.n-a.n;});
+  var maxC=probs.length?probs[0].n:1;
   var pc=document.getElementById('probs-card');
-  if(pc)pc.innerHTML='<div class="sec-title">Top problèmes signalés</div>'+PROBS.map(function(p){return '<div class="prob-row"><span style="color:#334155">'+esc(p.lb)+'</span><span style="font-weight:600;color:#3b82f6">'+p.n+'</span></div><div class="prob-bar-bg"><div class="prob-bar" style="width:'+Math.round(p.n/maxC*100)+'%"></div></div>';}).join('');
+  if(pc){
+    pc.innerHTML='<div class="sec-title">Problèmes détectés</div>'+(probs.length?probs.map(function(p){
+      return '<div style="display:flex;justify-content:space-between;font-size:13px"><span style="color:#334155">'+esc(p.lb)+'</span><span style="font-weight:600;color:#3b82f6">'+p.n+'</span></div>'+
+             '<div class="prob-bar-bg"><div class="prob-bar" style="width:'+Math.round(p.n/maxC*100)+'%"></div></div>';
+    }).join(''):'<div style="color:#94a3b8;font-size:13px">Aucune donnée</div>');
+  }
   var cc=document.getElementById('stats-chart-card');
-  if(cc){cc.innerHTML='<div class="sec-title">Activité 7 derniers jours</div><div id="stats-chart"></div>';buildChart('stats-chart',CHART);}
+  if(cc){cc.innerHTML='<div class="sec-title">Activité 7 derniers jours</div><div id="stats-chart"></div>';buildChart('stats-chart',chartData());}
 }
 
+function updateAiCount(){
+  var el=document.getElementById('ai-count');
+  if(el)el.textContent=CALLS.length+' ce mois';
+}
+
+// ─── CLIENTS ──────────────────────────────────────────────────────────────────
 function buildClients(){
   var el=document.getElementById('clients-grid');
   if(!el)return;
-  el.innerHTML=CALLS.map(function(c){return '<div class="client-card"><div class="client-icon">🏢</div><div style="font-weight:700;font-size:15px;color:#1e293b;margin-bottom:4px">'+esc(c.co)+'</div><div style="font-size:13px;color:#64748b;margin-bottom:8px">'+esc(c.tel)+'</div><div style="font-size:12px;color:#475569;background:#f8fafc;border-radius:8px;padding:6px 10px;margin-bottom:6px">'+esc(c.res)+'</div>'+(c.rdv?'<div style="font-size:12px;color:#1d4ed8;font-weight:600">📅 '+fmtS(c.rdv)+'</div>':'')+'</div>';}).join('');
+  if(CALLS.length===0){el.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:60px;color:#94a3b8">Aucun contact</div>';return;}
+  el.innerHTML=CALLS.map(function(c){
+    return '<div class="client-card" onclick="openDetail('+c.id+')" >' +
+      '<div style="width:44px;height:44px;background:#eff6ff;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:12px">🏢</div>'+
+      '<div style="font-weight:700;font-size:15px;color:#1e293b;margin-bottom:4px">'+esc(c.prenom)+'</div>'+
+      '<div style="font-size:13px;color:#64748b;margin-bottom:8px">'+esc(c.numero)+'</div>'+
+      '<div style="font-size:12px;color:#475569;background:#f8fafc;border-radius:8px;padding:6px 10px;margin-bottom:6px">'+esc(c.resume)+'</div>'+
+      (c.heure_rdv?'<div style="font-size:12px;color:#1d4ed8;font-weight:600">📅 '+esc(fmtDT(c.heure_rdv))+'</div>':'')+
+      '<div style="font-size:11px;color:#94a3b8;margin-top:6px">'+esc(c.timestamp?fmtTS(c.timestamp):'')+'</div>'+
+      '</div>';
+  }).join('');
 }
 
-function simulateCall(){
-  callData=SIMS[Math.floor(Math.random()*SIMS.length)];
-  callStep='ringing';
-  renderCall();
-  document.getElementById('call-overlay').classList.add('open');
-  callTimer=setTimeout(answerCall,2500);
+// ─── NEW CALL FORM ────────────────────────────────────────────────────────────
+function openNewCall(){
+  document.getElementById('f-prenom').value='';
+  document.getElementById('f-numero').value='';
+  document.getElementById('f-resume').value='';
+  document.getElementById('f-probleme').value='';
+  document.getElementById('f-rdv').value='';
+  document.getElementById('f-chatid').value='';
+  document.getElementById('new-err').style.display='none';
+  document.getElementById('new-overlay').classList.add('open');
+  document.getElementById('f-prenom').focus();
 }
 
-function renderCall(){
-  var c=callData,step=callStep;
-  var hdrCls=step==='ringing'?'hdr-ring':'hdr-active';
-  var ico=step==='ringing'?'📲':'🔧';
-  var icoCls=step==='ringing'?'ringing':'';
-  var sub=step==='ringing'?'Appel entrant simulé':'Appel en cours — IA active';
-  var body='';
-  if(step==='active'){
-    var rdvH=c.rdv?'<div class="info-box info-blue"><div style="font-weight:600;font-size:12px;color:#1e40af;margin-bottom:2px">📅 Rendez-vous fixé</div><div style="font-size:14px;color:#1d4ed8;font-weight:600">'+fmtL(c.rdv)+'</div></div>':'<div class="info-box info-green"><div style="font-weight:600;font-size:12px;color:#166534;margin-bottom:2px">💬 Statut</div><div style="font-size:13px;color:#166534">Demande d\'information – pas de RDV</div></div>';
-    body='<div class="call-body"><div class="info-box info-yellow"><div style="font-weight:600;font-size:12px;color:#92400e;margin-bottom:4px">🎤 Situation signalée</div><div style="font-size:14px;color:#78350f;font-weight:500">'+esc(c.sit)+'</div></div><div class="info-box info-gray"><div style="font-weight:600;font-size:12px;color:#475569;margin-bottom:4px">📋 Diagnostic IA</div><div style="font-size:13px;color:#334155;line-height:1.6">'+esc(c.det)+'</div></div>'+rdvH+'<button class="btn-end" id="btn-end">Terminer l\'appel</button></div>';
-  }else{
-    body='<div class="call-footer"><div style="color:#64748b;font-size:14px;margin-bottom:16px">Connexion en cours…</div><div class="btn-row"><button class="btn-ignore" id="btn-ignore">✕ Ignorer</button><button class="btn-answer" id="btn-answer">📞 Décrocher</button></div></div>';
-  }
-  document.getElementById('call-inner').innerHTML='<div class="call-hdr '+hdrCls+'"><div class="'+icoCls+'" style="font-size:40px;margin-bottom:8px">'+ico+'</div><div style="color:rgba(255,255,255,.75);font-size:12px;margin-bottom:4px">'+sub+'</div><div style="color:white;font-weight:700;font-size:20px;font-family:\'Syne\',sans-serif">'+esc(c.co)+'</div><div style="color:rgba(255,255,255,.85);font-size:14px;margin-top:4px">'+esc(c.tel)+'</div></div>'+body;
-  var be=document.getElementById('btn-end');
-  var bi=document.getElementById('btn-ignore');
-  var ba=document.getElementById('btn-answer');
-  if(be)be.onclick=closeCall;
-  if(bi)bi.onclick=closeCall;
-  if(ba)ba.onclick=answerCall;
+function saveNewCall(){
+  var prenom=document.getElementById('f-prenom').value.trim();
+  var numero=document.getElementById('f-numero').value.trim();
+  var resume=document.getElementById('f-resume').value.trim();
+  var err=document.getElementById('new-err');
+  if(!prenom||!numero||!resume){err.textContent='Prénom, numéro et résumé sont obligatoires.';err.style.display='block';return;}
+  addCall({
+    prenom:prenom,
+    numero:numero,
+    resume:resume,
+    probleme:document.getElementById('f-probleme').value.trim(),
+    heure_rdv:document.getElementById('f-rdv').value||null,
+    timestamp:new Date().toISOString(),
+    chat_id:document.getElementById('f-chatid').value.trim()||('manual_'+Date.now())
+  });
+  document.getElementById('new-overlay').classList.remove('open');
 }
 
-function answerCall(){clearTimeout(callTimer);callStep='active';renderCall();}
-function closeCall(){clearTimeout(callTimer);document.getElementById('call-overlay').classList.remove('open');}
-
+// ─── INIT ─────────────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded',function(){
   document.getElementById('page-sub').textContent='Mardi 18 février 2025 · Bienvenue sur votre tableau de bord';
   buildNav();
-  buildChart('chart-main',CHART);
-  var cm=document.getElementById('calls-main');if(cm){cm.innerHTML=callsTableHTML();bindInputs(cm);}
-  var ct=document.getElementById('calls-tab');if(ct){ct.innerHTML=callsTableHTML();bindInputs(ct);}
+  buildChart('chart-main',chartData());
+  buildCallsTable('calls-main');
+  buildCallsTable('calls-tab');
   buildCalendar();
   buildStats();
   buildClients();
-  document.getElementById('sim-btn').onclick=simulateCall;
+  updateAiCount();
+
   document.getElementById('stats-cta').onclick=function(){setTab('stats');};
+  document.getElementById('new-btn').onclick=openNewCall;
+  document.getElementById('new-save').onclick=saveNewCall;
+  document.getElementById('new-close').onclick=function(){document.getElementById('new-overlay').classList.remove('open');};
+  document.getElementById('detail-close').onclick=function(){document.getElementById('detail-overlay').classList.remove('open');};
   document.getElementById('agenda-close').onclick=function(){document.getElementById('agenda-overlay').classList.remove('open');};
-  document.getElementById('agenda-overlay').addEventListener('click',function(e){if(e.target===this)this.classList.remove('open');});
-  document.getElementById('call-overlay').addEventListener('click',function(e){if(e.target===this)closeCall();});
+  ['detail-overlay','agenda-overlay','new-overlay'].forEach(function(id){
+    document.getElementById(id).addEventListener('click',function(e){if(e.target===this)this.classList.remove('open');});
+  });
 });
+
+// ─── n8n INTEGRATION NOTE ─────────────────────────────────────────────────────
+// Pour ajouter un appel depuis n8n, utilisez un noeud "Execute Script" ou
+// injectez via postMessage / iframe. Exemple de payload attendu :
+// {
+//   "prenom": "Dupont Jean",
+//   "numero": "06 12 34 56 78",
+//   "resume": "Bruit moteur",
+//   "probleme": "Claquement au démarrage",
+//   "heure_rdv": "2025-02-20T10:00",   <- null si pas de RDV
+//   "timestamp": "2025-02-18T08:02:14",
+//   "chat_id": "n8n_conv_042"
+// }
+// Appelez ensuite: window.addCall(payload)
+// Pour supprimer: window.removeCall(id)
 </script>
 </body>
 </html>
