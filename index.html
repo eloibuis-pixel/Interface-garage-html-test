@@ -4,36 +4,205 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>GarageAI — Tableau de bord</title>
-<script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
-<script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'DM Sans',sans-serif;background:#f1f5f9;overflow:hidden;height:100vh}
+html,body{height:100%;overflow:hidden}
+body{font-family:'DM Sans',sans-serif;background:#f1f5f9;color:#1e293b}
 ::-webkit-scrollbar{width:5px}::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:99px}
 @keyframes pg{0%,100%{box-shadow:0 0 0 0 rgba(34,197,94,.5)}50%{box-shadow:0 0 0 6px rgba(34,197,94,0)}}
 @keyframes rg{0%{transform:rotate(0deg)}10%{transform:rotate(-15deg)}20%{transform:rotate(15deg)}30%{transform:rotate(-10deg)}40%{transform:rotate(10deg)}50%,100%{transform:rotate(0deg)}}
 @keyframes fu{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-.pdot{animation:pg 2s infinite}.ringing{display:inline-block;animation:rg 1s infinite}.fup{animation:fu .3s ease both}
-table{border-collapse:collapse;width:100%}input:focus{outline:none}button{font-family:'DM Sans',sans-serif;cursor:pointer}
+.pdot{width:8px;height:8px;background:#22c55e;border-radius:50%;animation:pg 2s infinite;flex-shrink:0}
+.pdot-lg{width:10px;height:10px;background:#22c55e;border-radius:50%;animation:pg 2s infinite;flex-shrink:0}
+.ringing{display:inline-block;animation:rg 1s infinite}
+.fup{animation:fu .3s ease both}
+.layout{display:flex;height:100vh}
+.sidebar{width:220px;background:#0f172a;display:flex;flex-direction:column;padding:24px 16px;flex-shrink:0}
+.logo-wrap{margin-bottom:32px}
+.logo-title{font-family:'Syne',sans-serif;font-weight:800;font-size:20px;color:white}
+.logo-dot{color:#3b82f6}.logo-ai{color:#60a5fa}
+.logo-sub{color:#475569;font-size:11px;margin-top:2px}
+.nav-btn{display:flex;align-items:center;gap:10px;width:100%;padding:10px 12px;border-radius:12px;border:none;background:transparent;color:#94a3b8;font-weight:400;font-size:14px;margin-bottom:4px;text-align:left;transition:all .2s;cursor:pointer;font-family:'DM Sans',sans-serif}
+.nav-btn.active{background:#1e40af;color:white;font-weight:600}
+.sim-btn{background:linear-gradient(135deg,#2563eb,#7c3aed);color:white;border:none;border-radius:14px;padding:14px 12px;font-weight:700;font-size:13px;width:100%;box-shadow:0 4px 20px rgba(59,130,246,.4);display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:transform .15s,box-shadow .15s}
+.sim-btn:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(59,130,246,.55)}
+.ai-status{margin-top:14px;display:flex;align-items:center;gap:8px;padding:10px 12px;background:#1e293b;border-radius:12px}
+.main{flex:1;overflow:auto;padding:24px;display:flex;flex-direction:column}
+.header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}
+.page-title{font-family:'Syne',sans-serif;font-weight:800;font-size:26px;color:#0f172a;letter-spacing:-.5px}
+.page-sub{color:#64748b;font-size:14px;margin-top:2px}
+.new-btn{background:#3b82f6;color:white;border:none;border-radius:12px;padding:10px 18px;font-weight:600;font-size:14px;box-shadow:0 4px 14px rgba(59,130,246,.35);cursor:pointer;font-family:'DM Sans',sans-serif}
+.card{background:white;border-radius:24px;padding:24px;box-shadow:0 2px 16px rgba(0,0,0,.06)}
+.card-sm{background:white;border-radius:20px;padding:20px;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+.dash-grid{display:grid;grid-template-columns:1fr 300px;gap:20px}
+.left-col{display:flex;flex-direction:column;gap:20px}
+.right-col{display:flex;flex-direction:column;gap:16px}
+.stats-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:20px}
+.clients-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+table{border-collapse:collapse;width:100%}
+th{text-align:left;padding:8px 10px;font-size:12px;font-weight:600;color:#94a3b8;white-space:nowrap;border-bottom:2px solid #f1f5f9}
+td{padding:12px 10px;border-bottom:1px solid #f8fafc;font-size:13px;vertical-align:middle;transition:background .15s}
+tr:hover td{background:#f8fafc}
+.prob-input{border:1px solid #e2e8f0;border-radius:8px;padding:5px 8px;font-size:12px;color:#334155;width:100%;background:#fafafa;font-family:'DM Sans',sans-serif;transition:border .15s,background .15s}
+.prob-input:focus{outline:none;border-color:#3b82f6;background:white}
+.badge{display:inline-block;background:#f1f5f9;border-radius:6px;padding:3px 8px;font-size:12px;color:#475569}
+.cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.cal-nav{background:#f1f5f9;border:none;border-radius:8px;width:28px;height:28px;color:#475569;font-size:18px;cursor:pointer;line-height:1}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+.cal-day-name{text-align:center;font-size:11px;font-weight:600;color:#94a3b8;padding:3px 0}
+.cal-day{text-align:center;padding:6px 2px;border-radius:8px;cursor:pointer;font-size:13px;border:1.5px solid transparent;transition:all .15s;position:relative}
+.cal-day:hover{background:#f1f5f9}
+.cal-day.today{background:#3b82f6;color:white;font-weight:700}
+.cal-day.selected{background:#eff6ff;border-color:#3b82f6}
+.cal-day.empty{cursor:default;pointer-events:none}
+.cal-dot{width:4px;height:4px;border-radius:50%;background:#3b82f6;margin:1px auto 0}
+.cal-day.today .cal-dot{background:white}
+.cal-hint{margin-top:10px;padding:8px 10px;background:#f8fafc;border-radius:10px;font-size:12px;color:#64748b;text-align:center}
+.chart-wrap{position:relative;width:100%}
+svg.chart{width:100%;height:auto;overflow:visible}
+.chart-tip{position:fixed;background:#0f172a;color:white;padding:5px 10px;border-radius:8px;font-size:12px;pointer-events:none;white-space:nowrap;z-index:9999;display:none}
+.overlay{position:fixed;inset:0;background:rgba(15,23,42,.65);z-index:200;display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+.overlay.open{display:flex}
+.modal{background:white;border-radius:20px;width:480px;max-height:82vh;overflow:hidden;box-shadow:0 25px 60px rgba(0,0,0,.35);animation:fu .3s ease}
+.modal-hdr{background:#1e293b;padding:16px 20px;display:flex;align-items:center;justify-content:space-between}
+.modal-close{background:#334155;border:none;color:white;border-radius:8px;width:30px;height:30px;font-size:20px;cursor:pointer;line-height:1;display:flex;align-items:center;justify-content:center}
+.modal-body{overflow-y:auto;max-height:66vh;padding:8px 16px 20px}
+.agenda-row{display:flex;min-height:50px;border-bottom:1px solid #f1f5f9}
+.agenda-time{width:46px;padding-top:10px;color:#94a3b8;font-size:11px;flex-shrink:0}
+.agenda-slot{flex:1;padding:4px 0 4px 8px}
+.agenda-event{background:#eff6ff;border-left:4px solid #3b82f6;border-radius:10px;padding:8px 12px}
+.call-modal-wrap{background:white;border-radius:24px;width:400px;box-shadow:0 30px 80px rgba(0,0,0,.4);overflow:hidden;animation:fu .3s ease}
+.call-hdr{padding:28px 24px;text-align:center;transition:background .6s}
+.hdr-ring{background:linear-gradient(135deg,#1e40af,#3b82f6)}
+.hdr-active{background:linear-gradient(135deg,#166534,#16a34a)}
+.call-body{padding:20px 24px}
+.info-box{border-radius:12px;padding:12px 14px;margin-bottom:12px}
+.info-yellow{background:#fef3c7;border-left:4px solid #f59e0b}
+.info-gray{background:#f8fafc}
+.info-blue{background:#eff6ff;border-left:4px solid #3b82f6;margin-bottom:16px}
+.info-green{background:#f0fdf4;margin-bottom:16px}
+.call-footer{padding:20px 24px;text-align:center}
+.btn-row{display:flex;gap:12px}
+.btn-ignore{flex:1;background:#fef2f2;color:#ef4444;border:none;border-radius:12px;padding:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif}
+.btn-answer{flex:1;background:#22c55e;color:white;border:none;border-radius:12px;padding:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif}
+.btn-end{width:100%;background:#1e293b;color:white;border:none;border-radius:12px;padding:12px;font-weight:600;font-size:14px;cursor:pointer;font-family:'DM Sans',sans-serif}
+.stat-card{background:white;border-radius:16px;padding:16px;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+.stat-val{font-weight:700;font-size:22px;margin-top:6px}
+.stat-lbl{font-size:12px;color:#94a3b8;margin-top:2px}
+.prob-bar-bg{background:#f1f5f9;border-radius:99px;height:6px;margin-top:4px;margin-bottom:10px}
+.prob-bar{background:#3b82f6;border-radius:99px;height:6px}
+.prob-row{display:flex;justify-content:space-between;font-size:13px}
+.client-card{background:white;border-radius:20px;padding:20px;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+.client-icon{width:44px;height:44px;background:#eff6ff;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:12px}
+.tab-content{display:none}.tab-content.active{display:block}
+.sec-title{font-family:'Syne',sans-serif;font-weight:700;font-size:15px;color:#1e293b;margin-bottom:14px}
+.sec-title-lg{font-family:'Syne',sans-serif;font-weight:700;font-size:16px;color:#1e293b;margin-bottom:16px}
+.ai-row{display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px}
+.stats-cta{background:linear-gradient(135deg,#0f172a,#1e293b);color:white;border:none;border-radius:20px;padding:16px;cursor:pointer;text-align:left;box-shadow:0 4px 16px rgba(0,0,0,.15);width:100%;font-family:'DM Sans',sans-serif}
+.chart-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.pill{background:#eff6ff;color:#3b82f6;font-size:12px;padding:4px 10px;border-radius:99px;font-weight:600}
 </style>
 </head>
 <body>
-<div id="root"></div>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="logo-wrap">
+      <div class="logo-title">Garage<span class="logo-dot">.</span><span class="logo-ai">AI</span></div>
+      <div class="logo-sub">Gestionnaire Automobile</div>
+    </div>
+    <nav style="flex:1" id="nav"></nav>
+    <button class="sim-btn" id="sim-btn">📲 Simuler Appel</button>
+    <div class="ai-status">
+      <div class="pdot"></div>
+      <div>
+        <div style="color:white;font-size:12px;font-weight:600">IA en ligne</div>
+        <div style="color:#475569;font-size:10px">n8n · actif</div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="header">
+      <div>
+        <h1 class="page-title" id="page-title">Tableau de bord</h1>
+        <p class="page-sub" id="page-sub"></p>
+      </div>
+      <button class="new-btn">+ Nouvel Appel</button>
+    </div>
+
+    <div id="tab-dashboard" class="tab-content active">
+      <div class="dash-grid">
+        <div class="left-col">
+          <div class="card">
+            <div class="chart-hdr">
+              <div>
+                <div class="sec-title-lg" style="margin-bottom:2px">Activité des appels</div>
+                <div style="color:#94a3b8;font-size:13px">7 derniers jours · 84 appels ce mois</div>
+              </div>
+              <span class="pill">📈 Semaine en cours</span>
+            </div>
+            <div class="chart-wrap" id="chart-main"></div>
+          </div>
+          <div class="card" id="calls-main"></div>
+        </div>
+        <div class="right-col">
+          <div class="card-sm" id="cal-widget"></div>
+          <div class="card-sm">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
+              <div class="pdot-lg"></div>
+              <span class="sec-title" style="margin:0">IA en ligne</span>
+            </div>
+            <div class="ai-row"><span style="color:#94a3b8">Modèle</span><span style="font-weight:500">GPT-4o via n8n</span></div>
+            <div class="ai-row"><span style="color:#94a3b8">Webhook</span><span style="font-weight:500">Connecté ✓</span></div>
+            <div class="ai-row"><span style="color:#94a3b8">Réponse moy.</span><span style="font-weight:500">1.4s</span></div>
+            <div class="ai-row"><span style="color:#94a3b8">Appels traités</span><span style="font-weight:500">84 ce mois</span></div>
+          </div>
+          <button class="stats-cta" id="stats-cta">
+            <div style="font-size:24px;margin-bottom:6px">📊</div>
+            <div style="font-weight:700;font-family:'Syne',sans-serif;font-size:14px;margin-bottom:4px">Voir les statistiques</div>
+            <div style="font-size:12px;color:#94a3b8">Conversion, top problèmes, tendances</div>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div id="tab-calls" class="tab-content">
+      <div class="card fup" id="calls-tab"></div>
+    </div>
+    <div id="tab-clients" class="tab-content">
+      <div class="clients-grid fup" id="clients-grid"></div>
+    </div>
+    <div id="tab-stats" class="tab-content fup">
+      <div class="stats-grid" id="stats-cards"></div>
+      <div class="card-sm" style="margin-bottom:16px" id="probs-card"></div>
+      <div class="card-sm" id="stats-chart-card"></div>
+    </div>
+  </main>
+</div>
+
+<div class="overlay" id="agenda-overlay">
+  <div class="modal" id="agenda-modal">
+    <div class="modal-hdr">
+      <div>
+        <div style="color:#94a3b8;font-size:12px">Agenda du</div>
+        <div id="agenda-title" style="color:white;font-weight:700;font-size:16px;font-family:'Syne',sans-serif"></div>
+      </div>
+      <button class="modal-close" id="agenda-close">×</button>
+    </div>
+    <div class="modal-body" id="agenda-body"></div>
+  </div>
+</div>
+
+<div class="overlay" id="call-overlay">
+  <div class="call-modal-wrap" id="call-inner"></div>
+</div>
+
+<div class="chart-tip" id="ctip"></div>
+
 <script>
-window.addEventListener('load', function() {
-
-var ce = React.createElement;
-var useState = React.useState;
-var useEffect = React.useEffect;
-var useRef = React.useRef;
-
-var CHART = [
-  {day:'Lun 12',n:8},{day:'Mar 13',n:14},{day:'Mer 14',n:11},
-  {day:'Jeu 15',n:17},{day:'Ven 16',n:22},{day:'Sam 17',n:9},{day:'Dim 18',n:3}
-];
-
-var CALLS = [
+var CHART=[{day:'Lun 12',n:8},{day:'Mar 13',n:14},{day:'Mer 14',n:11},{day:'Jeu 15',n:17},{day:'Ven 16',n:22},{day:'Sam 17',n:9},{day:'Dim 18',n:3}];
+var CALLS=[
   {id:1,co:'Transports Dupont',res:'Bruit moteur anormal',prob:'Claquement démarrage à froid, possible distribution',rdv:'2025-02-18T09:30',tel:'06 12 34 56 78'},
   {id:2,co:'BTP Marchand SARL',res:'Voyant moteur allumé',prob:'Témoin orange 3 jours, perte de puissance ressentie',rdv:'2025-02-18T11:00',tel:'07 89 01 23 45'},
   {id:3,co:'Livraisons Express 31',res:'Pneu crevé sur A64',prob:'Crevaison arrière droit, pneu de secours posé',rdv:null,tel:'06 55 44 33 22'},
@@ -41,454 +210,211 @@ var CALLS = [
   {id:5,co:'Agence Immobilière Sud',res:'Freins qui crissent',prob:'Bruit métallique au freinage, plaquettes à vérifier',rdv:'2025-02-20T10:00',tel:'06 33 22 11 00'},
   {id:6,co:'Menuiserie Fabre',res:'Climatisation en panne',prob:'Clim ne refroidit plus depuis la semaine dernière',rdv:null,tel:'06 77 66 55 44'}
 ];
-
-var RDV = {
-  '2025-02-18':[
-    {t:'09:30',dur:60,cl:'Transports Dupont',det:'Bruit moteur – Diagnostic'},
-    {t:'11:00',dur:90,cl:'BTP Marchand SARL',det:'Voyant moteur – Contrôle OBD'},
-    {t:'14:30',dur:45,cl:'Auto École Martin',det:'Contrôle technique préventif'},
-    {t:'16:00',dur:30,cl:'SARL Constructions Nord',det:'Devis carrosserie'}
-  ],
-  '2025-02-19':[
-    {t:'08:30',dur:120,cl:'Cabinet Notarial Léon',det:'Vidange + révision 45k km'},
-    {t:'11:00',dur:60,cl:'Flotte Renault SAS',det:'Remplacement courroie'},
-    {t:'15:00',dur:45,cl:'Pharmacie Centrale',det:'Diagnostic électronique'}
-  ],
-  '2025-02-20':[
-    {t:'10:00',dur:60,cl:'Agence Immobilière Sud',det:'Freins – Remplacement plaquettes'},
-    {t:'13:30',dur:90,cl:'Société Génie Civil 31',det:'Boîte de vitesses – Inspection'}
-  ],
-  '2025-02-21':[
-    {t:'09:00',dur:45,cl:'Restaurant Le Quercy',det:'Batterie déchargée – Remplacement'},
-    {t:'14:00',dur:120,cl:'Taxi Occitanie',det:'Révision complète + contrôle'},
-    {t:'16:30',dur:30,cl:'Boulangerie Moreau',det:'Pneus – Permutation saisonnière'}
-  ],
-  '2025-02-24':[
-    {t:'10:30',dur:60,cl:'Studio Photo Lumière',det:'Climatisation – Recharge gaz'},
-    {t:'15:00',dur:45,cl:'Mairie de Blagnac',det:'Contrôle périodique flotte'}
-  ]
+var RDV={
+  '2025-02-18':[{t:'09:30',dur:60,cl:'Transports Dupont',det:'Bruit moteur – Diagnostic'},{t:'11:00',dur:90,cl:'BTP Marchand SARL',det:'Voyant moteur – Contrôle OBD'},{t:'14:30',dur:45,cl:'Auto École Martin',det:'Contrôle technique préventif'},{t:'16:00',dur:30,cl:'SARL Constructions Nord',det:'Devis carrosserie'}],
+  '2025-02-19':[{t:'08:30',dur:120,cl:'Cabinet Notarial Léon',det:'Vidange + révision 45k km'},{t:'11:00',dur:60,cl:'Flotte Renault SAS',det:'Remplacement courroie'},{t:'15:00',dur:45,cl:'Pharmacie Centrale',det:'Diagnostic électronique'}],
+  '2025-02-20':[{t:'10:00',dur:60,cl:'Agence Immobilière Sud',det:'Freins – Remplacement plaquettes'},{t:'13:30',dur:90,cl:'Société Génie Civil 31',det:'Boîte de vitesses – Inspection'}],
+  '2025-02-21':[{t:'09:00',dur:45,cl:'Restaurant Le Quercy',det:'Batterie déchargée – Remplacement'},{t:'14:00',dur:120,cl:'Taxi Occitanie',det:'Révision complète + contrôle'},{t:'16:30',dur:30,cl:'Boulangerie Moreau',det:'Pneus – Permutation saisonnière'}],
+  '2025-02-24':[{t:'10:30',dur:60,cl:'Studio Photo Lumière',det:'Climatisation – Recharge gaz'},{t:'15:00',dur:45,cl:'Mairie de Blagnac',det:'Contrôle périodique flotte'}]
 };
-
-var SIMS = [
+var SIMS=[
   {co:'Transports Leclerc & Fils',tel:'06 42 18 73 05',sit:'Claquement métallique sous capot au démarrage',det:'Répété à froid, disparaît après 2 min. KM: 87 400. Renault Master 2019.',rdv:'2025-02-19T08:30'},
-  {co:'SARL Électricité Faure',tel:'07 63 29 41 87',sit:"Fumée blanche à l'échappement",det:"Continue depuis ce matin, consommation d'eau anormale. Suspicion joint de culasse. Peugeot Partner 2020.",rdv:null},
-  {co:'Flotte VTC Toulouse',tel:'06 81 54 32 09',sit:'Vibrations au freinage haute vitesse',det:'Volant qui vibre lors freinages >100 km/h. Disques avant probablement voilés. Toyota Camry 2022.',rdv:'2025-02-20T14:30'},
+  {co:'SARL Électricité Faure',tel:'07 63 29 41 87',sit:"Fumée blanche à l'échappement",det:"Continue depuis matin, conso eau anormale. Suspicion joint de culasse. Peugeot Partner 2020.",rdv:null},
+  {co:'Flotte VTC Toulouse',tel:'06 81 54 32 09',sit:'Vibrations au freinage haute vitesse',det:'Volant vibre lors freinages >100km/h. Disques avant probablement voilés. Toyota Camry 2022.',rdv:'2025-02-20T14:30'},
   {co:'Cabinet Médical Pyrénées',tel:'05 61 22 87 44',sit:'Voyant huile + témoin moteur allumés',det:'Deux témoins après long trajet. Niveau huile OK mais pression faible. BMW 320d 2021.',rdv:null},
-  {co:'Agence Compta Gestion Sud',tel:'06 17 93 62 58',sit:"Boîte automatique qui patine 2ème-3ème",det:"Passage hésitant, odeur de brûlé lors accélérations. VW Passat 2018 – 110 000 km.",rdv:'2025-02-21T09:00'}
+  {co:'Agence Compta Gestion Sud',tel:'06 17 93 62 58',sit:"Boîte auto qui patine 2ème-3ème",det:"Passage hésitant, odeur brûlé lors accélérations. VW Passat 2018 – 110 000 km.",rdv:'2025-02-21T09:00'}
 ];
+var PROBS=[{lb:'Moteur / Diagnostic',n:24},{lb:'Freins',n:18},{lb:'Vidange / Révision',n:15},{lb:'Pneumatiques',n:12},{lb:'Climatisation',n:8},{lb:'Électronique',n:7}];
+var MFR=['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+var DFR=['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'];
+var NAV=[{id:'dashboard',lb:'Tableau de bord',ic:'⊞'},{id:'calls',lb:'Appels',ic:'📞'},{id:'clients',lb:'Clients',ic:'👥'},{id:'stats',lb:'Statistiques',ic:'📊'}];
 
-var PROBS = [
-  {lb:'Moteur / Diagnostic',n:24},{lb:'Freins',n:18},{lb:'Vidange / Révision',n:15},
-  {lb:'Pneumatiques',n:12},{lb:'Climatisation',n:8},{lb:'Électronique',n:7}
-];
+var calY=2025,calM=1,calSel=null,callTimer=null,callStep='ringing',callData=null;
+var probs={};
+CALLS.forEach(function(c){probs[c.id]=c.prob;});
 
-var MFR = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
-var DFR = ['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'];
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function fmtL(dt){if(!dt)return null;var d=new Date(dt);return d.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'})+' à '+d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});}
+function fmtS(dt){if(!dt)return '—';var d=new Date(dt);return d.toLocaleDateString('fr-FR',{day:'2-digit',month:'2-digit'})+' '+d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});}
+function dkey(y,m,d){return y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');}
 
-function fmtL(dt) {
-  if (!dt) return null;
-  var d = new Date(dt);
-  return d.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'}) + ' à ' + d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
-}
-function fmtS(dt) {
-  if (!dt) return '—';
-  var d = new Date(dt);
-  return d.toLocaleDateString('fr-FR',{day:'2-digit',month:'2-digit'}) + ' ' + d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
-}
-function dkey(y,m,d) { return y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0'); }
-
-// s() helper: style object shorthand
-function s(obj) { return obj; }
-
-// ── LINE CHART ────────────────────────────────────────────────────────────────
-function LineChart(props) {
-  var data = props.data;
-  var tipS = useState(null); var tip = tipS[0]; var setTip = tipS[1];
-  var svgRef = useRef(null);
-  var W=500, H=150, PX=36, PY=18;
-  var maxV = 0;
-  for (var i=0; i<data.length; i++) { if (data[i].n > maxV) maxV = data[i].n; }
-  function px(i) { return PX + (i/(data.length-1)) * (W-PX*2); }
-  function py(v) { return PY + (1 - v/(maxV||1)) * (H-PY*2); }
-  var lineD = data.map(function(d,i){ return (i===0?'M':'L') + px(i).toFixed(1) + ',' + py(d.n).toFixed(1); }).join(' ');
-  var areaD = lineD + ' L' + px(data.length-1).toFixed(1) + ',' + (H-PY) + ' L' + px(0).toFixed(1) + ',' + (H-PY) + ' Z';
-
-  return ce('div', {style:{position:'relative',width:'100%'}},
-    ce('svg', {ref:svgRef, viewBox:'0 0 '+W+' '+H, style:{width:'100%',height:'auto',overflow:'visible'}},
-      ce('defs', null,
-        ce('linearGradient', {id:'cg',x1:'0',y1:'0',x2:'0',y2:'1'},
-          ce('stop', {offset:'0%',stopColor:'#3b82f6',stopOpacity:'0.2'}),
-          ce('stop', {offset:'100%',stopColor:'#3b82f6',stopOpacity:'0'})
-        )
-      ),
-      [0,0.33,0.66,1].map(function(t,i) {
-        var y = PY + t*(H-PY*2);
-        return ce('g', {key:i},
-          ce('line', {x1:PX,y1:y,x2:W-PX,y2:y,stroke:'#e2e8f0',strokeWidth:'1',strokeDasharray:'4,3'}),
-          ce('text', {x:PX-5,y:y+4,textAnchor:'end',fontSize:'10',fill:'#94a3b8'}, String(Math.round(maxV*(1-t))))
-        );
-      }),
-      ce('path', {d:areaD, fill:'url(#cg)'}),
-      ce('path', {d:lineD, fill:'none', stroke:'#3b82f6', strokeWidth:'2.5', strokeLinecap:'round', strokeLinejoin:'round'}),
-      data.map(function(d,i) {
-        return ce('g', {key:i, style:{cursor:'pointer'},
-          onMouseEnter: function() {
-            if (!svgRef.current) return;
-            var r = svgRef.current.getBoundingClientRect();
-            setTip({x: px(i)*(r.width/W)+r.left, y: py(d.n)*(r.height/H)+r.top, d:d});
-          },
-          onMouseLeave: function() { setTip(null); }},
-          ce('circle', {cx:px(i),cy:py(d.n),r:'5',fill:'#3b82f6',stroke:'white',strokeWidth:'2'}),
-          ce('text', {x:px(i),y:H-3,textAnchor:'middle',fontSize:'10',fill:'#64748b'}, d.day.split(' ')[0])
-        );
-      })
-    ),
-    tip ? ce('div', {style:{position:'fixed',left:tip.x-40,top:tip.y-38,background:'#0f172a',color:'white',padding:'5px 10px',borderRadius:'8px',fontSize:'12px',pointerEvents:'none',whiteSpace:'nowrap',zIndex:9999}}, tip.d.day + ' : ' + tip.d.n + ' appels') : null
-  );
+function setTab(id){
+  document.querySelectorAll('.tab-content').forEach(function(el){el.classList.remove('active');});
+  document.getElementById('tab-'+id).classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(function(b){b.classList.toggle('active',b.dataset.id===id);});
+  var labs={dashboard:'Tableau de bord',calls:'Appels',clients:'Clients',stats:'Statistiques'};
+  document.getElementById('page-title').textContent=labs[id];
 }
 
-// ── AGENDA MODAL ──────────────────────────────────────────────────────────────
-function AgendaModal(props) {
-  var date = props.date;
-  var onClose = props.onClose;
-  var key = date.toISOString().split('T')[0];
-  var rdvs = RDV[key] || [];
-  var hours = [8,9,10,11,12,13,14,15,16,17,18];
-
-  return ce('div', {onClick:onClose, style:{position:'fixed',inset:0,background:'rgba(15,23,42,.65)',zIndex:200,display:'flex',alignItems:'center',justifyContent:'center',backdropFilter:'blur(4px)'}},
-    ce('div', {onClick:function(e){e.stopPropagation();}, className:'fup', style:{background:'white',borderRadius:'20px',width:'480px',maxHeight:'82vh',overflow:'hidden',boxShadow:'0 25px 60px rgba(0,0,0,.35)'}},
-      ce('div', {style:{background:'#1e293b',padding:'16px 20px',display:'flex',alignItems:'center',justifyContent:'space-between'}},
-        ce('div', null,
-          ce('div', {style:{color:'#94a3b8',fontSize:'12px'}}, 'Agenda du'),
-          ce('div', {style:{color:'white',fontWeight:700,fontSize:'16px',fontFamily:'Syne,sans-serif'}}, date.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'}))
-        ),
-        ce('button', {onClick:onClose, style:{background:'#334155',border:'none',color:'white',borderRadius:'8px',width:'30px',height:'30px',fontSize:'18px',lineHeight:'1'}}, '×')
-      ),
-      ce('div', {style:{overflowY:'auto',maxHeight:'66vh',padding:'8px 16px 20px'}},
-        rdvs.length === 0
-          ? ce('div', {style:{textAlign:'center',padding:'48px 20px',color:'#94a3b8'}},
-              ce('div', {style:{fontSize:'36px',marginBottom:'8px'}}, '📅'),
-              ce('span', null, 'Aucun rendez-vous ce jour')
-            )
-          : hours.map(function(hr) {
-              var rdv = null;
-              for (var i=0; i<rdvs.length; i++) { if (parseInt(rdvs[i].t) === hr) { rdv = rdvs[i]; break; } }
-              return ce('div', {key:hr, style:{display:'flex',minHeight:'50px',borderBottom:'1px solid #f1f5f9'}},
-                ce('div', {style:{width:'46px',paddingTop:'10px',color:'#94a3b8',fontSize:'11px',flexShrink:0}}, hr+':00'),
-                ce('div', {style:{flex:1,padding:'4px 0 4px 8px'}},
-                  rdv ? ce('div', {style:{background:'#eff6ff',borderLeft:'4px solid #3b82f6',borderRadius:'10px',padding:'8px 12px'}},
-                    ce('div', {style:{fontWeight:600,fontSize:'13px',color:'#1e40af'}}, rdv.t + ' — ' + rdv.cl),
-                    ce('div', {style:{fontSize:'12px',color:'#475569',marginTop:'2px'}}, rdv.det),
-                    ce('div', {style:{fontSize:'11px',color:'#94a3b8',marginTop:'2px'}}, '⏱ ' + rdv.dur + ' min')
-                  ) : null
-                )
-              );
-            })
-      )
-    )
-  );
+function buildNav(){
+  var nav=document.getElementById('nav');
+  NAV.forEach(function(item){
+    var b=document.createElement('button');
+    b.className='nav-btn'+(item.id==='dashboard'?' active':'');
+    b.dataset.id=item.id;
+    b.innerHTML='<span style="font-size:16px">'+item.ic+'</span>'+esc(item.lb);
+    b.onclick=function(){setTab(item.id);};
+    nav.appendChild(b);
+  });
 }
 
-// ── CALENDAR ──────────────────────────────────────────────────────────────────
-function Calendar(props) {
-  var onSel = props.onDaySelect;
-  var vs = useState({y:2025,m:1}); var v=vs[0]; var setV=vs[1];
-  var ss = useState(null); var sel=ss[0]; var setSel=ss[1];
-  var firstDow = (function(){ var d=new Date(v.y,v.m,1).getDay(); return d===0?6:d-1; })();
-  var lastD = new Date(v.y,v.m+1,0).getDate();
-  var cells = [];
-  for (var ii=0; ii<firstDow; ii++) cells.push(null);
-  for (var dd=1; dd<=lastD; dd++) cells.push(dd);
-  function hasRdv(day) { return day ? !!(RDV[dkey(v.y,v.m,day)]) : false; }
-  function prev() { setV(function(x){ return x.m===0 ? {y:x.y-1,m:11} : {y:x.y,m:x.m-1}; }); }
-  function next() { setV(function(x){ return x.m===11 ? {y:x.y+1,m:0} : {y:x.y,m:x.m+1}; }); }
-
-  return ce('div', null,
-    ce('div', {style:{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:'12px'}},
-      ce('button', {onClick:prev, style:{background:'#f1f5f9',border:'none',borderRadius:'8px',width:'28px',height:'28px',color:'#475569',fontSize:'16px'}}, '‹'),
-      ce('span', {style:{fontWeight:700,fontSize:'14px',color:'#1e293b',fontFamily:'Syne,sans-serif'}}, MFR[v.m] + ' ' + v.y),
-      ce('button', {onClick:next, style:{background:'#f1f5f9',border:'none',borderRadius:'8px',width:'28px',height:'28px',color:'#475569',fontSize:'16px'}}, '›')
-    ),
-    ce('div', {style:{display:'grid',gridTemplateColumns:'repeat(7,1fr)',gap:'2px',marginBottom:'4px'}},
-      DFR.map(function(dd){ return ce('div',{key:dd,style:{textAlign:'center',fontSize:'11px',fontWeight:600,color:'#94a3b8',padding:'3px 0'}}, dd); })
-    ),
-    ce('div', {style:{display:'grid',gridTemplateColumns:'repeat(7,1fr)',gap:'2px'}},
-      cells.map(function(day,idx) {
-        var isToday = !!(day && v.y===2025 && v.m===1 && day===18);
-        var isSel = !!(day && sel===day);
-        var dot = hasRdv(day);
-        return ce('div', {key:idx,
-          onClick: function(){ if(day){ setSel(day); onSel(new Date(v.y,v.m,day)); } },
-          style:{textAlign:'center',padding:'6px 2px',borderRadius:'8px',cursor:day?'pointer':'default',
-            background:isToday?'#3b82f6':isSel?'#eff6ff':'transparent',
-            color:isToday?'white':day?'#1e293b':'transparent',
-            fontWeight:isToday?700:400,fontSize:'13px',
-            border:isSel&&!isToday?'1.5px solid #3b82f6':'1.5px solid transparent',transition:'all .15s'}},
-          day || '',
-          dot ? ce('div',{style:{width:'4px',height:'4px',borderRadius:'50%',background:isToday?'white':'#3b82f6',margin:'1px auto 0'}}) : null
-        );
-      })
-    )
-  );
+function buildChart(id,data){
+  var el=document.getElementById(id);
+  if(!el)return;
+  var W=500,H=150,PX=36,PY=18,maxV=0;
+  for(var i=0;i<data.length;i++){if(data[i].n>maxV)maxV=data[i].n;}
+  function px(i){return PX+(i/(data.length-1))*(W-PX*2);}
+  function py(v){return PY+(1-v/(maxV||1))*(H-PY*2);}
+  var ld=data.map(function(d,i){return (i===0?'M':'L')+px(i).toFixed(1)+','+py(d.n).toFixed(1);}).join(' ');
+  var ad=ld+' L'+px(data.length-1).toFixed(1)+','+(H-PY)+' L'+px(0).toFixed(1)+','+(H-PY)+' Z';
+  var uid='g'+Math.random().toString(36).slice(2,7);
+  var gl=[0,0.33,0.66,1].map(function(t,i){
+    var y=PY+t*(H-PY*2);
+    return '<line x1="'+PX+'" y1="'+y.toFixed(1)+'" x2="'+(W-PX)+'" y2="'+y.toFixed(1)+'" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="4,3"/><text x="'+(PX-5)+'" y="'+(y+4).toFixed(1)+'" text-anchor="end" font-size="10" fill="#94a3b8">'+Math.round(maxV*(1-t))+'</text>';
+  }).join('');
+  var pts=data.map(function(d,i){
+    return '<circle class="cpt" cx="'+px(i).toFixed(1)+'" cy="'+py(d.n).toFixed(1)+'" r="5" fill="#3b82f6" stroke="white" stroke-width="2" data-d="'+esc(d.day)+'" data-n="'+d.n+'" style="cursor:pointer"/>'+
+           '<text x="'+px(i).toFixed(1)+'" y="'+(H-3)+'" text-anchor="middle" font-size="10" fill="#64748b">'+d.day.split(' ')[0]+'</text>';
+  }).join('');
+  el.innerHTML='<svg class="chart" viewBox="0 0 '+W+' '+H+'"><defs><linearGradient id="'+uid+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#3b82f6" stop-opacity="0.2"/><stop offset="100%" stop-color="#3b82f6" stop-opacity="0"/></linearGradient></defs>'+gl+'<path d="'+ad+'" fill="url(#'+uid+')"/><path d="'+ld+'" fill="none" stroke="#3b82f6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>'+pts+'</svg>';
+  var tip=document.getElementById('ctip');
+  el.querySelectorAll('.cpt').forEach(function(pt){
+    pt.addEventListener('mouseenter',function(e){tip.textContent=pt.dataset.d+' : '+pt.dataset.n+' appels';tip.style.display='block';tip.style.left=(e.clientX-40)+'px';tip.style.top=(e.clientY-38)+'px';});
+    pt.addEventListener('mousemove',function(e){tip.style.left=(e.clientX-40)+'px';tip.style.top=(e.clientY-38)+'px';});
+    pt.addEventListener('mouseleave',function(){tip.style.display='none';});
+  });
 }
 
-// ── CALL MODAL ────────────────────────────────────────────────────────────────
-function CallModal(props) {
-  var call = props.call;
-  var onClose = props.onClose;
-  var ss = useState('ringing'); var step=ss[0]; var setStep=ss[1];
-  useEffect(function(){
-    var t = setTimeout(function(){ setStep('active'); }, 2000);
-    return function(){ clearTimeout(t); };
-  }, []);
-
-  return ce('div', {style:{position:'fixed',inset:0,background:'rgba(15,23,42,.75)',zIndex:300,display:'flex',alignItems:'center',justifyContent:'center',backdropFilter:'blur(6px)'}},
-    ce('div', {className:'fup', style:{background:'white',borderRadius:'24px',width:'400px',boxShadow:'0 30px 80px rgba(0,0,0,.4)',overflow:'hidden'}},
-      ce('div', {style:{background:step==='ringing'?'linear-gradient(135deg,#1e40af,#3b82f6)':'linear-gradient(135deg,#166534,#16a34a)',padding:'28px 24px',textAlign:'center',transition:'background .6s'}},
-        ce('div', {className:step==='ringing'?'ringing':'', style:{fontSize:'40px',marginBottom:'8px',display:'inline-block'}}, step==='ringing'?'📲':'🔧'),
-        ce('div', {style:{color:'rgba(255,255,255,.75)',fontSize:'12px',marginBottom:'4px'}}, step==='ringing'?'Appel entrant simulé':'Appel en cours — IA active'),
-        ce('div', {style:{color:'white',fontWeight:700,fontSize:'20px',fontFamily:'Syne,sans-serif'}}, call.co),
-        ce('div', {style:{color:'rgba(255,255,255,.85)',fontSize:'14px',marginTop:'4px'}}, call.tel)
-      ),
-      step==='active'
-        ? ce('div', {style:{padding:'20px 24px'}},
-            ce('div', {style:{background:'#fef3c7',borderRadius:'12px',padding:'12px 14px',marginBottom:'12px',borderLeft:'4px solid #f59e0b'}},
-              ce('div', {style:{fontWeight:600,fontSize:'12px',color:'#92400e',marginBottom:'4px'}}, '🎤 Situation signalée'),
-              ce('div', {style:{fontSize:'14px',color:'#78350f',fontWeight:500}}, call.sit)
-            ),
-            ce('div', {style:{background:'#f8fafc',borderRadius:'12px',padding:'12px 14px',marginBottom:'12px'}},
-              ce('div', {style:{fontWeight:600,fontSize:'12px',color:'#475569',marginBottom:'4px'}}, '📋 Diagnostic IA'),
-              ce('div', {style:{fontSize:'13px',color:'#334155',lineHeight:'1.6'}}, call.det)
-            ),
-            call.rdv
-              ? ce('div', {style:{background:'#eff6ff',borderRadius:'12px',padding:'12px 14px',marginBottom:'16px',borderLeft:'4px solid #3b82f6'}},
-                  ce('div', {style:{fontWeight:600,fontSize:'12px',color:'#1e40af',marginBottom:'2px'}}, '📅 Rendez-vous fixé'),
-                  ce('div', {style:{fontSize:'14px',color:'#1d4ed8',fontWeight:600}}, fmtL(call.rdv))
-                )
-              : ce('div', {style:{background:'#f0fdf4',borderRadius:'12px',padding:'12px 14px',marginBottom:'16px'}},
-                  ce('div', {style:{fontWeight:600,fontSize:'12px',color:'#166534',marginBottom:'2px'}}, '💬 Statut'),
-                  ce('div', {style:{fontSize:'13px',color:'#166534'}}, "Demande d'information – pas de RDV")
-                ),
-            ce('button', {onClick:onClose, style:{width:'100%',background:'#1e293b',color:'white',border:'none',borderRadius:'12px',padding:'12px',fontWeight:600,fontSize:'14px'}}, "Terminer l'appel")
-          )
-        : ce('div', {style:{padding:'20px 24px',textAlign:'center'}},
-            ce('div', {style:{color:'#64748b',fontSize:'14px',marginBottom:'16px'}}, 'Connexion en cours…'),
-            ce('div', {style:{display:'flex',gap:'12px'}},
-              ce('button', {onClick:onClose, style:{flex:1,background:'#fef2f2',color:'#ef4444',border:'none',borderRadius:'12px',padding:'12px',fontWeight:600}}, '✕ Ignorer'),
-              ce('button', {onClick:function(){setStep('active');}, style:{flex:1,background:'#22c55e',color:'white',border:'none',borderRadius:'12px',padding:'12px',fontWeight:600}}, '📞 Décrocher')
-            )
-          )
-    )
-  );
+function callsTableHTML(){
+  var h='<div class="sec-title-lg">Derniers appels</div><div style="overflow-x:auto"><table><thead><tr><th>Entreprise</th><th>Résumé</th><th>Problème (éditable)</th><th>Heure RDV</th><th>Téléphone</th></tr></thead><tbody>';
+  CALLS.forEach(function(c){
+    var rc=c.rdv?'color:#1d4ed8;font-weight:600':'color:#94a3b8';
+    h+='<tr><td style="font-weight:600;color:#1e293b;white-space:nowrap">'+esc(c.co)+'</td><td><span class="badge">'+esc(c.res)+'</span></td><td style="min-width:200px"><input class="prob-input" data-id="'+c.id+'" value="'+esc(probs[c.id])+'"></td><td style="white-space:nowrap;'+rc+'">'+fmtS(c.rdv)+'</td><td style="white-space:nowrap;color:#475569">'+esc(c.tel)+'</td></tr>';
+  });
+  return h+'</tbody></table></div>';
+}
+function bindInputs(el){
+  el.querySelectorAll('.prob-input').forEach(function(inp){
+    inp.addEventListener('change',function(){probs[inp.dataset.id]=inp.value;});
+  });
 }
 
-// ── STATS ─────────────────────────────────────────────────────────────────────
-function Stats() {
-  var maxC = 0;
-  for (var i=0; i<PROBS.length; i++) { if (PROBS[i].n > maxC) maxC = PROBS[i].n; }
-  return ce('div', {className:'fup'},
-    ce('div', {style:{display:'grid',gridTemplateColumns:'1fr 1fr 1fr',gap:'14px',marginBottom:'20px'}},
-      [{lb:'Appels ce mois',val:'84',col:'#3b82f6',ic:'📞'},
-       {lb:'RDV confirmés',val:'31',col:'#22c55e',ic:'✅'},
-       {lb:'Taux conversion',val:'36.9%',col:'#f59e0b',ic:'📈'}
-      ].map(function(s) {
-        return ce('div', {key:s.lb, style:{background:'white',borderRadius:'16px',padding:'16px',boxShadow:'0 2px 12px rgba(0,0,0,.06)'}},
-          ce('div', {style:{fontSize:'24px',marginBottom:'6px'}}, s.ic),
-          ce('div', {style:{fontWeight:700,fontSize:'22px',color:s.col}}, s.val),
-          ce('div', {style:{fontSize:'12px',color:'#94a3b8',marginTop:'2px'}}, s.lb)
-        );
-      })
-    ),
-    ce('div', {style:{background:'white',borderRadius:'20px',padding:'20px',boxShadow:'0 2px 12px rgba(0,0,0,.06)',marginBottom:'16px'}},
-      ce('div', {style:{fontWeight:700,fontSize:'15px',color:'#1e293b',marginBottom:'16px',fontFamily:'Syne,sans-serif'}}, 'Top problèmes signalés'),
-      PROBS.map(function(p) {
-        return ce('div', {key:p.lb, style:{marginBottom:'10px'}},
-          ce('div', {style:{display:'flex',justifyContent:'space-between',marginBottom:'4px'}},
-            ce('span', {style:{fontSize:'13px',color:'#334155'}}, p.lb),
-            ce('span', {style:{fontSize:'13px',fontWeight:600,color:'#3b82f6'}}, String(p.n))
-          ),
-          ce('div', {style:{background:'#f1f5f9',borderRadius:'99px',height:'6px'}},
-            ce('div', {style:{background:'#3b82f6',borderRadius:'99px',height:'6px',width:Math.round(p.n/maxC*100)+'%'}})
-          )
-        );
-      })
-    ),
-    ce('div', {style:{background:'white',borderRadius:'20px',padding:'20px',boxShadow:'0 2px 12px rgba(0,0,0,.06)'}},
-      ce('div', {style:{fontWeight:700,fontSize:'15px',color:'#1e293b',marginBottom:'12px',fontFamily:'Syne,sans-serif'}}, 'Activité 7 derniers jours'),
-      ce(LineChart, {data:CHART})
-    )
-  );
+function buildCalendar(){
+  var el=document.getElementById('cal-widget');
+  if(!el)return;
+  var fd=new Date(calY,calM,1).getDay();fd=fd===0?6:fd-1;
+  var ld=new Date(calY,calM+1,0).getDate();
+  var dh=DFR.map(function(d){return '<div class="cal-day-name">'+d+'</div>';}).join('');
+  var cells='';
+  for(var i=0;i<fd;i++)cells+='<div class="cal-day empty"></div>';
+  for(var d=1;d<=ld;d++){
+    var it=(calY===2025&&calM===1&&d===18);
+    var is=(calSel===d);
+    var dot=RDV[dkey(calY,calM,d)]?'<div class="cal-dot"></div>':'';
+    var cls='cal-day'+(it?' today':'')+(is&&!it?' selected':'');
+    cells+='<div class="'+cls+'" data-d="'+d+'">'+d+dot+'</div>';
+  }
+  el.innerHTML='<div class="sec-title">Calendrier</div>'+
+    '<div class="cal-header">'+
+    '<button class="cal-nav" id="cal-prev">&#8249;</button>'+
+    '<span style="font-weight:700;font-size:14px;font-family:\'Syne\',sans-serif">'+MFR[calM]+' '+calY+'</span>'+
+    '<button class="cal-nav" id="cal-next">&#8250;</button>'+
+    '</div>'+
+    '<div class="cal-grid" style="margin-bottom:4px">'+dh+'</div>'+
+    '<div class="cal-grid" id="cal-days">'+cells+'</div>'+
+    '<div class="cal-hint">Cliquez sur un jour pour voir les RDV</div>';
+  document.getElementById('cal-prev').onclick=function(){calM--;if(calM<0){calM=11;calY--;}buildCalendar();};
+  document.getElementById('cal-next').onclick=function(){calM++;if(calM>11){calM=0;calY++;}buildCalendar();};
+  document.getElementById('cal-days').querySelectorAll('.cal-day:not(.empty)').forEach(function(el){
+    el.onclick=function(){calSel=parseInt(el.dataset.d);buildCalendar();openAgenda(new Date(calY,calM,calSel));};
+  });
 }
 
-// ── CALLS TABLE ───────────────────────────────────────────────────────────────
-function CallsTable(props) {
-  var calls = props.calls;
-  var init = {};
-  calls.forEach(function(c){ init[c.id] = c.prob; });
-  var ps = useState(init); var probs=ps[0]; var setProbs=ps[1];
-  return ce('div', {style:{background:'white',borderRadius:'24px',padding:'24px',boxShadow:'0 2px 16px rgba(0,0,0,.06)'}},
-    ce('div', {style:{fontWeight:700,fontSize:'16px',color:'#1e293b',fontFamily:'Syne,sans-serif',marginBottom:'16px'}}, 'Derniers appels'),
-    ce('div', {style:{overflowX:'auto'}},
-      ce('table', null,
-        ce('thead', null,
-          ce('tr', {style:{borderBottom:'2px solid #f1f5f9'}},
-            ['Entreprise','Résumé','Problème (éditable)','Heure RDV','Téléphone'].map(function(col){
-              return ce('th',{key:col,style:{textAlign:'left',padding:'8px 10px',fontSize:'12px',fontWeight:600,color:'#94a3b8',whiteSpace:'nowrap'}}, col);
-            })
-          )
-        ),
-        ce('tbody', null,
-          calls.map(function(call) {
-            return ce('tr', {key:call.id,
-              onMouseEnter:function(e){e.currentTarget.style.background='#f8fafc';},
-              onMouseLeave:function(e){e.currentTarget.style.background='transparent';},
-              style:{borderBottom:'1px solid #f8fafc',transition:'background .15s'}},
-              ce('td', {style:{padding:'12px 10px',fontWeight:600,fontSize:'13px',color:'#1e293b',whiteSpace:'nowrap'}}, call.co),
-              ce('td', {style:{padding:'12px 10px'}},
-                ce('span', {style:{background:'#f1f5f9',borderRadius:'6px',padding:'3px 8px',fontSize:'12px',color:'#475569'}}, call.res)
-              ),
-              ce('td', {style:{padding:'12px 10px',minWidth:'200px'}},
-                ce('input', {
-                  value: probs[call.id] || '',
-                  onChange: function(e){ var v=e.target.value; var id=call.id; setProbs(function(p){ var n=Object.assign({},p); n[id]=v; return n; }); },
-                  style:{border:'1px solid #e2e8f0',borderRadius:'8px',padding:'5px 8px',fontSize:'12px',color:'#334155',width:'100%',background:'#fafafa',fontFamily:'DM Sans,sans-serif'},
-                  onFocus:function(e){e.target.style.border='1px solid #3b82f6';e.target.style.background='white';},
-                  onBlur:function(e){e.target.style.border='1px solid #e2e8f0';e.target.style.background='#fafafa';}
-                })
-              ),
-              ce('td', {style:{padding:'12px 10px',fontSize:'13px',whiteSpace:'nowrap',color:call.rdv?'#1d4ed8':'#94a3b8',fontWeight:call.rdv?600:400}}, fmtS(call.rdv)),
-              ce('td', {style:{padding:'12px 10px',fontSize:'13px',color:'#475569',whiteSpace:'nowrap'}}, call.tel)
-            );
-          })
-        )
-      )
-    )
-  );
+function openAgenda(date){
+  var key=date.toISOString().split('T')[0];
+  var rdvs=RDV[key]||[];
+  document.getElementById('agenda-title').textContent=date.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'});
+  var hours=[8,9,10,11,12,13,14,15,16,17,18];
+  var html='';
+  if(rdvs.length===0){
+    html='<div style="text-align:center;padding:48px 20px;color:#94a3b8"><div style="font-size:36px;margin-bottom:8px">📅</div>Aucun rendez-vous ce jour</div>';
+  }else{
+    hours.forEach(function(hr){
+      var rdv=null;
+      for(var i=0;i<rdvs.length;i++){if(parseInt(rdvs[i].t)===hr){rdv=rdvs[i];break;}}
+      html+='<div class="agenda-row"><div class="agenda-time">'+hr+':00</div><div class="agenda-slot">'+
+        (rdv?'<div class="agenda-event"><div style="font-weight:600;font-size:13px;color:#1e40af">'+esc(rdv.t)+' — '+esc(rdv.cl)+'</div><div style="font-size:12px;color:#475569;margin-top:2px">'+esc(rdv.det)+'</div><div style="font-size:11px;color:#94a3b8;margin-top:2px">⏱ '+rdv.dur+' min</div></div>':'')+
+        '</div></div>';
+    });
+  }
+  document.getElementById('agenda-body').innerHTML=html;
+  document.getElementById('agenda-overlay').classList.add('open');
 }
 
-// ── APP ───────────────────────────────────────────────────────────────────────
-function App() {
-  var ts = useState('dashboard'); var tab=ts[0]; var setTab=ts[1];
-  var sc = useState(null); var simCall=sc[0]; var setSimCall=sc[1];
-  var ag = useState(null); var agDate=ag[0]; var setAgDate=ag[1];
-
-  var NAV = [
-    {id:'dashboard',lb:'Tableau de bord',ic:'⊞'},
-    {id:'calls',lb:'Appels',ic:'📞'},
-    {id:'clients',lb:'Clients',ic:'👥'},
-    {id:'stats',lb:'Statistiques',ic:'📊'}
-  ];
-  function sim() { setSimCall(SIMS[Math.floor(Math.random()*SIMS.length)]); }
-  var curLabel = '';
-  for (var i=0; i<NAV.length; i++) { if (NAV[i].id===tab) { curLabel=NAV[i].lb; break; } }
-
-  return ce('div', {style:{display:'flex',height:'100vh',fontFamily:'DM Sans,sans-serif',background:'#f1f5f9'}},
-
-    ce('aside', {style:{width:'220px',background:'#0f172a',display:'flex',flexDirection:'column',padding:'24px 16px',flexShrink:0}},
-      ce('div', {style:{marginBottom:'32px'}},
-        ce('div', {style:{fontFamily:'Syne,sans-serif',fontWeight:800,fontSize:'20px',color:'white'}},
-          'Garage',
-          ce('span', {style:{color:'#3b82f6'}}, '.'),
-          ce('span', {style:{color:'#60a5fa'}}, 'AI')
-        ),
-        ce('div', {style:{color:'#475569',fontSize:'11px',marginTop:'2px'}}, 'Gestionnaire Automobile')
-      ),
-      ce('nav', {style:{flex:1}},
-        NAV.map(function(item) {
-          var active = tab===item.id;
-          return ce('button', {key:item.id, onClick:function(){setTab(item.id);},
-            style:{display:'flex',alignItems:'center',gap:'10px',width:'100%',padding:'10px 12px',borderRadius:'12px',border:'none',
-              background:active?'#1e40af':'transparent',color:active?'white':'#94a3b8',
-              fontWeight:active?600:400,fontSize:'14px',marginBottom:'4px',textAlign:'left',transition:'all .2s'}},
-            ce('span', {style:{fontSize:'16px'}}, item.ic),
-            item.lb
-          );
-        })
-      ),
-      ce('button', {onClick:sim, style:{background:'linear-gradient(135deg,#2563eb,#7c3aed)',color:'white',border:'none',borderRadius:'14px',padding:'14px 12px',fontWeight:700,fontSize:'13px',width:'100%',boxShadow:'0 4px 20px rgba(59,130,246,.4)',display:'flex',alignItems:'center',justifyContent:'center',gap:'8px'}},
-        '📲 Simuler Appel'
-      ),
-      ce('div', {style:{marginTop:'14px',display:'flex',alignItems:'center',gap:'8px',padding:'10px 12px',background:'#1e293b',borderRadius:'12px'}},
-        ce('div', {className:'pdot', style:{width:'8px',height:'8px',background:'#22c55e',borderRadius:'50%',flexShrink:0}}),
-        ce('div', null,
-          ce('div', {style:{color:'white',fontSize:'12px',fontWeight:600}}, 'IA en ligne'),
-          ce('div', {style:{color:'#475569',fontSize:'10px'}}, 'n8n · actif')
-        )
-      )
-    ),
-
-    ce('main', {style:{flex:1,overflow:'auto',padding:'24px',display:'flex',flexDirection:'column'}},
-      ce('div', {style:{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:'24px'}},
-        ce('div', null,
-          ce('h1', {style:{fontFamily:'Syne,sans-serif',fontWeight:800,fontSize:'26px',color:'#0f172a',letterSpacing:'-.5px'}}, curLabel),
-          ce('p', {style:{color:'#64748b',fontSize:'14px',marginTop:'2px'}}, 'Mardi 18 février 2025 · Bienvenue sur votre tableau de bord')
-        ),
-        ce('button', {style:{background:'#3b82f6',color:'white',border:'none',borderRadius:'12px',padding:'10px 18px',fontWeight:600,fontSize:'14px',boxShadow:'0 4px 14px rgba(59,130,246,.35)'}}, '+ Nouvel Appel')
-      ),
-
-      tab==='dashboard' ? ce('div', {style:{display:'grid',gridTemplateColumns:'1fr 300px',gap:'20px'}},
-        ce('div', {style:{display:'flex',flexDirection:'column',gap:'20px'}},
-          ce('div', {style:{background:'white',borderRadius:'24px',padding:'24px',boxShadow:'0 2px 16px rgba(0,0,0,.06)'}},
-            ce('div', {style:{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:'20px'}},
-              ce('div', null,
-                ce('div', {style:{fontWeight:700,fontSize:'16px',color:'#1e293b',fontFamily:'Syne,sans-serif'}}, 'Activité des appels'),
-                ce('div', {style:{color:'#94a3b8',fontSize:'13px',marginTop:'2px'}}, '7 derniers jours · 84 appels ce mois')
-              ),
-              ce('span', {style:{background:'#eff6ff',color:'#3b82f6',fontSize:'12px',padding:'4px 10px',borderRadius:'99px',fontWeight:600}}, '📈 Semaine en cours')
-            ),
-            ce(LineChart, {data:CHART})
-          ),
-          ce(CallsTable, {calls:CALLS})
-        ),
-        ce('div', {style:{display:'flex',flexDirection:'column',gap:'16px'}},
-          ce('div', {style:{background:'white',borderRadius:'24px',padding:'20px',boxShadow:'0 2px 16px rgba(0,0,0,.06)'}},
-            ce('div', {style:{fontWeight:700,fontSize:'15px',color:'#1e293b',fontFamily:'Syne,sans-serif',marginBottom:'14px'}}, 'Calendrier'),
-            ce(Calendar, {onDaySelect:function(dt){setAgDate(dt);}}),
-            ce('div', {style:{marginTop:'10px',padding:'8px 10px',background:'#f8fafc',borderRadius:'10px',fontSize:'12px',color:'#64748b',textAlign:'center'}}, 'Cliquez sur un jour pour voir les RDV')
-          ),
-          ce('div', {style:{background:'white',borderRadius:'24px',padding:'20px',boxShadow:'0 2px 16px rgba(0,0,0,.06)'}},
-            ce('div', {style:{display:'flex',alignItems:'center',gap:'8px',marginBottom:'14px'}},
-              ce('div', {className:'pdot', style:{width:'10px',height:'10px',background:'#22c55e',borderRadius:'50%',flexShrink:0}}),
-              ce('span', {style:{fontWeight:700,fontSize:'15px',color:'#1e293b',fontFamily:'Syne,sans-serif'}}, 'IA en ligne')
-            ),
-            [['Modèle','GPT-4o via n8n'],['Webhook','Connecté ✓'],['Réponse moy.','1.4s'],['Appels traités','84 ce mois']].map(function(row){
-              return ce('div', {key:row[0], style:{display:'flex',justifyContent:'space-between',fontSize:'13px',marginBottom:'6px'}},
-                ce('span', {style:{color:'#94a3b8'}}, row[0]),
-                ce('span', {style:{color:'#1e293b',fontWeight:500}}, row[1])
-              );
-            })
-          ),
-          ce('button', {onClick:function(){setTab('stats');}, style:{background:'linear-gradient(135deg,#0f172a,#1e293b)',color:'white',border:'none',borderRadius:'20px',padding:'16px',cursor:'pointer',textAlign:'left',boxShadow:'0 4px 16px rgba(0,0,0,.15)',width:'100%'}},
-            ce('div', {style:{fontSize:'24px',marginBottom:'6px'}}, '📊'),
-            ce('div', {style:{fontWeight:700,fontFamily:'Syne,sans-serif',fontSize:'14px',marginBottom:'4px'}}, 'Voir les statistiques'),
-            ce('div', {style:{fontSize:'12px',color:'#94a3b8'}}, 'Conversion, top problèmes, tendances')
-          )
-        )
-      ) : null,
-
-      tab==='stats' ? ce(Stats, null) : null,
-      tab==='calls' ? ce('div', {className:'fup'}, ce(CallsTable, {calls:CALLS})) : null,
-      tab==='clients' ? ce('div', {className:'fup', style:{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:'16px'}},
-        CALLS.map(function(call) {
-          return ce('div', {key:call.id, style:{background:'white',borderRadius:'20px',padding:'20px',boxShadow:'0 2px 12px rgba(0,0,0,.06)'}},
-            ce('div', {style:{width:'44px',height:'44px',background:'#eff6ff',borderRadius:'12px',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'20px',marginBottom:'12px'}}, '🏢'),
-            ce('div', {style:{fontWeight:700,fontSize:'15px',color:'#1e293b',marginBottom:'4px'}}, call.co),
-            ce('div', {style:{fontSize:'13px',color:'#64748b',marginBottom:'8px'}}, call.tel),
-            ce('div', {style:{fontSize:'12px',color:'#475569',background:'#f8fafc',borderRadius:'8px',padding:'6px 10px',marginBottom:'6px'}}, call.res),
-            call.rdv ? ce('div', {style:{fontSize:'12px',color:'#1d4ed8',fontWeight:600}}, '📅 ' + fmtS(call.rdv)) : null
-          );
-        })
-      ) : null
-    ),
-
-    agDate ? ce(AgendaModal, {date:agDate, onClose:function(){setAgDate(null);}}) : null,
-    simCall ? ce(CallModal, {call:simCall, onClose:function(){setSimCall(null);}}) : null
-  );
+function buildStats(){
+  var sc=document.getElementById('stats-cards');
+  if(sc)sc.innerHTML=[{lb:'Appels ce mois',val:'84',col:'#3b82f6',ic:'📞'},{lb:'RDV confirmés',val:'31',col:'#22c55e',ic:'✅'},{lb:'Taux conversion',val:'36.9%',col:'#f59e0b',ic:'📈'}].map(function(s){return '<div class="stat-card"><div style="font-size:24px">'+s.ic+'</div><div class="stat-val" style="color:'+s.col+'">'+s.val+'</div><div class="stat-lbl">'+s.lb+'</div></div>';}).join('');
+  var maxC=0;PROBS.forEach(function(p){if(p.n>maxC)maxC=p.n;});
+  var pc=document.getElementById('probs-card');
+  if(pc)pc.innerHTML='<div class="sec-title">Top problèmes signalés</div>'+PROBS.map(function(p){return '<div class="prob-row"><span style="color:#334155">'+esc(p.lb)+'</span><span style="font-weight:600;color:#3b82f6">'+p.n+'</span></div><div class="prob-bar-bg"><div class="prob-bar" style="width:'+Math.round(p.n/maxC*100)+'%"></div></div>';}).join('');
+  var cc=document.getElementById('stats-chart-card');
+  if(cc){cc.innerHTML='<div class="sec-title">Activité 7 derniers jours</div><div id="stats-chart"></div>';buildChart('stats-chart',CHART);}
 }
 
-ReactDOM.createRoot(document.getElementById('root')).render(ce(App, null));
+function buildClients(){
+  var el=document.getElementById('clients-grid');
+  if(!el)return;
+  el.innerHTML=CALLS.map(function(c){return '<div class="client-card"><div class="client-icon">🏢</div><div style="font-weight:700;font-size:15px;color:#1e293b;margin-bottom:4px">'+esc(c.co)+'</div><div style="font-size:13px;color:#64748b;margin-bottom:8px">'+esc(c.tel)+'</div><div style="font-size:12px;color:#475569;background:#f8fafc;border-radius:8px;padding:6px 10px;margin-bottom:6px">'+esc(c.res)+'</div>'+(c.rdv?'<div style="font-size:12px;color:#1d4ed8;font-weight:600">📅 '+fmtS(c.rdv)+'</div>':'')+'</div>';}).join('');
+}
 
-}); // end window.load
+function simulateCall(){
+  callData=SIMS[Math.floor(Math.random()*SIMS.length)];
+  callStep='ringing';
+  renderCall();
+  document.getElementById('call-overlay').classList.add('open');
+  callTimer=setTimeout(answerCall,2500);
+}
+
+function renderCall(){
+  var c=callData,step=callStep;
+  var hdrCls=step==='ringing'?'hdr-ring':'hdr-active';
+  var ico=step==='ringing'?'📲':'🔧';
+  var icoCls=step==='ringing'?'ringing':'';
+  var sub=step==='ringing'?'Appel entrant simulé':'Appel en cours — IA active';
+  var body='';
+  if(step==='active'){
+    var rdvH=c.rdv?'<div class="info-box info-blue"><div style="font-weight:600;font-size:12px;color:#1e40af;margin-bottom:2px">📅 Rendez-vous fixé</div><div style="font-size:14px;color:#1d4ed8;font-weight:600">'+fmtL(c.rdv)+'</div></div>':'<div class="info-box info-green"><div style="font-weight:600;font-size:12px;color:#166534;margin-bottom:2px">💬 Statut</div><div style="font-size:13px;color:#166534">Demande d\'information – pas de RDV</div></div>';
+    body='<div class="call-body"><div class="info-box info-yellow"><div style="font-weight:600;font-size:12px;color:#92400e;margin-bottom:4px">🎤 Situation signalée</div><div style="font-size:14px;color:#78350f;font-weight:500">'+esc(c.sit)+'</div></div><div class="info-box info-gray"><div style="font-weight:600;font-size:12px;color:#475569;margin-bottom:4px">📋 Diagnostic IA</div><div style="font-size:13px;color:#334155;line-height:1.6">'+esc(c.det)+'</div></div>'+rdvH+'<button class="btn-end" id="btn-end">Terminer l\'appel</button></div>';
+  }else{
+    body='<div class="call-footer"><div style="color:#64748b;font-size:14px;margin-bottom:16px">Connexion en cours…</div><div class="btn-row"><button class="btn-ignore" id="btn-ignore">✕ Ignorer</button><button class="btn-answer" id="btn-answer">📞 Décrocher</button></div></div>';
+  }
+  document.getElementById('call-inner').innerHTML='<div class="call-hdr '+hdrCls+'"><div class="'+icoCls+'" style="font-size:40px;margin-bottom:8px">'+ico+'</div><div style="color:rgba(255,255,255,.75);font-size:12px;margin-bottom:4px">'+sub+'</div><div style="color:white;font-weight:700;font-size:20px;font-family:\'Syne\',sans-serif">'+esc(c.co)+'</div><div style="color:rgba(255,255,255,.85);font-size:14px;margin-top:4px">'+esc(c.tel)+'</div></div>'+body;
+  var be=document.getElementById('btn-end');
+  var bi=document.getElementById('btn-ignore');
+  var ba=document.getElementById('btn-answer');
+  if(be)be.onclick=closeCall;
+  if(bi)bi.onclick=closeCall;
+  if(ba)ba.onclick=answerCall;
+}
+
+function answerCall(){clearTimeout(callTimer);callStep='active';renderCall();}
+function closeCall(){clearTimeout(callTimer);document.getElementById('call-overlay').classList.remove('open');}
+
+document.addEventListener('DOMContentLoaded',function(){
+  document.getElementById('page-sub').textContent='Mardi 18 février 2025 · Bienvenue sur votre tableau de bord';
+  buildNav();
+  buildChart('chart-main',CHART);
+  var cm=document.getElementById('calls-main');if(cm){cm.innerHTML=callsTableHTML();bindInputs(cm);}
+  var ct=document.getElementById('calls-tab');if(ct){ct.innerHTML=callsTableHTML();bindInputs(ct);}
+  buildCalendar();
+  buildStats();
+  buildClients();
+  document.getElementById('sim-btn').onclick=simulateCall;
+  document.getElementById('stats-cta').onclick=function(){setTab('stats');};
+  document.getElementById('agenda-close').onclick=function(){document.getElementById('agenda-overlay').classList.remove('open');};
+  document.getElementById('agenda-overlay').addEventListener('click',function(e){if(e.target===this)this.classList.remove('open');});
+  document.getElementById('call-overlay').addEventListener('click',function(e){if(e.target===this)closeCall();});
+});
 </script>
 </body>
-</html> 
+</html>
