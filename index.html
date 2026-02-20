@@ -279,7 +279,24 @@ svg.chart{width:100%;height:auto;overflow:visible}
 // Structure d'un appel :
 // { id, prenom, numero, resume, probleme, heure_rdv (ISO string|null), timestamp (ISO), chat_id }
 
+// ─── API URL — change uniquement cette ligne ──────────────────────────────────
+var API_URL = '/api/calls';
+
 var CALLS = [
+  {
+    id: 'placeholder',
+    prenom: 'Chargement…',
+    numero: '',
+    resume: '',
+    probleme: '',
+    heure_rdv: null,
+    timestamp: new Date().toISOString(),
+    chat_id: ''
+  }
+];
+
+/* DONNÉES SUPPRIMÉES — tout vient maintenant de l'API Vercel KV */
+var _REMOVED = [
   {
     id: 1,
     prenom: 'Transports Dupont',
@@ -342,32 +359,7 @@ var CALLS = [
   }
 ];
 
-var RDV = {
-  '2025-02-18':[
-    {t:'09:30',dur:60,cl:'Transports Dupont',det:'Bruit moteur – Diagnostic'},
-    {t:'11:00',dur:90,cl:'BTP Marchand SARL',det:'Voyant moteur – Contrôle OBD'},
-    {t:'14:30',dur:45,cl:'Auto École Martin',det:'Contrôle technique préventif'},
-    {t:'16:00',dur:30,cl:'SARL Constructions Nord',det:'Devis carrosserie'}
-  ],
-  '2025-02-19':[
-    {t:'08:30',dur:120,cl:'Cabinet Notarial Léon',det:'Vidange + révision 45k km'},
-    {t:'11:00',dur:60,cl:'Flotte Renault SAS',det:'Remplacement courroie'},
-    {t:'15:00',dur:45,cl:'Pharmacie Centrale',det:'Diagnostic électronique'}
-  ],
-  '2025-02-20':[
-    {t:'10:00',dur:60,cl:'Agence Immobilière Sud',det:'Freins – Remplacement plaquettes'},
-    {t:'13:30',dur:90,cl:'Société Génie Civil 31',det:'Boîte de vitesses – Inspection'}
-  ],
-  '2025-02-21':[
-    {t:'09:00',dur:45,cl:'Restaurant Le Quercy',det:'Batterie déchargée – Remplacement'},
-    {t:'14:00',dur:120,cl:'Taxi Occitanie',det:'Révision complète + contrôle'},
-    {t:'16:30',dur:30,cl:'Boulangerie Moreau',det:'Pneus – Permutation saisonnière'}
-  ],
-  '2025-02-24':[
-    {t:'10:30',dur:60,cl:'Studio Photo Lumière',det:'Climatisation – Recharge gaz'},
-    {t:'15:00',dur:45,cl:'Mairie de Blagnac',det:'Contrôle périodique flotte'}
-  ]
-};
+var RDV = {};
 
 var MFR=['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
 var DFR=['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'];
@@ -375,34 +367,70 @@ var NAV=[{id:'dashboard',lb:'Tableau de bord',ic:'⊞'},{id:'calls',lb:'Appels',
 var calY=2025,calM=1,calSel=null;
 var nextId=100;
 
-// ─── PUBLIC API — appelée par n8n ─────────────────────────────────────────────
-// Usage depuis n8n (HTTP Request ou webhook) :
-// window.addCall({ prenom, numero, resume, probleme, heure_rdv, timestamp, chat_id })
+// ─── API — toutes les données viennent de Vercel KV ──────────────────────────
+
+function loadCalls() {
+  // Affiche un spinner pendant le chargement
+  var cm = document.getElementById('calls-main');
+  var ct = document.getElementById('calls-tab');
+  var msg = '<div style="padding:40px;text-align:center;color:#64748b;font-size:14px">⏳ Chargement des appels…</div>';
+  if (cm) cm.innerHTML = msg;
+  if (ct) ct.innerHTML = msg;
+
+  fetch(API_URL)
+    .then(function(r) {
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.json();
+    })
+    .then(function(data) {
+      CALLS = Array.isArray(data) ? data : [];
+      // Reconstruit RDV depuis les appels chargés
+      RDV = {};
+      CALLS.forEach(function(c) {
+        if (c.heure_rdv) {
+          var dk = c.heure_rdv.split('T')[0];
+          var tm = c.heure_rdv.split('T')[1] ? c.heure_rdv.split('T')[1].slice(0,5) : '09:00';
+          if (!RDV[dk]) RDV[dk] = [];
+          RDV[dk].push({t:tm, dur:60, cl:c.prenom, det:c.resume});
+        }
+      });
+      refresh();
+    })
+    .catch(function(e) {
+      console.error('Erreur chargement appels:', e);
+      CALLS = [];
+      var errMsg = '<div style="padding:40px;text-align:center;color:#ef4444;font-size:14px">❌ Impossible de charger les appels.<br><small style=\'color:#64748b\'>Vérifie que l\'API Vercel est bien déployée.</small></div>';
+      var cm2 = document.getElementById('calls-main');
+      var ct2 = document.getElementById('calls-tab');
+      if (cm2) cm2.innerHTML = errMsg;
+      if (ct2) ct2.innerHTML = errMsg;
+    });
+}
+
 function addCall(data) {
-  var call = {
-    id: nextId++,
-    prenom: data.prenom || '',
-    numero: data.numero || '',
-    resume: data.resume || '',
-    probleme: data.probleme || '',
-    heure_rdv: data.heure_rdv || null,
-    timestamp: data.timestamp || new Date().toISOString(),
-    chat_id: data.chat_id || ''
-  };
-  CALLS.unshift(call);
-  if (call.heure_rdv) {
-    var dk = call.heure_rdv.split('T')[0];
-    var hr = parseInt(call.heure_rdv.split('T')[1]);
-    var tm = call.heure_rdv.split('T')[1].slice(0,5);
-    if (!RDV[dk]) RDV[dk] = [];
-    RDV[dk].push({t:tm, dur:60, cl:call.prenom, det:call.resume});
-  }
-  refresh();
+  fetch(API_URL, {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({
+      prenom:    data.prenom    || '',
+      numero:    data.numero    || '',
+      resume:    data.resume    || '',
+      probleme:  data.probleme  || '',
+      heure_rdv: data.heure_rdv || null,
+      timestamp: data.timestamp || new Date().toISOString(),
+      chat_id:   data.chat_id   || 'manual_' + Date.now()
+    })
+  })
+  .then(function(r) { return r.json(); })
+  .then(function() { loadCalls(); })
+  .catch(function(e) { console.error('Erreur ajout appel:', e); });
 }
 
 function removeCall(id) {
-  CALLS = CALLS.filter(function(c){return c.id !== id;});
-  refresh();
+  if (!confirm('Supprimer cet appel ?')) return;
+  fetch(API_URL + '?id=' + id, {method: 'DELETE'})
+    .then(function() { loadCalls(); })
+    .catch(function(e) { console.error('Erreur suppression:', e); });
 }
 
 function refresh() {
@@ -701,6 +729,9 @@ function saveNewCall(){
   var resume=document.getElementById('f-resume').value.trim();
   var err=document.getElementById('new-err');
   if(!prenom||!numero||!resume){err.textContent='Prénom, numéro et résumé sont obligatoires.';err.style.display='block';return;}
+  // Ferme le modal immédiatement
+  document.getElementById('new-overlay').classList.remove('open');
+  // Envoie à l'API (addCall recharge automatiquement après)
   addCall({
     prenom:prenom,
     numero:numero,
@@ -710,20 +741,20 @@ function saveNewCall(){
     timestamp:new Date().toISOString(),
     chat_id:document.getElementById('f-chatid').value.trim()||('manual_'+Date.now())
   });
-  document.getElementById('new-overlay').classList.remove('open');
 }
 
 // ─── INIT ─────────────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded',function(){
-  document.getElementById('page-sub').textContent='Mardi 18 février 2025 · Bienvenue sur votre tableau de bord';
+  var now = new Date();
+  document.getElementById('page-sub').textContent = now.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long',year:'numeric'}) + ' · Bienvenue sur votre tableau de bord';
   buildNav();
-  buildChart('chart-main',chartData());
-  buildCallsTable('calls-main');
-  buildCallsTable('calls-tab');
   buildCalendar();
   buildStats();
   buildClients();
-  updateAiCount();
+
+  // Charge les appels depuis l'API et actualise toutes les 30s
+  loadCalls();
+  setInterval(loadCalls, 30000);
 
   document.getElementById('stats-cta').onclick=function(){setTab('stats');};
   document.getElementById('new-btn').onclick=openNewCall;
